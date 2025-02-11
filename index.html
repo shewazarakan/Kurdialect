@@ -1,146 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Website</title>
-  <link rel="icon" href="Icon.png">
-  <link rel="manifest" href="Manifest.json">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>زاراوەکانی کوردی</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon.png" type="image/png">
+    <style>
+        /* You can move this into a separate styles.css file */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
+    <!-- Loading Spinner -->
+    <div id="loadingScreen" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(255, 255, 255, 0.8); display: flex; align-items: center; justify-content: center; flex-direction: column; font-size: 1.5em; font-weight: bold; color: #4CAF50; z-index: 9999;">
+        <div class="spinner" style="border: 6px solid #f3f3f3; border-top: 6px solid #4CAF50; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;"></div>
+        <p style="margin-top: 15px;">Loading...</p>
+    </div>
 
-<!-- Loading Spinner -->
-<div id="loadingScreen" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(255, 255, 255, 0.8); display: flex; align-items: center; justify-content: center; flex-direction: column; font-size: 1.5em; font-weight: bold; color: #1E90FF; z-index: 9999;">
-  <div class="spinner" style="border: 6px solid #f3f3f3; border-top: 6px solid #1E90FF; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;"></div>
-  <p style="margin-top: 15px;">Loading...</p>
-</div>
+    <!-- Search Input -->
+    <div style="margin-bottom: 20px; display: flex; flex-direction: column; align-items: flex-start; width: 100%; padding-left: 20px;">
+        <input type="text" id="searchInput" placeholder="Search" style="padding: 10px; width: 90%; max-width: 400px; font-size: 1em; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 10px;">
+        
+        <div style="display: flex; justify-content: space-between; width: 90%; max-width: 400px;">
+            <button id="searchButton" style="padding: 10px 15px; font-size: 1em; cursor: pointer; background-color: #2196F3; color: white; border: none; border-radius: 4px; width: 48%;">Search</button>
+            <button id="clearButton" style="padding: 10px 15px; font-size: 1em; cursor: pointer; background-color: #ADD8E6; color: white; border: none; border-radius: 4px; width: 48%;">Clear</button>
+        </div>
+    </div>
 
-<!-- Search Input -->
-<div style="margin-bottom: 20px; display: flex; flex-direction: column; align-items: flex-start; width: 100%; padding-left: 20px;">
-  <input type="text" id="searchInput" placeholder="Search" style="padding: 10px; width: 90%; max-width: 400px; font-size: 1em; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 10px;">
-  
-  <div style="display: flex; justify-content: space-between; width: 90%; max-width: 400px;">
-    <button id="searchButton" style="padding: 10px 15px; font-size: 1em; cursor: pointer; background-color: #1E90FF; color: white; border: none; border-radius: 4px; width: 48%;">Search</button>
-    <button id="clearButton" style="padding: 10px 15px; font-size: 1em; cursor: pointer; background-color: #ADD8E6; color: white; border: none; border-radius: 4px; width: 48%;">Clear</button>
-  </div>
-</div>
+    <!-- Output Container -->
+    <div id="outputContainer" style="padding: 20px; background-color: #f0f0f0; border-radius: 8px; border: 1px solid #ccc; margin-top: 20px; width: 100%; padding-left: 20px;">
+        <h3 style="font-size: 1.5em;">Search Results:</h3>
+        
+        <!-- Raw JSON output (hidden) -->
+        <pre id="rawOutput" style="display: none; font-size: 14px; color: #333;"></pre>
+        
+        <!-- Cleaner, structured output (visible) -->
+        <div id="output" style="font-size: 1.2em; color: #333; line-height: 1.6;"></div>
+    </div>
 
-<!-- Output Container -->
-<div id="outputContainer" style="padding: 20px; background-color: #f0f0f0; border-radius: 8px; border: 1px solid #ccc; margin-top: 20px; width: 100%; padding-left: 20px;">
-  <h3 style="font-size: 1.5em;">Search Results:</h3>
-  
-  <!-- Raw JSON output (hidden) -->
-  <pre id="rawOutput" style="display: none; font-size: 14px; color: #333;"></pre>
-  
-  <!-- Cleaner, structured output (visible) -->
-  <div id="output" style="font-size: 1.2em; color: #333; line-height: 1.6;"></div>
-</div>
+    <!-- Input Data Container -->
+    <div id="inputDataContainer" style="font-size: 1.2em; font-weight: bold; color: blue; padding: 20px; margin-top: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #f0f0f0; text-align: left; padding-left: 20px;"></div>
 
-<!-- Input Data Container -->
-<div id="inputDataContainer" style="font-size: 1.2em; font-weight: bold; color: blue; padding: 20px; margin-top: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #f0f0f0; text-align: left; padding-left: 20px;">
-</div>
-
-<script>
-// Airtable API Fetch Code
-let airtableData = [];
-
-function fetchData() {
-  document.getElementById('loadingScreen').style.display = 'flex'; // Show loading screen
-  
-  fetch('https://api.airtable.com/v0/appPMRn6taSjy5Cuw/database2', {
-    method: 'GET',
-    headers: {
-      'Authorization': 'Bearer pattdszpPNjdfwO2r.44b8a2e4dcb3f0bf95b2f80fda2a42734ba1ef4ac5d43172d8bdcd3e94016395',
-    },
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.records && data.records.length > 0) {
-      airtableData = data.records;
-      document.getElementById('output').innerHTML = ""; // Clear output initially
-    } else {
-      document.getElementById('output').innerHTML = "No records found in Airtable.";
-    }
-  })
-  .catch(error => {
-    console.error('Error fetching data:', error);
-    document.getElementById('output').innerHTML = `Error fetching data: ${error.message}`;
-  })
-  .finally(() => {
-    document.getElementById('loadingScreen').style.display = 'none'; // Hide loading screen
-  });
-}
-
-// Call fetchData when the page loads
-fetchData();
-
-// Display data in a cleaner format
-function displayData(data, searchTerm) {
-  let outputHTML = '';
-  data.forEach(record => {
-    let topColumn = '';
-    let otherColumns = '';
-
-    // Check where the search term is located and display accordingly
-    if (record.fields["بادینی"] && record.fields["بادینی"].toLowerCase().includes(searchTerm)) {
-      topColumn = `<strong style="color: blue;">بادینی:</strong> ${record.fields["بادینی"]}<br>`;
-      otherColumns = `<strong style="color: lightblue;">سۆرانی:</strong> ${record.fields["سۆرانی"]}<br>
-                      <strong style="color: lightblue;">هەورامی:</strong> ${record.fields["هەورامی"]}<br>`;
-    } else if (record.fields["سۆرانی"] && record.fields["سۆرانی"].toLowerCase().includes(searchTerm)) {
-      topColumn = `<strong style="color: blue;">سۆرانی:</strong> ${record.fields["سۆرانی"]}<br>`;
-      otherColumns = `<strong style="color: lightblue;">بادینی:</strong> ${record.fields["بادینی"]}<br>
-                      <strong style="color: lightblue;">هەورامی:</strong> ${record.fields["هەورامی"]}<br>`;
-    } else if (record.fields["هەورامی"] && record.fields["هەورامی"].toLowerCase().includes(searchTerm)) {
-      topColumn = `<strong style="color: blue;">هەورامی:</strong> ${record.fields["هەورامی"]}<br>`;
-      otherColumns = `<strong style="color: lightblue;">سۆرانی:</strong> ${record.fields["سۆرانی"]}<br>
-                      <strong style="color: lightblue;">بادینی:</strong> ${record.fields["بادینی"]}<br>`;
-    }
-
-    outputHTML += `<div style="padding: 15px; border: 1px solid #ccc; margin-bottom: 10px; background-color: #fff; border-radius: 8px;">
-                    ${topColumn}${otherColumns}
-                   </div>`;
-  });
-
-  document.getElementById('output').innerHTML = outputHTML;
-}
-
-// Search Data
-function searchData() {
-  const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-
-  if (!searchTerm) {
-    document.getElementById('output').innerHTML = "Please enter a search term.";
-    return;
-  }
-
-  const filteredData = airtableData.filter(record => 
-    (record.fields["بادینی"] && record.fields["بادینی"].toLowerCase().includes(searchTerm)) ||
-    (record.fields["سۆرانی"] && record.fields["سۆرانی"].toLowerCase().includes(searchTerm)) ||
-    (record.fields["هەورامی"] && record.fields["هەورامی"].toLowerCase().includes(searchTerm))
-  );
-
-  if (filteredData.length === 0) {
-    document.getElementById('output').innerHTML = "No results found.";
-  } else {
-    displayData(filteredData, searchTerm);
-  }
-}
-
-// Handle button actions
-document.getElementById('searchButton').addEventListener('click', searchData);
-document.getElementById('clearButton').addEventListener('click', () => {
-  document.getElementById('searchInput').value = '';
-  document.getElementById('output').innerHTML = '';
-});
-</script>
-
+    <script src="app.js"></script>
 </body>
 </html>
