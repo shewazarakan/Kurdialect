@@ -1,0 +1,23 @@
+name: Deploy PWA Translator
+
+on:
+  push:
+    branches:
+      - main  # Runs when you push to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Create config.js with Secret API Key
+        run: |
+          echo "const API_KEY = '${{ secrets.AIRTABLE_API_KEY }}';" > config.js
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: . # Deploy everything
