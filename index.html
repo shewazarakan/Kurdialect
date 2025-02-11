@@ -6,30 +6,35 @@
     <title>زاراوەکانی کوردی</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
+    <script defer src="config.js"></script>
+    <script defer src="app.js"></script>
 </head>
 <body>
 
-    <!-- Loading Spinner -->
-    <div id="loadingScreen" class="loading-screen">
-        <div class="spinner"></div>
-        <p>چاوەڕێ بکە...</p>
-    </div>
+<!-- Loading Spinner -->
+<div id="loadingScreen">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+</div>
 
-    <!-- Search Input -->
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="گەڕان">
-        <div class="button-container">
-            <button id="searchButton">گەڕان</button>
-            <button id="clearButton">پاککردنەوە</button>
-        </div>
+<!-- Search Input -->
+<div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search">
+    <div class="button-container">
+        <button id="searchButton">Search</button>
+        <button id="clearButton">Clear</button>
     </div>
+</div>
 
-    <!-- Output Container -->
-    <div id="outputContainer">
-        <h3>ئەنجامەکان:</h3>
-        <div id="output"></div>
-    </div>
+<!-- Output Container -->
+<div id="outputContainer">
+    <h3>Search Results:</h3>
+    <pre id="rawOutput"></pre>
+    <div id="output"></div>
+</div>
 
-    <script src="app.js"></script>
+<!-- Input Data Container -->
+<div id="inputDataContainer"></div>
+
 </body>
 </html>
