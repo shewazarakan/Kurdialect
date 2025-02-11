@@ -4,37 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>زاراوەکانی کوردی</title>
-    <link rel="stylesheet" href="styles.css">
+    
+    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
-    <script defer src="config.js"></script>
-    <script defer src="app.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!-- Loading Spinner -->
-<div id="loadingScreen">
-    <div class="spinner"></div>
-    <p>Loading...</p>
-</div>
+    <!-- Loading Spinner -->
+    <div id="loadingScreen">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
 
-<!-- Search Input -->
-<div class="search-container">
-    <input type="text" id="searchInput" placeholder="Search">
-    <div class="button-container">
+    <!-- Search Section -->
+    <div id="searchSection">
+        <input type="text" id="searchInput" placeholder="Search">
         <button id="searchButton">Search</button>
         <button id="clearButton">Clear</button>
     </div>
-</div>
 
-<!-- Output Container -->
-<div id="outputContainer">
-    <h3>Search Results:</h3>
-    <pre id="rawOutput"></pre>
-    <div id="output"></div>
-</div>
+    <!-- Output Section -->
+    <div id="outputContainer">
+        <h3>Search Results:</h3>
+        <pre id="rawOutput" style="display: none;"></pre>
+        <div id="output"></div>
+    </div>
 
-<!-- Input Data Container -->
-<div id="inputDataContainer"></div>
-
+    <script src="app.js"></script>
 </body>
 </html>
