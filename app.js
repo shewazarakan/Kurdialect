@@ -1,30 +1,23 @@
-let airtableData = [];
+// Initialize offline data storage
+let translationData = [];
 
-function fetchData() {
+// Fetch Data from JSON (Offline Support)
+async function fetchData() {
     document.getElementById('loadingScreen').style.display = 'flex';
 
-    fetch("https://api.airtable.com/v0/appPMRn6taSjy5Cuw/database2", {
-        method: "GET",
-        headers: {
-            "Authorization": `Bearer ${API_KEY}`
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        airtableData = data.records;
-        document.getElementById('output').innerHTML = "";
-    })
-    .catch(error => {
-        console.error("Error fetching data:", error);
-        document.getElementById('output').innerHTML = `Error: ${error.message}`;
-    })
-    .finally(() => {
+    try {
+        const response = await fetch('data.json'); // Load local JSON file
+        const data = await response.json();
+        translationData = data.records;
+
         document.getElementById('loadingScreen').style.display = 'none';
-    });
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        document.getElementById('loadingScreen').style.display = 'none';
+    }
 }
 
-fetchData();
-
+// Search Function
 function searchData() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
 
@@ -33,34 +26,46 @@ function searchData() {
         return;
     }
 
-    const filteredData = airtableData.filter(record =>
-        (record.fields["بادینی"] && record.fields["بادینی"].toLowerCase().includes(searchTerm)) ||
-        (record.fields["سۆرانی"] && record.fields["سۆرانی"].toLowerCase().includes(searchTerm)) ||
-        (record.fields["هەورامی"] && record.fields["هەورامی"].toLowerCase().includes(searchTerm))
+    const results = translationData.filter(record =>
+        record.sorani.toLowerCase().includes(searchTerm) ||
+        record.badini.toLowerCase().includes(searchTerm) ||
+        record.hawrami.toLowerCase().includes(searchTerm)
     );
 
-    if (filteredData.length === 0) {
+    if (results.length === 0) {
         document.getElementById('output').innerHTML = "No results found.";
     } else {
-        displayData(filteredData);
+        displayData(results);
     }
 }
 
+// Display Results
 function displayData(data) {
     let outputHTML = '';
     data.forEach(record => {
-        outputHTML += `<div class="result">
-            <strong style="color: #007BFF;">بادینی:</strong> ${record.fields["بادینی"] || "-"}<br>
-            <strong style="color: #5bc0de;">سۆرانی:</strong> ${record.fields["سۆرانی"] || "-"}<br>
-            <strong style="color: #5bc0de;">هەورامی:</strong> ${record.fields["هەورامی"] || "-"}<br>
+        outputHTML += `<div class="result-card">
+            <strong style="color: blue;">سۆرانی:</strong> ${record.sorani}<br>
+            <strong style="color: lightblue;">بادینی:</strong> ${record.badini}<br>
+            <strong style="color: lightblue;">هەورامی:</strong> ${record.hawrami}
         </div>`;
     });
 
     document.getElementById('output').innerHTML = outputHTML;
 }
 
+// Register Service Worker
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+        .then(() => console.log("Service Worker Registered"))
+        .catch(error => console.log("Service Worker Registration Failed:", error));
+}
+
+// Event Listeners
 document.getElementById('searchButton').addEventListener('click', searchData);
 document.getElementById('clearButton').addEventListener('click', () => {
     document.getElementById('searchInput').value = '';
     document.getElementById('output').innerHTML = '';
 });
+
+// Load Data on Page Load
+fetchData();
