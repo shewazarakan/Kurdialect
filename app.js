@@ -1,50 +1,47 @@
-document.addEventListener("DOMContentLoaded", () => {
-  let airtableData = [];
+const AIRTABLE_TOKEN = "${{ secrets.AIRTABLE_TOKEN }}";
+const AIRTABLE_URL = "https://api.airtable.com/v0/appPMRn6taSjy5Cuw/database2";
 
-  async function fetchData() {
-    document.getElementById("loadingScreen").style.display = "flex";
+let airtableData = [];
 
-    const response = await fetch("https://api.airtable.com/v0/appPMRn6taSjy5Cuw/database2", {
-      headers: {
-        Authorization: `Bearer ${import.meta.env.AIRTABLE_TOKEN}`,
-      },
+function fetchData() {
+  document.getElementById("loadingScreen").style.display = "flex";
+
+  fetch(AIRTABLE_URL, {
+    method: "GET",
+    headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
+  })
+    .then(response => response.json())
+    .then(data => {
+      airtableData = data.records || [];
+      document.getElementById("output").innerHTML = airtableData.length
+        ? ""
+        : "No records found.";
+    })
+    .catch(error => {
+      console.error("Error fetching data:", error);
+      document.getElementById("output").innerHTML = `Error: ${error.message}`;
+    })
+    .finally(() => {
+      document.getElementById("loadingScreen").style.display = "none";
     });
+}
 
-    const data = await response.json();
-    airtableData = data.records || [];
-    document.getElementById("loadingScreen").style.display = "none";
-  }
+document.getElementById("searchButton").addEventListener("click", () => {
+  const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
+  if (!searchTerm) return;
 
-  function searchData() {
-    const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
-    const output = document.getElementById("output");
-    output.innerHTML = "";
+  const filteredData = airtableData.filter(record =>
+    Object.values(record.fields).some(field => field.toLowerCase().includes(searchTerm))
+  );
 
-    if (!searchTerm) {
-      output.innerHTML = "Please enter a search term.";
-      return;
-    }
-
-    const filteredData = airtableData.filter(record =>
-      Object.values(record.fields).some(value => value.toLowerCase().includes(searchTerm))
-    );
-
-    output.innerHTML = filteredData.length
-      ? filteredData.map(record => `
-        <div class="result-box">
-          <strong style="color: blue;">${record.fields["بادینی"] || ""}</strong><br>
-          <strong style="color: lightblue;">${record.fields["سۆرانی"] || ""}</strong><br>
-          <strong style="color: lightblue;">${record.fields["هەورامی"] || ""}</strong>
-        </div>
-      `).join("")
-      : "No results found.";
-  }
-
-  document.getElementById("searchButton").addEventListener("click", searchData);
-  document.getElementById("clearButton").addEventListener("click", () => {
-    document.getElementById("searchInput").value = "";
-    document.getElementById("output").innerHTML = "";
-  });
-
-  fetchData();
+  document.getElementById("output").innerHTML = filteredData.length
+    ? filteredData.map(record => `<p>${JSON.stringify(record.fields)}</p>`).join("")
+    : "No results found.";
 });
+
+document.getElementById("clearButton").addEventListener("click", () => {
+  document.getElementById("searchInput").value = "";
+  document.getElementById("output").innerHTML = "";
+});
+
+fetchData();
