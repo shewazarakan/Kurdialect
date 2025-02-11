@@ -1,38 +1,32 @@
 <!DOCTYPE html>
-<html lang="ku">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>زاراوەکانی کوردی</title>
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-
-    <!-- Styles -->
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kurdish Dialects Translator</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="app.js"></script>
 </head>
 <body>
 
-    <!-- Loading Spinner -->
-    <div id="loadingScreen">
-        <div class="spinner"></div>
-        <p>Loading...</p>
-    </div>
+<!-- Loading Spinner -->
+<div id="loadingScreen" class="loading">
+  <div class="spinner"></div>
+  <p>Loading...</p>
+</div>
 
-    <!-- Search Section -->
-    <div id="searchSection">
-        <input type="text" id="searchInput" placeholder="Search">
-        <button id="searchButton">Search</button>
-        <button id="clearButton">Clear</button>
-    </div>
+<!-- Search Input -->
+<div class="search-container">
+  <input type="text" id="searchInput" placeholder="Search">
+  <button id="searchButton">Search</button>
+  <button id="clearButton">Clear</button>
+</div>
 
-    <!-- Output Section -->
-    <div id="outputContainer">
-        <h3>Search Results:</h3>
-        <pre id="rawOutput" style="display: none;"></pre>
-        <div id="output"></div>
-    </div>
+<!-- Output Container -->
+<div id="outputContainer">
+  <h3>Search Results:</h3>
+  <div id="output"></div>
+</div>
 
-    <script src="app.js"></script>
 </body>
 </html>
