@@ -1,19 +1,19 @@
 {
-  "name": "زاراوەکانی کوردی",
-  "short_name": "زاراوەکان",
-  "description": "A Kurdish translation app for different dialects.",
+  "name": "My Website",
+  "short_name": "Website",
+  "description": "A simple website with search functionality.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ff7f00",
-  "theme_color": "#008000",
+  "background_color": "#ADD8E6",
+  "theme_color": "#0000FF",
   "icons": [
     {
-      "src": "icon.png",
+      "src": "Icon.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "icon-512.png",
+      "src": "Icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
