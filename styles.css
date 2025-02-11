@@ -36,4 +36,59 @@ body {
 
 .search-container input {
     padding: 10px;
-    width: 90%; max-width:
+    width: 90%; max-width: 400px;
+    font-size: 1em;
+    border: 1px solid #ccc; border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.search-container button {
+    padding: 10px 15px;
+    font-size: 1em;
+    cursor: pointer;
+    border: none; border-radius: 4px;
+    width: 48%;
+}
+
+.search-container .search-button {
+    background-color: #007BFF; color: white;
+}
+
+.search-container .clear-button {
+    background-color: #87CEFA; color: white;
+}
+
+.output-container {
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-top: 20px;
+}
+
+.output-container h3 {
+    font-size: 1.5em;
+}
+
+.output-container pre {
+    font-size: 14px;
+    color: #333;
+}
+
+.output-container .output {
+    font-size: 1.2em;
+    color: #333;
+    line-height: 1.6;
+}
+
+.input-data-container {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #007BFF;
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f0f0f0;
+    text-align: left;
+}
