@@ -1,16 +1,16 @@
-## Hi there 👋
+# Kurdish Dialect Translator
 
-<!--
-**shewazarakan/shewazarakan** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+A Kurdish translation app for different dialects (Sorani, Badini, and Hawrami).
 
-Here are some ideas to get you started:
+## Features:
+- Search for words in three Kurdish dialects.
+- View translations in other dialects.
+- User-friendly interface.
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+## Technologies:
+- HTML
+- CSS
+- JavaScript
+
+## Setup:
+Clone this repository and open `index.html` in a browser to run the app.
