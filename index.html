@@ -4,48 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>زاراوەکانی کوردی</title>
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="icon.png" type="image/png">
-    <style>
-        /* You can move this into a separate styles.css file */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f1f1f1;
-            padding: 20px;
-        }
-    </style>
+    <title>زاراوەکانی کوردی</title>
+    <link rel="icon" href="icon.png" sizes="192x192" type="image/png">
+    <link rel="icon" href="icon-512.png" sizes="512x512" type="image/png">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Loading Spinner -->
-    <div id="loadingScreen" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(255, 255, 255, 0.8); display: flex; align-items: center; justify-content: center; flex-direction: column; font-size: 1.5em; font-weight: bold; color: #4CAF50; z-index: 9999;">
-        <div class="spinner" style="border: 6px solid #f3f3f3; border-top: 6px solid #4CAF50; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;"></div>
-        <p style="margin-top: 15px;">Loading...</p>
-    </div>
+    <h1>زاراوەکانی کوردی</h1>
 
     <!-- Search Input -->
-    <div style="margin-bottom: 20px; display: flex; flex-direction: column; align-items: flex-start; width: 100%; padding-left: 20px;">
-        <input type="text" id="searchInput" placeholder="Search" style="padding: 10px; width: 90%; max-width: 400px; font-size: 1em; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 10px;">
-        
-        <div style="display: flex; justify-content: space-between; width: 90%; max-width: 400px;">
-            <button id="searchButton" style="padding: 10px 15px; font-size: 1em; cursor: pointer; background-color: #2196F3; color: white; border: none; border-radius: 4px; width: 48%;">Search</button>
-            <button id="clearButton" style="padding: 10px 15px; font-size: 1em; cursor: pointer; background-color: #ADD8E6; color: white; border: none; border-radius: 4px; width: 48%;">Clear</button>
-        </div>
+    <div id="searchContainer">
+        <input type="text" id="searchInput" placeholder="Search for a word" />
+        <button id="searchButton">Search</button>
+        <button id="clearButton">Clear</button>
     </div>
 
     <!-- Output Container -->
-    <div id="outputContainer" style="padding: 20px; background-color: #f0f0f0; border-radius: 8px; border: 1px solid #ccc; margin-top: 20px; width: 100%; padding-left: 20px;">
-        <h3 style="font-size: 1.5em;">Search Results:</h3>
-        
-        <!-- Raw JSON output (hidden) -->
-        <pre id="rawOutput" style="display: none; font-size: 14px; color: #333;"></pre>
-        
-        <!-- Cleaner, structured output (visible) -->
-        <div id="output" style="font-size: 1.2em; color: #333; line-height: 1.6;"></div>
+    <div id="outputContainer">
+        <h3>Search Results:</h3>
+        <div id="output"></div>
     </div>
 
-    <!-- Input Data Container -->
-    <div id="inputDataContainer" style="font-size: 1.2em; font-weight: bold; color: blue; padding: 20px; margin-top: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #f0f0f0; text-align: left; padding-left: 20px;"></div>
+    <!-- Display Input Data -->
+    <div id="inputDataContainer"></div>
 
     <script src="app.js"></script>
 </body>
