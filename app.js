@@ -1,65 +1,62 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const searchInput = document.getElementById("searchInput");
-    const searchButton = document.getElementById("searchButton");
-    const clearButton = document.getElementById("clearButton");
-    const output = document.getElementById("output");
-    const installButton = document.getElementById("installButton");
-    let deferredPrompt;
-
-    // Fetch data from SheetDB API
-    async function fetchData() {
-        try {
-            const response = await fetch("https://sheetdb.io/api/v1/cg3gwaj5yfawg");
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error("Error fetching data:", error);
-            return [];
-        }
+// Fetch data from Google Sheets via SheetDB API
+async function fetchData() {
+    try {
+        const response = await fetch("https://sheetdb.io/api/v1/cg3gwaj5yfawg");
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        return [];
     }
+}
 
-    // Search function
-    async function searchData() {
-        const query = searchInput.value.trim();
-        if (!query) return;
+// Display search results
+function searchData() {
+    const input = document.getElementById("searchInput").value.trim().toLowerCase();
+    const resultsTable = document.getElementById("results");
+    resultsTable.innerHTML = ""; // Clear previous results
 
-        const data = await fetchData();
-        const filteredResults = data.filter(row =>
-            Object.values(row).some(value => value.toLowerCase().includes(query.toLowerCase()))
+    fetchData().then((data) => {
+        const filteredData = data.filter(row =>
+            row["سۆرانی"].toLowerCase().includes(input)
         );
 
-        // Display results
-        output.innerHTML = filteredResults.length
-            ? filteredResults.map(row => `<p>${row["سۆرانی"]} - ${row["بادینی"]} - ${row["هەورامی"]}</p>`).join("")
-            : "<p>No results found</p>";
-    }
-
-    // Clear function
-    function clearSearch() {
-        searchInput.value = "";
-        output.innerHTML = "";
-    }
-
-    // Install PWA
-    window.addEventListener("beforeinstallprompt", (event) => {
-        event.preventDefault();
-        deferredPrompt = event;
-        installButton.style.display = "block";
+        filteredData.forEach(row => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `<td>${row["سۆرانی"]}</td>
+                            <td>${row["بادینی"]}</td>
+                            <td>${row["هەورامی"]}</td>`;
+            resultsTable.appendChild(tr);
+        });
     });
+}
 
-    installButton.addEventListener("click", () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then(choice => {
-                if (choice.outcome === "accepted") {
-                    installButton.style.display = "none";
-                }
-                deferredPrompt = null;
-            });
-        }
-    });
+// Clear input and results
+function clearSearch() {
+    document.getElementById("searchInput").value = "";
+    document.getElementById("results").innerHTML = "";
+}
 
-    // Event listeners
-    searchButton.addEventListener("click", searchData);
-    clearButton.addEventListener("click", clearSearch);
+// Install PWA
+let deferredPrompt;
+window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById("installButton").style.display = "block";
 });
+
+document.getElementById("installButton").addEventListener("click", () => {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(choiceResult => {
+            if (choiceResult.outcome === "accepted") {
+                console.log("User installed the app");
+            }
+            deferredPrompt = null;
+        });
+    }
+});
+
+// Event Listeners
+document.getElementById("searchButton").addEventListener("click", searchData);
+document.getElementById("clearButton").addEventListener("click", clearSearch);
