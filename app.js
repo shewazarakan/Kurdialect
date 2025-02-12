@@ -1,98 +1,86 @@
-let sheetData = [];
+document.addEventListener("DOMContentLoaded", function () {
+    let sheetURL = "https://sheetdb.io/api/v1/cg3gwaj5yfawg";
+    let searchButton = document.getElementById("searchButton");
+    let clearButton = document.getElementById("clearButton");
+    let searchInput = document.getElementById("searchInput");
+    let outputContainer = document.getElementById("output");
+    let inputDataContainer = document.getElementById("inputDataContainer");
+    let loadingScreen = document.getElementById("loadingScreen");
 
-function fetchData() {
-    document.getElementById('loadingScreen').style.display = 'flex';
+    function fetchData() {
+        loadingScreen.style.display = "flex";
+        fetch(sheetURL)
+            .then(response => response.json())
+            .then(data => {
+                window.data = data; // Store data globally
+                loadingScreen.style.display = "none";
+            })
+            .catch(error => {
+                console.error("Error fetching data:", error);
+                loadingScreen.style.display = "none";
+            });
+    }
 
-    fetch('https://sheetdb.io/api/v1/cg3gwaj5yfawg')
-    .then(response => response.json())
-    .then(data => {
-        sheetData = data;
-        document.getElementById('output').innerHTML = "";
-    })
-    .catch(error => {
-        console.error('Error fetching data:', error);
-        document.getElementById('output').innerHTML = `Error fetching data: ${error.message}`;
-    })
-    .finally(() => {
-        document.getElementById('loadingScreen').style.display = 'none';
-    });
-}
-
-fetchData();
-
-function displayData(data, searchTerm) {
-    let outputHTML = '';
-    data.forEach(record => {
-        let topColumn = '';
-        let otherColumns = '';
-
-        if (record["بادینی"] && record["بادینی"].toLowerCase().includes(searchTerm)) {
-            topColumn = `<strong style="color: #012169;">بادینی:</strong> ${record["بادینی"]}<br>`;
-            otherColumns = `<strong style="color: #f5c400;">سۆرانی:</strong> ${record["سۆرانی"]}<br>
-                            <strong style="color: #f5c400;">هەورامی:</strong> ${record["هەورامی"]}<br>`;
-        } else if (record["سۆرانی"] && record["سۆرانی"].toLowerCase().includes(searchTerm)) {
-            topColumn = `<strong style="color: #012169;">سۆرانی:</strong> ${record["سۆرانی"]}<br>`;
-            otherColumns = `<strong style="color: #f5c400;">بادینی:</strong> ${record["بادینی"]}<br>
-                            <strong style="color: #f5c400;">هەورامی:</strong> ${record["هەورامی"]}<br>`;
-        } else if (record["هەورامی"] && record["هەورامی"].toLowerCase().includes(searchTerm)) {
-            topColumn = `<strong style="color: #012169;">هەورامی:</strong> ${record["هەورامی"]}<br>`;
-            otherColumns = `<strong style="color: #f5c400;">سۆرانی:</strong> ${record["سۆرانی"]}<br>
-                            <strong style="color: #f5c400;">بادینی:</strong> ${record["بادینی"]}<br>`;
+    function searchData() {
+        let searchTerm = searchInput.value.toLowerCase().trim();
+        if (!searchTerm) {
+            outputContainer.innerHTML = "Please enter a search term.";
+            return;
         }
 
-        outputHTML += `<div style="padding: 15px; border: 1px solid #ccc; margin-bottom: 10px; background-color: #fff; border-radius: 8px;">
-                        ${topColumn}${otherColumns}
-                       </div>`;
+        let results = window.data.filter(record =>
+            Object.values(record).some(value =>
+                value.toLowerCase().includes(searchTerm)
+            )
+        );
+
+        if (results.length === 0) {
+            outputContainer.innerHTML = "No results found.";
+        } else {
+            displayData(results);
+        }
+    }
+
+    function displayData(data) {
+        outputContainer.innerHTML = data.map(record => `
+            <div class="result-box">
+                <strong class="output-title">سۆرانی:</strong> ${record["سۆرانی"]} <br>
+                <strong class="output-title">بادینی:</strong> ${record["بادینی"]} <br>
+                <strong class="output-title">هەورامی:</strong> ${record["هەورامی"]}
+            </div>
+        `).join("");
+    }
+
+    searchButton.addEventListener("click", searchData);
+    clearButton.addEventListener("click", () => {
+        searchInput.value = "";
+        outputContainer.innerHTML = "";
     });
 
-    document.getElementById('output').innerHTML = outputHTML;
-}
+    fetchData();
 
-function searchData() {
-    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+    // Install Button
+    let installButton = document.getElementById("installButton");
+    let deferredPrompt;
 
-    if (!searchTerm) {
-        document.getElementById('output').innerHTML = "Please enter a search term.";
-        return;
-    }
+    window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installButton.style.display = "block";
+    });
 
-    const filteredData = sheetData.filter(record => 
-        (record["بادینی"] && record["بادینی"].toLowerCase().includes(searchTerm)) ||
-        (record["سۆرانی"] && record["سۆرانی"].toLowerCase().includes(searchTerm)) ||
-        (record["هەورامی"] && record["هەورامی"].toLowerCase().includes(searchTerm))
-    );
+    installButton.addEventListener("click", () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then(choice => {
+                if (choice.outcome === "accepted") {
+                    installButton.style.display = "none";
+                }
+            });
+        }
+    });
 
-    if (filteredData.length === 0) {
-        document.getElementById('output').innerHTML = "No results found.";
-    } else {
-        displayData(filteredData, searchTerm);
-    }
-}
-
-document.getElementById('searchButton').addEventListener('click', searchData);
-document.getElementById('clearButton').addEventListener('click', () => {
-    document.getElementById('searchInput').value = '';
-    document.getElementById('output').innerHTML = '';
-});
-
-// Add to Home Screen (PWA)
-let deferredPrompt;
-const installButton = document.getElementById("installButton");
-
-window.addEventListener("beforeinstallprompt", (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    installButton.style.display = "block";
-});
-
-installButton.addEventListener("click", () => {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === "accepted") {
-                installButton.style.display = "none";
-            }
-            deferredPrompt = null;
-        });
-    }
+    window.addEventListener("appinstalled", () => {
+        installButton.style.display = "none";
+    });
 });
