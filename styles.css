@@ -1,6 +1,8 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
+    margin: 0;
+    padding: 20px;
+    background-color: #f8f8f8;
 }
 
 #loadingScreen {
@@ -31,16 +33,15 @@ body {
 }
 
 @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .search-container {
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
+    align-items: center;
 }
 
 #searchInput {
@@ -53,7 +54,7 @@ body {
     margin-bottom: 10px;
 }
 
-.buttons {
+.button-group {
     display: flex;
     justify-content: space-between;
     width: 90%;
@@ -84,31 +85,16 @@ body {
 
 #outputContainer {
     padding: 20px;
-    background-color: #f0f0f0;
+    background-color: #fff;
     border-radius: 8px;
     border: 1px solid #ccc;
     margin-top: 20px;
-    width: 100%;
+    width: 90%;
+    max-width: 600px;
 }
 
-h3 {
-    font-size: 1.5em;
-}
-
-.result-box {
-    padding: 15px;
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
-    background-color: #fff;
-    border-radius: 8px;
+#output {
     font-size: 1.2em;
-    line-height: 1.6;
-}
-
-.result-header {
-    font-weight: bold;
-}
-
-.result-data {
     color: #000;
+    line-height: 1.6;
 }
