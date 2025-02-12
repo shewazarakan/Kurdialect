@@ -13,36 +13,26 @@
 </head>
 
 <body>
+
     <div class="container">
-        <!-- Search Box Section -->
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="Enter Kurdish word" class="search-input">
-            <button id="search-btn" class="search-btn">Search</button>
-            <button id="clear-btn" class="clear-btn">Clear</button>
-        </div>
-        
-        <!-- Results Display Section -->
-        <div id="search-results-box" class="results-box">
-            <table>
-                <thead>
-                    <tr>
-                        <th class="input-column">Input Word</th>
-                        <th class="output-column">Translation (Soranî)</th>
-                        <th class="output-column">Translation (Badînî)</th>
-                    </tr>
-                </thead>
-                <tbody id="results-body"></tbody>
-            </table>
-        </div>
+        <input type="text" id="searchBox" placeholder="Search for a word...">
+        <button id="searchButton">Search</button>
+        <button id="clearButton">Clear</button>
     </div>
 
-    <!-- Install Button -->
-    <button id="install-button" class="install-button">
-        <span>+</span>
-    </button>
+    <div id="searchResults">
+        <div class="column-header">
+            <span class="input-column">سۆرانی</span>
+            <span class="output-column">بادینی</span>
+            <span class="output-column">هەورامی</span>
+        </div>
+        <div id="resultsContainer"></div>
+    </div>
+
+    <button id="installButton">+</button>
 
     <script src="app.js"></script>
-    <script src="service-worker.js"></script>
+
 </body>
 
 </html>
