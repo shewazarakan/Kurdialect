@@ -1,20 +1,20 @@
 {
-  "name": "زاراوەکانی کوردی",
-  "short_name": "Kurdish Translator",
-  "description": "A PWA for translating between Kurdish dialects.",
-  "start_url": "/index.html",
+  "name": "Kurdişiv",
+  "short_name": "Kurdişiv",
+  "description": "Kurdish dialects translator",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#007BFF",
+  "theme_color": "#012169",
   "icons": [
-    {
-      "src": "icon.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
       "type": "image/png"
     }
   ]
