@@ -1,7 +1,9 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    padding: 20px;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
 }
 
 #loadingScreen {
@@ -31,8 +33,17 @@ body {
     animation: spin 1s linear infinite;
 }
 
-.search-container {
-    margin-bottom: 20px;
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#searchContainer {
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
 }
 
 #searchInput {
@@ -45,7 +56,7 @@ body {
     margin-bottom: 10px;
 }
 
-.buttons {
+#searchContainer div {
     display: flex;
     justify-content: space-between;
     width: 90%;
@@ -71,10 +82,28 @@ button {
     color: white;
 }
 
-.result {
+#outputContainer {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 600px;
+    text-align: left;
+}
+
+h3 {
+    font-size: 1.5em;
+    color: #012169;
+}
+
+#output div {
     padding: 15px;
     border: 1px solid #ccc;
     margin-bottom: 10px;
     background-color: #fff;
     border-radius: 8px;
+    font-size: 1.2em;
+    line-height: 1.6;
 }
