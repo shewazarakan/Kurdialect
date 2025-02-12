@@ -9,17 +9,16 @@
     <script defer src="app.js"></script>
 </head>
 <body>
-
-    <!-- Loading Screen -->
+    <!-- Loading Spinner -->
     <div id="loadingScreen">
         <div class="spinner"></div>
         <p>Loading...</p>
     </div>
 
     <!-- Search Input -->
-    <div id="searchContainer">
+    <div class="search-container">
         <input type="text" id="searchInput" placeholder="Search">
-        <div id="buttonContainer">
+        <div class="button-group">
             <button id="searchButton">Search</button>
             <button id="clearButton">Clear</button>
         </div>
@@ -28,17 +27,10 @@
     <!-- Output Container -->
     <div id="outputContainer">
         <h3>Search Results:</h3>
-        <pre id="rawOutput" style="display: none;"></pre>
         <div id="output"></div>
     </div>
 
-    <!-- Input Data Container -->
-    <div id="inputDataContainer">
-        <strong class="input-title">Input Data</strong>
-    </div>
-
     <!-- Install Button -->
-    <button id="installButton" class="floating-button">Install</button>
-
+    <button id="installButton" class="install-btn">+</button>
 </body>
 </html>
