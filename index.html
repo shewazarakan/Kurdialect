@@ -5,21 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kurdişiv</title>
     <link rel="stylesheet" href="styles.css">
-    <script defer src="app.js"></script> <!-- Ensure the script is loaded after the DOM is ready -->
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <div class="container">
-        <!-- Search Input & Buttons -->
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Enter word">
-            <button class="search-btn" onclick="searchData()">Search</button>
-            <button class="clear-btn" onclick="clearData()">Clear</button>
-        </div>
+    <!-- Loading Screen -->
+    <div id="loadingScreen">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
 
-        <!-- Search Results Box -->
-        <div class="search-results" id="searchResults">
-            <!-- This will remain empty until a search is performed -->
+    <!-- Search Input -->
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search">
+        <div class="buttons">
+            <button id="searchButton">Search</button>
+            <button id="clearButton">Clear</button>
         </div>
     </div>
+
+    <!-- Output Container -->
+    <div id="outputContainer">
+        <h3>Search Results:</h3>
+        <pre id="rawOutput"></pre>
+        <div id="output"></div>
+    </div>
+
+    <!-- Input Data Container -->
+    <div id="inputDataContainer"></div>
+
+    <script src="app.js"></script>
 </body>
 </html>
