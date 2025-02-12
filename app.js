@@ -10,7 +10,7 @@ async function fetchData() {
         }
         const data = await response.json();
 
-        // Hide loading screen and display search results once data is fetched
+        // Hide loading screen and return data once fetched
         loadingScreen.style.display = "none";
         return data;
     } catch (error) {
@@ -53,11 +53,14 @@ function displayResults(results) {
     results.forEach(result => {
         const resultElement = document.createElement("div");
         resultElement.classList.add("search-result-item");
+
+        // Display input and output columns
         resultElement.innerHTML = `
-            <strong>سۆرانی:</strong> ${result["سۆرانی"]} <br>
-            <strong>بادینی:</strong> ${result["بادینی"]} <br>
-            <strong>هەورامی:</strong> ${result["هەورامی"]}
+            <div><span class="column-header">سۆرانی:</span> ${result["سۆرانی"]}</div>
+            <div><span class="output-column">بادینی:</span> ${result["بادینی"]}</div>
+            <div><span class="output-column">هەورامی:</span> ${result["هەورامی"]}</div>
         `;
+
         resultsContainer.appendChild(resultElement);
     });
 }
