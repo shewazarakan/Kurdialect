@@ -1,91 +1,107 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const searchButton = document.getElementById('searchButton');
-  const clearButton = document.getElementById('clearButton');
-  const searchInput = document.getElementById('searchInput');
-  const resultsBox = document.getElementById('resultsBox');
-  const resultsTableBody = document.getElementById('resultsTableBody');
-  const installBtn = document.getElementById('installBtn');
-  const loadingScreen = document.getElementById('loadingScreen');
+// Fetch data from SheetDB
+async function fetchData() {
+    const loadingScreen = document.getElementById("loading-screen");
+    loadingScreen.style.display = "block"; // Show loading screen
 
-  const apiUrl = 'https://sheetdb.io/api/v1/cg3gwaj5yfawg'; // Your SheetDB API URL
-
-  searchButton.addEventListener('click', searchData);
-  clearButton.addEventListener('click', clearData);
-  installBtn.addEventListener('click', installApp);
-
-  function searchData() {
-    const searchTerm = searchInput.value.trim();
-    if (!searchTerm) {
-      alert('Please enter a word to search!');
-      return;
-    }
-
-    showLoadingScreen(true);
-
-    fetch(`${apiUrl}?search=${searchTerm}`)
-      .then(response => response.json())
-      .then(data => {
-        showLoadingScreen(false);
-        displayResults(data);
-      })
-      .catch(error => {
-        showLoadingScreen(false);
-        console.error('Error fetching data:', error);
-      });
-  }
-
-  function displayResults(data) {
-    resultsBox.style.display = data.length ? 'block' : 'none';
-    resultsTableBody.innerHTML = '';
-
-    if (data.length) {
-      data.forEach(item => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${item.soranî}</td>
-          <td>${item.badinî}</td>
-          <td>${item.hewramî}</td>
-        `;
-        resultsTableBody.appendChild(row);
-      });
-    } else {
-      resultsTableBody.innerHTML = '<tr><td colspan="3">No results found</td></tr>';
-    }
-  }
-
-  function clearData() {
-    searchInput.value = '';
-    resultsBox.style.display = 'none';
-  }
-
-  function installApp() {
-    // Add your logic here to trigger PWA installation
-    alert('Install button clicked');
-  }
-
-  function showLoadingScreen(isLoading) {
-    loadingScreen.style.display = isLoading ? 'flex' : 'none';
-  }
-
-  // Handling the beforeinstallprompt event for PWA
-  let deferredPrompt;
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    installBtn.style.display = 'block';
-  });
-
-  installBtn.addEventListener('click', () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === 'accepted') {
-          console.log('User accepted the A2HS prompt');
-        } else {
-          console.log('User dismissed the A2HS prompt');
+    try {
+        const response = await fetch('https://sheetdb.io/api/v1/cg3gwaj5yfawg');
+        if (!response.ok) {
+            throw new Error("Network response was not ok.");
         }
-        deferredPrompt = null;
-      });
+        const data = await response.json();
+
+        // Hide loading screen and display search results once data is fetched
+        loadingScreen.style.display = "none";
+        return data;
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        loadingScreen.style.display = "none"; // Hide loading screen
+        alert("Failed to load data");
     }
-  });
+}
+
+// Search and display results
+async function searchData() {
+    const searchInput = document.getElementById("search-input").value.toLowerCase();
+    const resultsContainer = document.getElementById("search-results");
+
+    if (!searchInput) {
+        resultsContainer.innerHTML = "";
+        return;
+    }
+
+    const data = await fetchData();
+    const filteredResults = data.filter(item => 
+        item["سۆرانی"].toLowerCase().includes(searchInput) ||
+        item["بادینی"].toLowerCase().includes(searchInput) ||
+        item["هەورامی"].toLowerCase().includes(searchInput)
+    );
+
+    displayResults(filteredResults);
+}
+
+// Display the filtered results
+function displayResults(results) {
+    const resultsContainer = document.getElementById("search-results");
+    resultsContainer.innerHTML = ""; // Clear any previous results
+
+    if (results.length === 0) {
+        resultsContainer.innerHTML = "<div>No results found</div>";
+        return;
+    }
+
+    results.forEach(result => {
+        const resultElement = document.createElement("div");
+        resultElement.classList.add("search-result-item");
+        resultElement.innerHTML = `
+            <strong>سۆرانی:</strong> ${result["سۆرانی"]} <br>
+            <strong>بادینی:</strong> ${result["بادینی"]} <br>
+            <strong>هەورامی:</strong> ${result["هەورامی"]}
+        `;
+        resultsContainer.appendChild(resultElement);
+    });
+}
+
+// Clear search input and results
+function clearData() {
+    document.getElementById("search-input").value = "";
+    document.getElementById("search-results").innerHTML = "";
+}
+
+// Handle Install Button functionality
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    deferredPrompt = event;
+
+    const installButton = document.getElementById('install-button');
+    installButton.style.display = 'block';
+
+    installButton.addEventListener('click', () => {
+        deferredPrompt.prompt();
+
+        deferredPrompt.userChoice
+            .then((choiceResult) => {
+                console.log(choiceResult.outcome);
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the A2HS prompt');
+                } else {
+                    console.log('User dismissed the A2HS prompt');
+                }
+                deferredPrompt = null;
+            });
+    });
+});
+
+// Event listeners for buttons
+document.getElementById("search-button").addEventListener("click", searchData);
+document.getElementById("clear-button").addEventListener("click", clearData);
+
+// Responsive fixes for mobile view
+window.addEventListener("resize", () => {
+    if (window.innerWidth <= 768) {
+        const inputContainer = document.querySelector(".input-container");
+        inputContainer.style.flexDirection = "column";
+    }
 });
