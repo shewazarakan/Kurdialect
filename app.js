@@ -1,74 +1,69 @@
-let sheetData = [];
+document.addEventListener("DOMContentLoaded", function () {
+    let searchButton = document.getElementById("searchButton");
+    let clearButton = document.getElementById("clearButton");
+    let searchInput = document.getElementById("searchInput");
+    let output = document.getElementById("output");
+    let loadingScreen = document.getElementById("loadingScreen");
 
-function fetchData() {
-    document.getElementById('loadingScreen').style.display = 'flex';
+    async function fetchData() {
+        loadingScreen.style.display = "flex";
+        try {
+            let response = await fetch("https://sheetdb.io/api/v1/cg3gwaj5yfawg");
+            let data = await response.json();
+            return data;
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            output.innerHTML = "Error fetching data.";
+            return [];
+        } finally {
+            loadingScreen.style.display = "none";
+        }
+    }
 
-    fetch('https://opensheet.elk.sh/YOUR_GOOGLE_SHEET_ID/database2')
-        .then(response => response.json())
-        .then(data => {
-            sheetData = data;
-            document.getElementById('output').innerHTML = "";
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-            document.getElementById('output').innerHTML = `Error fetching data: ${error.message}`;
-        })
-        .finally(() => {
-            document.getElementById('loadingScreen').style.display = 'none';
-        });
-}
-
-fetchData();
-
-function displayData(data, searchTerm) {
-    let outputHTML = '';
-    data.forEach(record => {
-        let topColumn = '';
-        let otherColumns = '';
-
-        if (record["بادینی"] && record["بادینی"].toLowerCase().includes(searchTerm)) {
-            topColumn = `<strong class="top-text">بادینی:</strong> ${record["بادینی"]}<br>`;
-            otherColumns = `<strong class="other-text">سۆرانی:</strong> ${record["سۆرانی"]}<br>
-                            <strong class="other-text">هەورامی:</strong> ${record["هەورامی"]}<br>`;
-        } else if (record["سۆرانی"] && record["سۆرانی"].toLowerCase().includes(searchTerm)) {
-            topColumn = `<strong class="top-text">سۆرانی:</strong> ${record["سۆرانی"]}<br>`;
-            otherColumns = `<strong class="other-text">بادینی:</strong> ${record["بادینی"]}<br>
-                            <strong class="other-text">هەورامی:</strong> ${record["هەورامی"]}<br>`;
-        } else if (record["هەورامی"] && record["هەورامی"].toLowerCase().includes(searchTerm)) {
-            topColumn = `<strong class="top-text">هەورامی:</strong> ${record["هەورامی"]}<br>`;
-            otherColumns = `<strong class="other-text">سۆرانی:</strong> ${record["سۆرانی"]}<br>
-                            <strong class="other-text">بادینی:</strong> ${record["بادینی"]}<br>`;
+    async function searchData() {
+        let searchTerm = searchInput.value.trim().toLowerCase();
+        if (!searchTerm) {
+            output.innerHTML = "Please enter a search term.";
+            return;
         }
 
-        outputHTML += `<div class="result">${topColumn}${otherColumns}</div>`;
+        let data = await fetchData();
+        let results = data.filter(row =>
+            row["سۆرانی"]?.toLowerCase().includes(searchTerm) ||
+            row["بادینی"]?.toLowerCase().includes(searchTerm) ||
+            row["هەورامی"]?.toLowerCase().includes(searchTerm)
+        );
+
+        if (results.length === 0) {
+            output.innerHTML = "No results found.";
+            return;
+        }
+
+        let outputHTML = "";
+        results.forEach(row => {
+            let searchInSorani = row["سۆرانی"]?.toLowerCase().includes(searchTerm);
+            let searchInBadini = row["بادینی"]?.toLowerCase().includes(searchTerm);
+            let searchInHawrami = row["هەورامی"]?.toLowerCase().includes(searchTerm);
+
+            let soraniColor = searchInSorani ? "#012169" : "#f5c400";
+            let badiniColor = searchInBadini ? "#012169" : "#f5c400";
+            let hawramiColor = searchInHawrami ? "#012169" : "#f5c400";
+
+            outputHTML += `
+                <div class="result">
+                    <strong style="color: ${soraniColor};">سۆرانی:</strong> <span style="color: #000;">${row["سۆرانی"] || "N/A"}</span><br>
+                    <strong style="color: ${badiniColor};">بادینی:</strong> <span style="color: #000;">${row["بادینی"] || "N/A"}</span><br>
+                    <strong style="color: ${hawramiColor};">هەورامی:</strong> <span style="color: #000;">${row["هەورامی"] || "N/A"}</span>
+                </div><br>
+            `;
+        });
+
+        output.innerHTML = outputHTML;
+    }
+
+    searchButton.addEventListener("click", searchData);
+    clearButton.addEventListener("click", function () {
+        searchInput.value = "";
+        output.innerHTML = "";
     });
-
-    document.getElementById('output').innerHTML = outputHTML;
-}
-
-function searchData() {
-    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-
-    if (!searchTerm) {
-        document.getElementById('output').innerHTML = "Please enter a search term.";
-        return;
-    }
-
-    const filteredData = sheetData.filter(record =>
-        (record["بادینی"] && record["بادینی"].toLowerCase().includes(searchTerm)) ||
-        (record["سۆرانی"] && record["سۆرانی"].toLowerCase().includes(searchTerm)) ||
-        (record["هەورامی"] && record["هەورامی"].toLowerCase().includes(searchTerm))
-    );
-
-    if (filteredData.length === 0) {
-        document.getElementById('output').innerHTML = "No results found.";
-    } else {
-        displayData(filteredData, searchTerm);
-    }
-}
-
-document.getElementById('searchButton').addEventListener('click', searchData);
-document.getElementById('clearButton').addEventListener('click', () => {
-    document.getElementById('searchInput').value = '';
-    document.getElementById('output').innerHTML = '';
 });
