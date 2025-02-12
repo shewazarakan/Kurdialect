@@ -1,11 +1,69 @@
 body {
     font-family: Arial, sans-serif;
-    text-align: center;
     margin: 0;
-    padding: 0;
-    background-color: #f0f0f0;
+    padding: 20px;
+    text-align: center;
 }
 
+.search-container {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+input {
+    padding: 10px;
+    width: 90%;
+    max-width: 400px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    max-width: 400px;
+}
+
+button {
+    padding: 10px 15px;
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    width: 48%;
+}
+
+#searchButton {
+    background-color: #012169;
+    color: white;
+}
+
+#clearButton {
+    background-color: #f5c400;
+    color: white;
+}
+
+/* Output Styling */
+#outputContainer {
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-top: 20px;
+}
+
+#output {
+    font-size: 1.2em;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Loading Screen */
 #loadingScreen {
     display: none;
     position: fixed;
@@ -38,72 +96,15 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-#searchContainer {
-    margin: 20px auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
-#searchInput {
-    padding: 10px;
-    width: 90%;
-    max-width: 400px;
-    font-size: 1em;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 10px;
-}
-
-#searchContainer div {
-    display: flex;
-    justify-content: space-between;
-    width: 90%;
-    max-width: 400px;
-}
-
-button {
+/* Install Button */
+#installButton {
     padding: 10px 15px;
     font-size: 1em;
     cursor: pointer;
-    border: none;
-    border-radius: 4px;
-    width: 48%;
-}
-
-#searchButton {
     background-color: #012169;
     color: white;
-}
-
-#clearButton {
-    background-color: #f5c400;
-    color: white;
-}
-
-#outputContainer {
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    margin: 20px auto;
-    width: 90%;
-    max-width: 600px;
-    text-align: left;
-}
-
-h3 {
-    font-size: 1.5em;
-    color: #012169;
-}
-
-#output div {
-    padding: 15px;
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
-    background-color: #fff;
-    border-radius: 8px;
-    font-size: 1.2em;
-    line-height: 1.6;
+    border: none;
+    border-radius: 4px;
+    display: none;
+    margin-top: 20px;
 }
