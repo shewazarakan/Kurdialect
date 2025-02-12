@@ -1,77 +1,43 @@
-const searchButton = document.getElementById('search-btn');
-const clearButton = document.getElementById('clear-btn');
-const installButton = document.getElementById('install-button');
-const searchInput = document.getElementById('search-input');
-const resultsBox = document.getElementById('search-results-box');
-const resultsBody = document.getElementById('results-body');
+document.getElementById("searchButton").addEventListener("click", searchData);
+document.getElementById("clearButton").addEventListener("click", clearSearch);
 
-// Sample Data (replace this with actual data from SheetDB)
-const data = [
-    { input: 'Kurdish', sorani: 'کوردی', badini: 'کوردی' },
-    { input: 'Language', sorani: 'زمان', badini: 'زمان' },
-    // Add more data as needed
-];
-
-// Event Listeners
-searchButton.addEventListener('click', searchData);
-clearButton.addEventListener('click', clearResults);
-
-// Search Function
 function searchData() {
-    const query = searchInput.value.trim().toLowerCase();
-    if (query) {
-        const results = data.filter(item =>
-            item.input.toLowerCase().includes(query)
-        );
-        displayResults(results);
-    }
-}
+    let query = document.getElementById("searchBox").value.trim().toLowerCase();
+    if (!query) return;
 
-// Display Results
-function displayResults(results) {
-    resultsBody.innerHTML = '';
-    if (results.length > 0) {
-        results.forEach(result => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${result.input}</td>
-                <td>${result.sorani}</td>
-                <td>${result.badini}</td>
-            `;
-            resultsBody.appendChild(row);
-        });
-    } else {
-        resultsBody.innerHTML = '<tr><td colspan="3">No results found.</td></tr>';
-    }
-}
+    fetch("https://sheetdb.io/api/v1/cg3gwaj5yfawg")
+        .then(response => response.json())
+        .then(data => {
+            let filteredData = data.filter(row =>
+                row["سۆرانی"].toLowerCase().includes(query) ||
+                row["بادینی"].toLowerCase().includes(query) ||
+                row["هەورامی"].toLowerCase().includes(query)
+            );
 
-// Clear Results
-function clearResults() {
-    searchInput.value = '';
-    resultsBody.innerHTML = '';
-}
+            let resultsContainer = document.getElementById("resultsContainer");
+            resultsContainer.innerHTML = "";
 
-// Install Button Logic
-let deferredPrompt;
+            if (filteredData.length > 0) {
+                filteredData.forEach(row => {
+                    let resultRow = document.createElement("div");
+                    resultRow.classList.add("result-row");
+                    resultRow.innerHTML = `
+                        <span class="input-column">${row["سۆرانی"]}</span>
+                        <span class="output-column">${row["بادینی"]}</span>
+                        <span class="output-column">${row["هەورامی"]}</span>
+                    `;
+                    resultsContainer.appendChild(resultRow);
+                });
 
-window.addEventListener('beforeinstallprompt', (e) => {
-    // Prevent the default behavior
-    e.preventDefault();
-    deferredPrompt = e;
-
-    // Show the install button
-    installButton.style.display = 'flex';
-
-    installButton.addEventListener('click', () => {
-        // Prompt the user for installation
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                console.log('User accepted the A2HS prompt');
+                document.getElementById("searchResults").style.display = "block";
             } else {
-                console.log('User dismissed the A2HS prompt');
+                resultsContainer.innerHTML = "<p>No results found.</p>";
             }
-            deferredPrompt = null;
-        });
-    });
-});
+        })
+        .catch(error => console.error("Error fetching data:", error));
+}
+
+function clearSearch() {
+    document.getElementById("searchBox").value = "";
+    document.getElementById("searchResults").style.display = "none";
+}
