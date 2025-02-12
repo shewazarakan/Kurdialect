@@ -5,34 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kurdişiv</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loadingScreen">
-        <div class="spinner"></div>
-        <p>Loading...</p>
+
+<!-- Loading Spinner -->
+<div id="loadingScreen">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+</div>
+
+<!-- Search Input -->
+<div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search">
+    <div class="buttons">
+        <button id="searchButton">Search</button>
+        <button id="clearButton">Clear</button>
     </div>
+</div>
 
-    <!-- Search Input -->
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search">
-        <div class="buttons">
-            <button id="searchButton">Search</button>
-            <button id="clearButton">Clear</button>
-        </div>
-    </div>
+<!-- Output Container -->
+<div id="outputContainer">
+    <h3>Search Results:</h3>
+    <div id="output"></div>
+</div>
 
-    <!-- Output Container -->
-    <div id="outputContainer">
-        <h3>Search Results:</h3>
-        <pre id="rawOutput"></pre>
-        <div id="output"></div>
-    </div>
-
-    <!-- Input Data Container -->
-    <div id="inputDataContainer"></div>
-
-    <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
