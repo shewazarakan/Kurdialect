@@ -19,28 +19,40 @@ function searchData() {
     }
 
     // Update the results and apply styles
+    const searchResults = document.getElementById('searchResults');
+    searchResults.innerHTML = '<h2>Search Results</h2>'; // Clear previous results and add header
+
     ['sorani', 'badini', 'hawrami'].forEach(column => {
-        const resultContainer = document.getElementById(`${column}ResultContainer`);
-        const resultElement = document.getElementById(`${column}Result`);
-        const labelElement = document.getElementById(`${column}Label`);
-        resultElement.textContent = data[column] || 'No data';
+        const resultText = data[column] || 'No data';
+        const resultDiv = document.createElement('div');
+        const columnNameSpan = document.createElement('span');
+        columnNameSpan.classList.add('column-name');
+        columnNameSpan.textContent = `${getColumnDisplayName(column)}: `;
+        const resultSpan = document.createElement('span');
+        resultSpan.textContent = resultText;
 
         if (column === inputColumn) {
-            labelElement.classList.add('input-column');
-            labelElement.classList.remove('output-column');
+            columnNameSpan.classList.add('input-column');
         } else {
-            labelElement.classList.add('output-column');
-            labelElement.classList.remove('input-column');
+            columnNameSpan.classList.add('output-column');
         }
+
+        resultDiv.appendChild(columnNameSpan);
+        resultDiv.appendChild(resultSpan);
+        searchResults.appendChild(resultDiv);
     });
 }
 
 function clearData() {
     document.getElementById('searchInput').value = '';
-    ['sorani', 'badini', 'hawrami'].forEach(column => {
-        const resultElement = document.getElementById(`${column}Result`);
-        const labelElement = document.getElementById(`${column}Label`);
-        resultElement.textContent = '';
-        labelElement.classList.remove('input-column', 'output-column');
-    });
+    document.getElementById('searchResults').innerHTML = '';
+}
+
+function getColumnDisplayName(column) {
+    const columnNames = {
+        sorani: 'سۆرانی',
+        badini: 'بادینی',
+        hawrami: 'هەورامی'
+    };
+    return columnNames[column] || column;
 }
