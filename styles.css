@@ -44,23 +44,6 @@ button {
     border-radius: 5px;
 }
 
-/* Column Name Styles */
-.column-name-input {
-    color: #012169; /* Input column name color */
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
-    text-align: center;
-}
-
-.column-name-output {
-    color: #f5c400; /* Output column names color */
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
-    text-align: center;
-}
-
 /* Search Results Box */
 .search-results {
     margin-top: 20px;
@@ -68,4 +51,22 @@ button {
     border: 1px solid #ddd;
     border-radius: 5px;
     background-color: #f9f9f9;
+    text-align: left;
+}
+
+.search-results h2 {
+    font-weight: bold;
+    text-align: center;
+}
+
+.column-name {
+    font-weight: bold;
+}
+
+.input-column {
+    color: #012169;
+}
+
+.output-column {
+    color: #f5c400;
 }
