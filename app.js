@@ -1,110 +1,77 @@
-// Fetch data from SheetDB
-async function fetchData() {
-    const loadingScreen = document.getElementById("loading-screen");
-    loadingScreen.style.display = "block"; // Show loading screen
+const searchButton = document.getElementById('search-btn');
+const clearButton = document.getElementById('clear-btn');
+const installButton = document.getElementById('install-button');
+const searchInput = document.getElementById('search-input');
+const resultsBox = document.getElementById('search-results-box');
+const resultsBody = document.getElementById('results-body');
 
-    try {
-        const response = await fetch('https://sheetdb.io/api/v1/cg3gwaj5yfawg');
-        if (!response.ok) {
-            throw new Error("Network response was not ok.");
-        }
-        const data = await response.json();
+// Sample Data (replace this with actual data from SheetDB)
+const data = [
+    { input: 'Kurdish', sorani: 'کوردی', badini: 'کوردی' },
+    { input: 'Language', sorani: 'زمان', badini: 'زمان' },
+    // Add more data as needed
+];
 
-        // Hide loading screen and return data once fetched
-        loadingScreen.style.display = "none";
-        return data;
-    } catch (error) {
-        console.error("Error fetching data:", error);
-        loadingScreen.style.display = "none"; // Hide loading screen
-        alert("Failed to load data");
+// Event Listeners
+searchButton.addEventListener('click', searchData);
+clearButton.addEventListener('click', clearResults);
+
+// Search Function
+function searchData() {
+    const query = searchInput.value.trim().toLowerCase();
+    if (query) {
+        const results = data.filter(item =>
+            item.input.toLowerCase().includes(query)
+        );
+        displayResults(results);
     }
 }
 
-// Search and display results
-async function searchData() {
-    const searchInput = document.getElementById("search-input").value.toLowerCase();
-    const resultsContainer = document.getElementById("search-results");
-
-    if (!searchInput) {
-        resultsContainer.innerHTML = "";
-        return;
-    }
-
-    const data = await fetchData();
-    const filteredResults = data.filter(item => 
-        item["سۆرانی"].toLowerCase().includes(searchInput) ||
-        item["بادینی"].toLowerCase().includes(searchInput) ||
-        item["هەورامی"].toLowerCase().includes(searchInput)
-    );
-
-    displayResults(filteredResults);
-}
-
-// Display the filtered results
+// Display Results
 function displayResults(results) {
-    const resultsContainer = document.getElementById("search-results");
-    resultsContainer.innerHTML = ""; // Clear any previous results
-
-    if (results.length === 0) {
-        resultsContainer.innerHTML = "<div>No results found</div>";
-        return;
+    resultsBody.innerHTML = '';
+    if (results.length > 0) {
+        results.forEach(result => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${result.input}</td>
+                <td>${result.sorani}</td>
+                <td>${result.badini}</td>
+            `;
+            resultsBody.appendChild(row);
+        });
+    } else {
+        resultsBody.innerHTML = '<tr><td colspan="3">No results found.</td></tr>';
     }
-
-    results.forEach(result => {
-        const resultElement = document.createElement("div");
-        resultElement.classList.add("search-result-item");
-
-        // Display input and output columns
-        resultElement.innerHTML = `
-            <div><span class="column-header">سۆرانی:</span> ${result["سۆرانی"]}</div>
-            <div><span class="output-column">بادینی:</span> ${result["بادینی"]}</div>
-            <div><span class="output-column">هەورامی:</span> ${result["هەورامی"]}</div>
-        `;
-
-        resultsContainer.appendChild(resultElement);
-    });
 }
 
-// Clear search input and results
-function clearData() {
-    document.getElementById("search-input").value = "";
-    document.getElementById("search-results").innerHTML = "";
+// Clear Results
+function clearResults() {
+    searchInput.value = '';
+    resultsBody.innerHTML = '';
 }
 
-// Handle Install Button functionality
+// Install Button Logic
 let deferredPrompt;
 
-window.addEventListener('beforeinstallprompt', (event) => {
-    event.preventDefault();
-    deferredPrompt = event;
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent the default behavior
+    e.preventDefault();
+    deferredPrompt = e;
 
-    const installButton = document.getElementById('install-button');
-    installButton.style.display = 'block';
+    // Show the install button
+    installButton.style.display = 'flex';
 
     installButton.addEventListener('click', () => {
+        // Prompt the user for installation
         deferredPrompt.prompt();
-
-        deferredPrompt.userChoice
-            .then((choiceResult) => {
-                console.log(choiceResult.outcome);
-                if (choiceResult.outcome === 'accepted') {
-                    console.log('User accepted the A2HS prompt');
-                } else {
-                    console.log('User dismissed the A2HS prompt');
-                }
-                deferredPrompt = null;
-            });
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('User accepted the A2HS prompt');
+            } else {
+                console.log('User dismissed the A2HS prompt');
+            }
+            deferredPrompt = null;
+        });
     });
-});
-
-// Event listeners for buttons
-document.getElementById("search-button").addEventListener("click", searchData);
-document.getElementById("clear-button").addEventListener("click", clearData);
-
-// Responsive fixes for mobile view
-window.addEventListener("resize", () => {
-    if (window.innerWidth <= 768) {
-        const inputContainer = document.querySelector(".input-container");
-        inputContainer.style.flexDirection = "column";
-    }
 });
