@@ -1,14 +1,71 @@
-/* Column name styles */
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+/* Search and Buttons Layout */
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.search-btn {
+    background-color: #012169;
+    color: white;
+    border-radius: 5px;
+}
+
+.clear-btn {
+    background-color: #f5c400;
+    color: black;
+    border-radius: 5px;
+}
+
+/* Column Name Styles */
 .column-name-input {
     color: #012169; /* Input column name color */
     font-weight: bold;
-    display: block; /* Ensures it appears on a separate row */
+    display: block;
     margin-bottom: 5px;
+    text-align: center;
 }
 
 .column-name-output {
     color: #f5c400; /* Output column names color */
     font-weight: bold;
-    display: block; /* Ensures they appear on separate rows */
+    display: block;
     margin-bottom: 5px;
+    text-align: center;
+}
+
+/* Search Results Box */
+.search-results {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
 }
