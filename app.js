@@ -1,69 +1,70 @@
 document.addEventListener("DOMContentLoaded", function () {
-    let searchButton = document.getElementById("searchButton");
-    let clearButton = document.getElementById("clearButton");
-    let searchInput = document.getElementById("searchInput");
-    let output = document.getElementById("output");
-    let loadingScreen = document.getElementById("loadingScreen");
+    const API_URL = "https://sheetdb.io/api/v1/cg3gwaj5yfawg";
+    
+    const searchInput = document.getElementById("searchInput");
+    const searchButton = document.getElementById("searchButton");
+    const clearButton = document.getElementById("clearButton");
+    const outputContainer = document.getElementById("output");
+    const loadingScreen = document.getElementById("loadingScreen");
 
-    async function fetchData() {
+    let sheetData = [];
+
+    // Fetch Data from Google Sheets
+    function fetchData() {
         loadingScreen.style.display = "flex";
-        try {
-            let response = await fetch("https://sheetdb.io/api/v1/cg3gwaj5yfawg");
-            let data = await response.json();
-            return data;
-        } catch (error) {
-            console.error("Error fetching data:", error);
-            output.innerHTML = "Error fetching data.";
-            return [];
-        } finally {
-            loadingScreen.style.display = "none";
-        }
+        fetch(API_URL)
+            .then(response => response.json())
+            .then(data => {
+                sheetData = data;
+                loadingScreen.style.display = "none";
+            })
+            .catch(error => {
+                console.error("Error fetching data:", error);
+                outputContainer.innerHTML = `<p style="color: red;">Error loading data. Please try again.</p>`;
+                loadingScreen.style.display = "none";
+            });
     }
 
-    async function searchData() {
-        let searchTerm = searchInput.value.trim().toLowerCase();
+    // Call fetchData when the page loads
+    fetchData();
+
+    // Function to search data
+    function searchData() {
+        const searchTerm = searchInput.value.trim().toLowerCase();
         if (!searchTerm) {
-            output.innerHTML = "Please enter a search term.";
+            outputContainer.innerHTML = "<p>Please enter a search term.</p>";
             return;
         }
 
-        let data = await fetchData();
-        let results = data.filter(row =>
-            row["سۆرانی"]?.toLowerCase().includes(searchTerm) ||
-            row["بادینی"]?.toLowerCase().includes(searchTerm) ||
-            row["هەورامی"]?.toLowerCase().includes(searchTerm)
+        const results = sheetData.filter(row =>
+            Object.values(row).some(value => value.toLowerCase().includes(searchTerm))
         );
 
         if (results.length === 0) {
-            output.innerHTML = "No results found.";
+            outputContainer.innerHTML = "<p>No results found.</p>";
             return;
         }
 
-        let outputHTML = "";
+        // Display Results
+        outputContainer.innerHTML = `<h3 style="font-size: 1.5em;">Search Results:</h3>`;
         results.forEach(row => {
-            let searchInSorani = row["سۆرانی"]?.toLowerCase().includes(searchTerm);
-            let searchInBadini = row["بادینی"]?.toLowerCase().includes(searchTerm);
-            let searchInHawrami = row["هەورامی"]?.toLowerCase().includes(searchTerm);
+            let searchColumn = Object.keys(row).find(key => row[key].toLowerCase().includes(searchTerm));
+            let columnsHTML = Object.keys(row).map(key => {
+                let headerColor = key === searchColumn ? "#012169" : "#f5c400";
+                return `<p><strong style="color: ${headerColor};">${key}:</strong> <span style="color: black;">${row[key]}</span></p>`;
+            }).join("");
 
-            let soraniColor = searchInSorani ? "#012169" : "#f5c400";
-            let badiniColor = searchInBadini ? "#012169" : "#f5c400";
-            let hawramiColor = searchInHawrami ? "#012169" : "#f5c400";
-
-            outputHTML += `
-                <div class="result">
-                    <strong style="color: ${soraniColor};">سۆرانی:</strong> <span style="color: #000;">${row["سۆرانی"] || "N/A"}</span><br>
-                    <strong style="color: ${badiniColor};">بادینی:</strong> <span style="color: #000;">${row["بادینی"] || "N/A"}</span><br>
-                    <strong style="color: ${hawramiColor};">هەورامی:</strong> <span style="color: #000;">${row["هەورامی"] || "N/A"}</span>
-                </div><br>
-            `;
+            outputContainer.innerHTML += `
+                <div style="padding: 15px; border: 1px solid #ccc; margin-bottom: 10px; background-color: #fff; border-radius: 8px;">
+                    ${columnsHTML}
+                </div>`;
         });
-
-        output.innerHTML = outputHTML;
     }
 
+    // Event Listeners
     searchButton.addEventListener("click", searchData);
-    clearButton.addEventListener("click", function () {
+    clearButton.addEventListener("click", () => {
         searchInput.value = "";
-        output.innerHTML = "";
+        outputContainer.innerHTML = "";
     });
 });
