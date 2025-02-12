@@ -1,73 +1,14 @@
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-}
-
-.container {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-#searchBox {
-    padding: 10px;
-    font-size: 16px;
-    width: 50%;
-}
-
-#searchButton {
-    background-color: #012169;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-}
-
-#clearButton {
-    background-color: #f5c400;
-    color: black;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-}
-
-#searchResults {
-    margin-top: 20px;
-    padding: 10px;
-    background: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    display: none;
-}
-
-.column-header {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
+/* Column name styles */
+.column-name-input {
+    color: #012169; /* Input column name color */
     font-weight: bold;
+    display: block; /* Ensures it appears on a separate row */
+    margin-bottom: 5px;
 }
 
-.input-column {
-    color: #012169;
-}
-
-.output-column {
-    color: #f5c400;
-}
-
-#installButton {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #f5c400;
-    color: black;
-    border: none;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    font-size: 24px;
-    cursor: pointer;
+.column-name-output {
+    color: #f5c400; /* Output column names color */
+    font-weight: bold;
+    display: block; /* Ensures they appear on separate rows */
+    margin-bottom: 5px;
 }
