@@ -9,18 +9,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let sheetData = [];
 
-    // Fetch Data from Google Sheets
+    // Fetch Data from Google Sheets (with offline caching)
     function fetchData() {
         loadingScreen.style.display = "flex";
+
         fetch(API_URL)
             .then(response => response.json())
             .then(data => {
                 sheetData = data;
+                localStorage.setItem("cachedData", JSON.stringify(data)); // Cache the data
+                localStorage.setItem("lastUpdated", Date.now()); // Store last update time
                 loadingScreen.style.display = "none";
             })
             .catch(error => {
                 console.error("Error fetching data:", error);
-                outputContainer.innerHTML = `<p style="color: red;">Error loading data. Please try again.</p>`;
+                let cachedData = localStorage.getItem("cachedData");
+                if (cachedData) {
+                    sheetData = JSON.parse(cachedData);
+                    outputContainer.innerHTML = `<p style="color: orange;">Offline mode: Using cached data.</p>`;
+                } else {
+                    outputContainer.innerHTML = `<p style="color: red;">Error loading data. Please check your internet connection.</p>`;
+                }
                 loadingScreen.style.display = "none";
             });
     }
@@ -67,4 +76,9 @@ document.addEventListener("DOMContentLoaded", function () {
         searchInput.value = "";
         outputContainer.innerHTML = "";
     });
+
+    // Periodically refresh data every 30 minutes if online
+    setInterval(() => {
+        if (navigator.onLine) fetchData();
+    }, 30 * 60 * 1000);
 });
