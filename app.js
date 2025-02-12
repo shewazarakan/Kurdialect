@@ -1,43 +1,46 @@
-document.getElementById("searchButton").addEventListener("click", searchData);
-document.getElementById("clearButton").addEventListener("click", clearSearch);
-
 function searchData() {
-    let query = document.getElementById("searchBox").value.trim().toLowerCase();
-    if (!query) return;
+    const searchTerm = document.getElementById('searchInput').value.trim();
+    if (!searchTerm) return;
 
-    fetch("https://sheetdb.io/api/v1/cg3gwaj5yfawg")
-        .then(response => response.json())
-        .then(data => {
-            let filteredData = data.filter(row =>
-                row["سۆرانی"].toLowerCase().includes(query) ||
-                row["بادینی"].toLowerCase().includes(query) ||
-                row["هەورامی"].toLowerCase().includes(query)
-            );
+    // Simulated data retrieval
+    const data = {
+        sorani: 'دانا٢',
+        badini: 'داتا٣',
+        hawrami: 'داتا'
+    };
 
-            let resultsContainer = document.getElementById("resultsContainer");
-            resultsContainer.innerHTML = "";
+    // Determine which column is the input column
+    let inputColumn = '';
+    for (const [key, value] of Object.entries(data)) {
+        if (value === searchTerm) {
+            inputColumn = key;
+            break;
+        }
+    }
 
-            if (filteredData.length > 0) {
-                filteredData.forEach(row => {
-                    let resultRow = document.createElement("div");
-                    resultRow.classList.add("result-row");
-                    resultRow.innerHTML = `
-                        <span class="input-column">${row["سۆرانی"]}</span>
-                        <span class="output-column">${row["بادینی"]}</span>
-                        <span class="output-column">${row["هەورامی"]}</span>
-                    `;
-                    resultsContainer.appendChild(resultRow);
-                });
+    // Update the results and apply styles
+    ['sorani', 'badini', 'hawrami'].forEach(column => {
+        const resultContainer = document.getElementById(`${column}ResultContainer`);
+        const resultElement = document.getElementById(`${column}Result`);
+        const labelElement = document.getElementById(`${column}Label`);
+        resultElement.textContent = data[column] || 'No data';
 
-                document.getElementById("searchResults").style.display = "block";
-            } else {
-                resultsContainer.innerHTML = "<p>No results found.</p>";
-            }
-        })
-        .catch(error => console.error("Error fetching data:", error));
+        if (column === inputColumn) {
+            labelElement.classList.add('input-column');
+            labelElement.classList.remove('output-column');
+        } else {
+            labelElement.classList.add('output-column');
+            labelElement.classList.remove('input-column');
+        }
+    });
 }
 
-function clearSearch() {
-    document.getElementById("searchBox").value = "";
-    document.getElementById("searchResults").style.display = "none";
+function clearData() {
+    document.getElementById('searchInput').value = '';
+    ['sorani', 'badini', 'hawrami'].forEach(column => {
+        const resultElement = document.getElementById(`${column}Result`);
+        const labelElement = document.getElementById(`${column}Label`);
+        resultElement.textContent = '';
+        labelElement.classList.remove('input-column', 'output-column');
+    });
 }
