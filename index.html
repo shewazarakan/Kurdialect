@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kurdişiv</title>
     <link rel="stylesheet" href="styles.css">
-    <script defer src="app.js"></script>
+    <script defer src="app.js"></script> <!-- Ensure the script is loaded after the DOM is ready -->
 </head>
 <body>
     <div class="container">
@@ -17,20 +17,8 @@
         </div>
 
         <!-- Search Results Box -->
-        <div class="search-results">
-            <h2>Search Results</h2>
-            <div id="soraniResultContainer">
-                <span class="column-name" id="soraniLabel">سۆرانی:</span>
-                <span id="soraniResult"></span>
-            </div>
-            <div id="badiniResultContainer">
-                <span class="column-name" id="badiniLabel">بادینی:</span>
-                <span id="badiniResult"></span>
-            </div>
-            <div id="hawramiResultContainer">
-                <span class="column-name" id="hawramiLabel">هەورامی:</span>
-                <span id="hawramiResult"></span>
-            </div>
+        <div class="search-results" id="searchResults">
+            <!-- This will remain empty until a search is performed -->
         </div>
     </div>
 </body>
