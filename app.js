@@ -1,81 +1,74 @@
-// Function to fetch data from SheetDB and perform the search
-async function searchData() {
-    const searchInput = document.getElementById('searchInput');
-    if (!searchInput) {
-        console.error('Search input element not found');
-        return;
-    }
+let sheetData = [];
 
-    const searchTerm = searchInput.value.trim();
-    if (!searchTerm) return;
+function fetchData() {
+    document.getElementById('loadingScreen').style.display = 'flex';
 
-    const apiUrl = 'https://sheetdb.io/api/v1/cg3gwaj5yfawg/search?limit=1&casesensitive=false&sheet=database3&search=' + encodeURIComponent(searchTerm);
-
-    try {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-
-        if (data.length === 0) {
-            displayNoResults();
-        } else {
-            displayResults(data[0], searchTerm);
-        }
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
+    fetch('https://opensheet.elk.sh/YOUR_GOOGLE_SHEET_ID/database2')
+        .then(response => response.json())
+        .then(data => {
+            sheetData = data;
+            document.getElementById('output').innerHTML = "";
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            document.getElementById('output').innerHTML = `Error fetching data: ${error.message}`;
+        })
+        .finally(() => {
+            document.getElementById('loadingScreen').style.display = 'none';
+        });
 }
 
-// Function to display search results
-function displayResults(row, searchTerm) {
-    const searchResults = document.getElementById('searchResults');
-    if (!searchResults) {
-        console.error('Search results element not found');
-        return;
-    }
+fetchData();
 
-    searchResults.innerHTML = '<h2>Search Results</h2>';
+function displayData(data, searchTerm) {
+    let outputHTML = '';
+    data.forEach(record => {
+        let topColumn = '';
+        let otherColumns = '';
 
-    const columns = ['سۆرانی', 'هەورامی', 'بادینی'];
-    columns.forEach((col) => {
-        if (row[col]) {
-            const resultDiv = document.createElement('div');
-            resultDiv.classList.add('result-item');
-
-            const columnName = document.createElement('span');
-            columnName.classList.add('column-name');
-            columnName.textContent = `${col}:`;
-
-            const columnData = document.createElement('span');
-            columnData.classList.add('column-data');
-            columnData.textContent = row[col];
-
-            resultDiv.appendChild(columnName);
-            resultDiv.appendChild(columnData);
-            searchResults.appendChild(resultDiv);
+        if (record["بادینی"] && record["بادینی"].toLowerCase().includes(searchTerm)) {
+            topColumn = `<strong class="top-text">بادینی:</strong> ${record["بادینی"]}<br>`;
+            otherColumns = `<strong class="other-text">سۆرانی:</strong> ${record["سۆرانی"]}<br>
+                            <strong class="other-text">هەورامی:</strong> ${record["هەورامی"]}<br>`;
+        } else if (record["سۆرانی"] && record["سۆرانی"].toLowerCase().includes(searchTerm)) {
+            topColumn = `<strong class="top-text">سۆرانی:</strong> ${record["سۆرانی"]}<br>`;
+            otherColumns = `<strong class="other-text">بادینی:</strong> ${record["بادینی"]}<br>
+                            <strong class="other-text">هەورامی:</strong> ${record["هەورامی"]}<br>`;
+        } else if (record["هەورامی"] && record["هەورامی"].toLowerCase().includes(searchTerm)) {
+            topColumn = `<strong class="top-text">هەورامی:</strong> ${record["هەورامی"]}<br>`;
+            otherColumns = `<strong class="other-text">سۆرانی:</strong> ${record["سۆرانی"]}<br>
+                            <strong class="other-text">بادینی:</strong> ${record["بادینی"]}<br>`;
         }
+
+        outputHTML += `<div class="result">${topColumn}${otherColumns}</div>`;
     });
+
+    document.getElementById('output').innerHTML = outputHTML;
 }
 
-// Function to display a message when no results are found
-function displayNoResults() {
-    const searchResults = document.getElementById('searchResults');
-    if (!searchResults) {
-        console.error('Search results element not found');
+function searchData() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    if (!searchTerm) {
+        document.getElementById('output').innerHTML = "Please enter a search term.";
         return;
     }
 
-    searchResults.innerHTML = '<h2>No results found</h2>';
-}
+    const filteredData = sheetData.filter(record =>
+        (record["بادینی"] && record["بادینی"].toLowerCase().includes(searchTerm)) ||
+        (record["سۆرانی"] && record["سۆرانی"].toLowerCase().includes(searchTerm)) ||
+        (record["هەورامی"] && record["هەورامی"].toLowerCase().includes(searchTerm))
+    );
 
-// Function to clear search results
-function clearData() {
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) {
-        searchInput.value = '';
-    }
-
-    const searchResults = document.getElementById('searchResults');
-    if (searchResults) {
-        searchResults.innerHTML = '';
+    if (filteredData.length === 0) {
+        document.getElementById('output').innerHTML = "No results found.";
+    } else {
+        displayData(filteredData, searchTerm);
     }
 }
+
+document.getElementById('searchButton').addEventListener('click', searchData);
+document.getElementById('clearButton').addEventListener('click', () => {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('output').innerHTML = '';
+});
