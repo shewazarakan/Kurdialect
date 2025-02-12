@@ -1,77 +1,67 @@
+let databaseURL = "https://sheetdb.io/api/v1/cg3gwaj5yfawg";
 let sheetData = [];
 
 function fetchData() {
-  document.getElementById('loadingScreen').style.display = 'flex'; // Show loading screen
+    document.getElementById('loadingScreen').style.display = 'flex';
 
-  fetch('https://sheetdb.io/api/v1/cg3gwaj5yfawg')
-    .then(response => response.json())
-    .then(data => {
-      sheetData = data; // Store data but don't display it yet
-      document.getElementById('output').innerHTML = ""; // Ensure no default display
-    })
-    .catch(error => {
-      console.error('Error fetching data:', error);
-      document.getElementById('output').innerHTML = `Error fetching data: ${error.message}`;
-    })
-    .finally(() => {
-      document.getElementById('loadingScreen').style.display = 'none'; // Hide loading screen
-    });
+    fetch(databaseURL)
+        .then(response => response.json())
+        .then(data => {
+            sheetData = data;
+            document.getElementById('loadingScreen').style.display = 'none';
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            document.getElementById('loadingScreen').style.display = 'none';
+        });
 }
 
-fetchData(); // Fetch data on load
-
-function displayData(data, searchTerm) {
-  let outputHTML = '';
-
-  data.forEach(record => {
-    let topColumn = '';
-    let otherColumns = '';
-
-    if (record["بادینی"] && record["بادینی"].toLowerCase().includes(searchTerm)) {
-      topColumn = `<strong style="color: #012169;">بادینی:</strong> ${record["بادینی"]}<br>`;
-      otherColumns = `<strong style="color: #f5c400;">سۆرانی:</strong> ${record["سۆرانی"]}<br>
-                      <strong style="color: #f5c400;">هەورامی:</strong> ${record["هەورامی"]}<br>`;
-    } else if (record["سۆرانی"] && record["سۆرانی"].toLowerCase().includes(searchTerm)) {
-      topColumn = `<strong style="color: #012169;">سۆرانی:</strong> ${record["سۆرانی"]}<br>`;
-      otherColumns = `<strong style="color: #f5c400;">بادینی:</strong> ${record["بادینی"]}<br>
-                      <strong style="color: #f5c400;">هەورامی:</strong> ${record["هەورامی"]}<br>`;
-    } else if (record["هەورامی"] && record["هەورامی"].toLowerCase().includes(searchTerm)) {
-      topColumn = `<strong style="color: #012169;">هەورامی:</strong> ${record["هەورامی"]}<br>`;
-      otherColumns = `<strong style="color: #f5c400;">سۆرانی:</strong> ${record["سۆرانی"]}<br>
-                      <strong style="color: #f5c400;">بادینی:</strong> ${record["بادینی"]}<br>`;
-    }
-
-    outputHTML += `<div style="padding: 15px; border: 1px solid #ccc; margin-bottom: 10px; background-color: #fff; border-radius: 8px;">
-                    ${topColumn}${otherColumns}
-                   </div>`;
-  });
-
-  document.getElementById('output').innerHTML = outputHTML;
-}
+fetchData();
 
 function searchData() {
-  const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+    const output = document.getElementById('output');
 
-  if (!searchTerm) {
-    document.getElementById('output').innerHTML = "Please enter a search term.";
-    return;
-  }
+    if (!searchTerm) {
+        output.innerHTML = "Please enter a search term.";
+        return;
+    }
 
-  const filteredData = sheetData.filter(record =>
-    (record["بادینی"] && record["بادینی"].toLowerCase().includes(searchTerm)) ||
-    (record["سۆرانی"] && record["سۆرانی"].toLowerCase().includes(searchTerm)) ||
-    (record["هەورامی"] && record["هەورامی"].toLowerCase().includes(searchTerm))
-  );
+    let results = sheetData.filter(row =>
+        row["سۆرانی"]?.toLowerCase().includes(searchTerm) ||
+        row["بادینی"]?.toLowerCase().includes(searchTerm) ||
+        row["هەورامی"]?.toLowerCase().includes(searchTerm)
+    );
 
-  if (filteredData.length === 0) {
-    document.getElementById('output').innerHTML = "No results found.";
-  } else {
-    displayData(filteredData, searchTerm);
-  }
+    if (results.length === 0) {
+        output.innerHTML = "No results found.";
+    } else {
+        output.innerHTML = results.map(row => `
+            <div>
+                <strong>سۆرانی:</strong> ${row["سۆرانی"] || ''} <br>
+                <strong>بادینی:</strong> ${row["بادینی"] || ''} <br>
+                <strong>هەورامی:</strong> ${row["هەورامی"] || ''}
+            </div>
+        `).join("<hr>");
+    }
 }
 
 document.getElementById('searchButton').addEventListener('click', searchData);
 document.getElementById('clearButton').addEventListener('click', () => {
-  document.getElementById('searchInput').value = '';
-  document.getElementById('output').innerHTML = '';
+    document.getElementById('searchInput').value = '';
+    document.getElementById('output').innerHTML = '';
+});
+
+// Add to Home Screen
+let installPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    installPrompt = e;
+    document.getElementById('installButton').style.display = 'block';
+});
+
+document.getElementById('installButton').addEventListener('click', () => {
+    if (installPrompt) {
+        installPrompt.prompt();
+    }
 });
