@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search App</title>
+    <title>Kurdişiv</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
+    <script defer src="app.js"></script>
 </head>
 <body>
-    <!-- Loading Spinner -->
+
+    <!-- Loading Screen -->
     <div id="loadingScreen">
         <div class="spinner"></div>
         <p>Loading...</p>
     </div>
 
     <!-- Search Input -->
-    <div id="searchContainer">
+    <div class="search-container">
         <input type="text" id="searchInput" placeholder="Search">
-        <div>
+        <div class="buttons">
             <button id="searchButton">Search</button>
             <button id="clearButton">Clear</button>
         </div>
@@ -26,10 +28,12 @@
     <!-- Output Container -->
     <div id="outputContainer">
         <h3>Search Results:</h3>
-        <pre id="rawOutput"></pre>
+        <pre id="rawOutput" style="display: none;"></pre>
         <div id="output"></div>
     </div>
 
-    <script src="app.js"></script>
+    <!-- Install Button -->
+    <button id="installButton">Install Kurdişiv</button>
+
 </body>
 </html>
