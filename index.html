@@ -18,51 +18,46 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f9f9f9;
         }
+
         .container {
             padding: 20px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-        }
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
+            width: 100%;
+            max-width: 800px;
             justify-content: center;
-            align-items: center;
         }
-        .loading-text {
-            color: white;
-            font-size: 24px;
-        }
-        .input-container, .output-container {
+
+        .input-container {
             display: flex;
             justify-content: space-between;
             width: 100%;
             margin-bottom: 15px;
         }
-        input, select {
+
+        input, button {
             padding: 10px;
             font-size: 16px;
-            width: 30%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 32%;
         }
+
         .button {
             background-color: #012169;
             color: white;
-            padding: 10px 15px;
-            font-size: 16px;
             cursor: pointer;
-            border: none;
-            transition: 0.3s;
         }
+
         .button-clear {
             background-color: #f5c400;
         }
+
         .install-button {
             position: fixed;
             bottom: 20px;
@@ -75,20 +70,54 @@
             cursor: pointer;
             display: none;
         }
+
         .search-results {
             width: 100%;
             max-height: 300px;
             overflow-y: auto;
             margin-top: 20px;
-        }
-        .search-result-item {
-            background: #f1f1f1;
             padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        .search-result-item {
+            padding: 10px;
+            background: #f1f1f1;
             margin: 5px 0;
+            border-radius: 5px;
+        }
+
+        .column-header {
+            font-weight: bold;
+            color: #012169; /* Same color as Search button */
+        }
+
+        .output-column {
+            color: #f5c400; /* Same color as Clear button */
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 24px;
         }
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
     <div class="loading-screen" id="loading-screen">
         <div class="loading-text">Loading...</div>
     </div>
@@ -96,13 +125,15 @@
     <div class="container">
         <!-- Input Section -->
         <div class="input-container">
-            <input type="text" id="search-input" placeholder="Enter word" />
+            <input type="text" id="search-input" placeholder="Enter word">
             <button class="button" id="search-button">Search</button>
             <button class="button button-clear" id="clear-button">Clear</button>
         </div>
 
         <!-- Search Results Section -->
-        <div class="search-results" id="search-results"></div>
+        <div class="search-results" id="search-results">
+            <!-- Results will appear here -->
+        </div>
     </div>
 
     <!-- Install Button -->
