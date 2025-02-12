@@ -1,92 +1,98 @@
-// Service Worker Registration
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js')
-    .then(reg => console.log('Service Worker Registered', reg))
-    .catch(err => console.log('Service Worker Registration Failed', err));
-}
-
-// Install Button
-let installPrompt;
-const installBtn = document.getElementById('installButton');
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  installPrompt = e;
-  installBtn.style.display = 'block';
-});
-
-installBtn.addEventListener('click', () => {
-  if (installPrompt) {
-    installPrompt.prompt();
-    installPrompt.userChoice.then(choiceResult => {
-      if (choiceResult.outcome === 'accepted') {
-        console.log('User installed the app');
-      }
-      installPrompt = null;
-    });
-  }
-});
-
-// Loading Screen
-function showLoading() {
-  document.getElementById('loadingScreen').style.display = 'flex';
-}
-function hideLoading() {
-  document.getElementById('loadingScreen').style.display = 'none';
-}
-
-// Fetch Data
-let sheetURL = "https://sheetdb.io/api/v1/cg3gwaj5yfawg";
-let dataStore = [];
+let sheetData = [];
 
 function fetchData() {
-  showLoading();
-  fetch(sheetURL)
+    document.getElementById('loadingScreen').style.display = 'flex';
+
+    fetch('https://sheetdb.io/api/v1/cg3gwaj5yfawg')
     .then(response => response.json())
     .then(data => {
-      dataStore = data;
-      hideLoading();
+        sheetData = data;
+        document.getElementById('output').innerHTML = "";
     })
     .catch(error => {
-      console.error('Error fetching data:', error);
-      hideLoading();
+        console.error('Error fetching data:', error);
+        document.getElementById('output').innerHTML = `Error fetching data: ${error.message}`;
+    })
+    .finally(() => {
+        document.getElementById('loadingScreen').style.display = 'none';
     });
 }
 
-// Search Function
-function searchData() {
-  const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-  const outputDiv = document.getElementById('output');
+fetchData();
 
-  if (!searchTerm) {
-    outputDiv.innerHTML = "Please enter a search term.";
-    return;
-  }
+function displayData(data, searchTerm) {
+    let outputHTML = '';
+    data.forEach(record => {
+        let topColumn = '';
+        let otherColumns = '';
 
-  const results = dataStore.filter(entry => 
-    entry["سۆرانی"]?.toLowerCase().includes(searchTerm) ||
-    entry["بادینی"]?.toLowerCase().includes(searchTerm) ||
-    entry["هەورامی"]?.toLowerCase().includes(searchTerm)
-  );
+        if (record["بادینی"] && record["بادینی"].toLowerCase().includes(searchTerm)) {
+            topColumn = `<strong style="color: #012169;">بادینی:</strong> ${record["بادینی"]}<br>`;
+            otherColumns = `<strong style="color: #f5c400;">سۆرانی:</strong> ${record["سۆرانی"]}<br>
+                            <strong style="color: #f5c400;">هەورامی:</strong> ${record["هەورامی"]}<br>`;
+        } else if (record["سۆرانی"] && record["سۆرانی"].toLowerCase().includes(searchTerm)) {
+            topColumn = `<strong style="color: #012169;">سۆرانی:</strong> ${record["سۆرانی"]}<br>`;
+            otherColumns = `<strong style="color: #f5c400;">بادینی:</strong> ${record["بادینی"]}<br>
+                            <strong style="color: #f5c400;">هەورامی:</strong> ${record["هەورامی"]}<br>`;
+        } else if (record["هەورامی"] && record["هەورامی"].toLowerCase().includes(searchTerm)) {
+            topColumn = `<strong style="color: #012169;">هەورامی:</strong> ${record["هەورامی"]}<br>`;
+            otherColumns = `<strong style="color: #f5c400;">سۆرانی:</strong> ${record["سۆرانی"]}<br>
+                            <strong style="color: #f5c400;">بادینی:</strong> ${record["بادینی"]}<br>`;
+        }
 
-  if (results.length === 0) {
-    outputDiv.innerHTML = "No results found.";
-  } else {
-    outputDiv.innerHTML = results.map(entry =>
-      `<div style="padding: 10px; border: 1px solid #ccc; margin-bottom: 5px;">
-        <strong>سۆرانی:</strong> ${entry["سۆرانی"] || 'N/A'}<br>
-        <strong>بادینی:</strong> ${entry["بادینی"] || 'N/A'}<br>
-        <strong>هەورامی:</strong> ${entry["هەورامی"] || 'N/A'}
-      </div>`).join('');
-  }
+        outputHTML += `<div style="padding: 15px; border: 1px solid #ccc; margin-bottom: 10px; background-color: #fff; border-radius: 8px;">
+                        ${topColumn}${otherColumns}
+                       </div>`;
+    });
+
+    document.getElementById('output').innerHTML = outputHTML;
 }
 
-// Event Listeners
+function searchData() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+
+    if (!searchTerm) {
+        document.getElementById('output').innerHTML = "Please enter a search term.";
+        return;
+    }
+
+    const filteredData = sheetData.filter(record => 
+        (record["بادینی"] && record["بادینی"].toLowerCase().includes(searchTerm)) ||
+        (record["سۆرانی"] && record["سۆرانی"].toLowerCase().includes(searchTerm)) ||
+        (record["هەورامی"] && record["هەورامی"].toLowerCase().includes(searchTerm))
+    );
+
+    if (filteredData.length === 0) {
+        document.getElementById('output').innerHTML = "No results found.";
+    } else {
+        displayData(filteredData, searchTerm);
+    }
+}
+
 document.getElementById('searchButton').addEventListener('click', searchData);
 document.getElementById('clearButton').addEventListener('click', () => {
-  document.getElementById('searchInput').value = '';
-  document.getElementById('output').innerHTML = '';
+    document.getElementById('searchInput').value = '';
+    document.getElementById('output').innerHTML = '';
 });
 
-// Load Data on Start
-fetchData();
+// Add to Home Screen (PWA)
+let deferredPrompt;
+const installButton = document.getElementById("installButton");
+
+window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installButton.style.display = "block";
+});
+
+installButton.addEventListener("click", () => {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === "accepted") {
+                installButton.style.display = "none";
+            }
+            deferredPrompt = null;
+        });
+    }
+});
