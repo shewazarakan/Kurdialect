@@ -1,26 +1,80 @@
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+}
+
+#loadingScreen {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #012169;
+    z-index: 9999;
 }
 
 .spinner {
-  border: 6px solid #f3f3f3;
-  border-top: 6px solid #2196F3;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: spin 1s linear infinite;
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #012169;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.search-container {
+    margin-bottom: 20px;
+}
+
+#searchInput {
+    padding: 10px;
+    width: 90%;
+    max-width: 400px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    max-width: 400px;
 }
 
 button {
-  background-color: #03A9F4;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
+    padding: 10px 15px;
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    width: 48%;
+}
+
+#searchButton {
+    background-color: #012169;
+    color: white;
+}
+
+#clearButton {
+    background-color: #f5c400;
+    color: white;
+}
+
+.result {
+    padding: 15px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    background-color: #fff;
+    border-radius: 8px;
 }
