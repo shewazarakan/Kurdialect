@@ -1,47 +1,64 @@
-const AIRTABLE_TOKEN = "${{ secrets.AIRTABLE_TOKEN }}";
-const AIRTABLE_URL = "https://api.airtable.com/v0/appPMRn6taSjy5Cuw/database2";
+const googleSheetsURL = "https://docs.google.com/spreadsheets/d/1nE2ohOnINWPDd2u3_ajVBXaM8lR3gQqvUSe0pE9UJH4/gviz/tq?tqx=out:json";
 
-let airtableData = [];
+let sheetData = [];
 
-function fetchData() {
-  document.getElementById("loadingScreen").style.display = "flex";
+// Fetch data from Google Sheets
+async function fetchData() {
+    document.getElementById('loadingScreen').style.display = 'flex';
 
-  fetch(AIRTABLE_URL, {
-    method: "GET",
-    headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
-  })
-    .then(response => response.json())
-    .then(data => {
-      airtableData = data.records || [];
-      document.getElementById("output").innerHTML = airtableData.length
-        ? ""
-        : "No records found.";
-    })
-    .catch(error => {
-      console.error("Error fetching data:", error);
-      document.getElementById("output").innerHTML = `Error: ${error.message}`;
-    })
-    .finally(() => {
-      document.getElementById("loadingScreen").style.display = "none";
-    });
+    try {
+        const response = await fetch(googleSheetsURL);
+        let text = await response.text();
+        text = text.substring(47, text.length - 2);
+        const json = JSON.parse(text);
+
+        sheetData = json.table.rows.map(row => ({
+            بادینی: row.c[0]?.v || "",
+            سۆرانی: row.c[1]?.v || "",
+            هەورامی: row.c[2]?.v || ""
+        }));
+
+        document.getElementById('loadingScreen').style.display = 'none';
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        document.getElementById('output').innerText = `Error: ${error.message}`;
+        document.getElementById('loadingScreen').style.display = 'none';
+    }
 }
 
-document.getElementById("searchButton").addEventListener("click", () => {
-  const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
-  if (!searchTerm) return;
+// Search function
+function searchData() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+    if (!searchTerm) {
+        document.getElementById('output').innerText = "Please enter a search term.";
+        return;
+    }
 
-  const filteredData = airtableData.filter(record =>
-    Object.values(record.fields).some(field => field.toLowerCase().includes(searchTerm))
-  );
+    const results = sheetData.filter(entry =>
+        entry["بادینی"].toLowerCase().includes(searchTerm) ||
+        entry["سۆرانی"].toLowerCase().includes(searchTerm) ||
+        entry["هەورامی"].toLowerCase().includes(searchTerm)
+    );
 
-  document.getElementById("output").innerHTML = filteredData.length
-    ? filteredData.map(record => `<p>${JSON.stringify(record.fields)}</p>`).join("")
-    : "No results found.";
+    if (results.length === 0) {
+        document.getElementById('output').innerText = "No results found.";
+    } else {
+        document.getElementById('output').innerHTML = results.map(entry => `
+            <div class="result">
+                <strong>بادینی:</strong> ${entry["بادینی"]}<br>
+                <strong>سۆرانی:</strong> ${entry["سۆرانی"]}<br>
+                <strong>هەورامی:</strong> ${entry["هەورامی"]}
+            </div>
+        `).join("");
+    }
+}
+
+// Event Listeners
+document.getElementById('searchButton').addEventListener('click', searchData);
+document.getElementById('clearButton').addEventListener('click', () => {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('output').innerHTML = '';
 });
 
-document.getElementById("clearButton").addEventListener("click", () => {
-  document.getElementById("searchInput").value = "";
-  document.getElementById("output").innerHTML = "";
-});
-
+// Fetch data on page load
 fetchData();
