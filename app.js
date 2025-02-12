@@ -1,67 +1,92 @@
-let databaseURL = "https://sheetdb.io/api/v1/cg3gwaj5yfawg";
-let sheetData = [];
+// Service Worker Registration
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(reg => console.log('Service Worker Registered', reg))
+    .catch(err => console.log('Service Worker Registration Failed', err));
+}
+
+// Install Button
+let installPrompt;
+const installBtn = document.getElementById('installButton');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  installPrompt = e;
+  installBtn.style.display = 'block';
+});
+
+installBtn.addEventListener('click', () => {
+  if (installPrompt) {
+    installPrompt.prompt();
+    installPrompt.userChoice.then(choiceResult => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('User installed the app');
+      }
+      installPrompt = null;
+    });
+  }
+});
+
+// Loading Screen
+function showLoading() {
+  document.getElementById('loadingScreen').style.display = 'flex';
+}
+function hideLoading() {
+  document.getElementById('loadingScreen').style.display = 'none';
+}
+
+// Fetch Data
+let sheetURL = "https://sheetdb.io/api/v1/cg3gwaj5yfawg";
+let dataStore = [];
 
 function fetchData() {
-    document.getElementById('loadingScreen').style.display = 'flex';
-
-    fetch(databaseURL)
-        .then(response => response.json())
-        .then(data => {
-            sheetData = data;
-            document.getElementById('loadingScreen').style.display = 'none';
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-            document.getElementById('loadingScreen').style.display = 'none';
-        });
+  showLoading();
+  fetch(sheetURL)
+    .then(response => response.json())
+    .then(data => {
+      dataStore = data;
+      hideLoading();
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+      hideLoading();
+    });
 }
 
-fetchData();
-
+// Search Function
 function searchData() {
-    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-    const output = document.getElementById('output');
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+  const outputDiv = document.getElementById('output');
 
-    if (!searchTerm) {
-        output.innerHTML = "Please enter a search term.";
-        return;
-    }
+  if (!searchTerm) {
+    outputDiv.innerHTML = "Please enter a search term.";
+    return;
+  }
 
-    let results = sheetData.filter(row =>
-        row["سۆرانی"]?.toLowerCase().includes(searchTerm) ||
-        row["بادینی"]?.toLowerCase().includes(searchTerm) ||
-        row["هەورامی"]?.toLowerCase().includes(searchTerm)
-    );
+  const results = dataStore.filter(entry => 
+    entry["سۆرانی"]?.toLowerCase().includes(searchTerm) ||
+    entry["بادینی"]?.toLowerCase().includes(searchTerm) ||
+    entry["هەورامی"]?.toLowerCase().includes(searchTerm)
+  );
 
-    if (results.length === 0) {
-        output.innerHTML = "No results found.";
-    } else {
-        output.innerHTML = results.map(row => `
-            <div>
-                <strong>سۆرانی:</strong> ${row["سۆرانی"] || ''} <br>
-                <strong>بادینی:</strong> ${row["بادینی"] || ''} <br>
-                <strong>هەورامی:</strong> ${row["هەورامی"] || ''}
-            </div>
-        `).join("<hr>");
-    }
+  if (results.length === 0) {
+    outputDiv.innerHTML = "No results found.";
+  } else {
+    outputDiv.innerHTML = results.map(entry =>
+      `<div style="padding: 10px; border: 1px solid #ccc; margin-bottom: 5px;">
+        <strong>سۆرانی:</strong> ${entry["سۆرانی"] || 'N/A'}<br>
+        <strong>بادینی:</strong> ${entry["بادینی"] || 'N/A'}<br>
+        <strong>هەورامی:</strong> ${entry["هەورامی"] || 'N/A'}
+      </div>`).join('');
+  }
 }
 
+// Event Listeners
 document.getElementById('searchButton').addEventListener('click', searchData);
 document.getElementById('clearButton').addEventListener('click', () => {
-    document.getElementById('searchInput').value = '';
-    document.getElementById('output').innerHTML = '';
+  document.getElementById('searchInput').value = '';
+  document.getElementById('output').innerHTML = '';
 });
 
-// Add to Home Screen
-let installPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    installPrompt = e;
-    document.getElementById('installButton').style.display = 'block';
-});
-
-document.getElementById('installButton').addEventListener('click', () => {
-    if (installPrompt) {
-        installPrompt.prompt();
-    }
-});
+// Load Data on Start
+fetchData();
