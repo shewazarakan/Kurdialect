@@ -30,8 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fetch data and perform the search
     const fetchData = async () => {
         try {
+            // Show loading screen
+            loadingScreen.style.display = 'flex';
+
             const response = await fetch('https://sheetdb.io/api/v1/cg3gwaj5yfawg');
             const data = await response.json();
+
+            // Hide loading screen once data is fetched
+            loadingScreen.style.display = 'none';
 
             // Handle the search functionality
             searchButton.addEventListener('click', () => {
@@ -78,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Error fetching data:', error);
+            loadingScreen.style.display = 'none'; // Hide loading screen in case of error
         }
     };
 
