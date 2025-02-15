@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const columnColors = {
                 "سۆرانی": "#c05510",
                 "بادینی": "#f5c265",
-                "هەورامی": "#2e6095"
+                "هەورامی": "#c05510" // Updated هەورامی to #c05510
             };
 
             // Ensure the searched column appears first
