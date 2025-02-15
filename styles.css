@@ -25,7 +25,7 @@ body {
 
 .spinner {
     border: 6px solid #f3f3f3;
-    border-top: 6px solid #2e6095;  /* Matches هەورامی color */
+    border-top: 6px solid #012169;
     border-radius: 50%;
     width: 50px;
     height: 50px;
@@ -65,7 +65,7 @@ body {
     padding: 10px 15px;
     font-size: 1em;
     cursor: pointer;
-    background-color: #2e6095;  /* Matches هەورامی column */
+    background-color: #2e6095;
     color: white;
     border: none;
     border-radius: 4px;
@@ -76,7 +76,7 @@ body {
     padding: 10px 15px;
     font-size: 1em;
     cursor: pointer;
-    background-color: #f5c265;  /* Matches بادینی column */
+    background-color: #f5c265;
     color: white;
     border: none;
     border-radius: 4px;
@@ -97,4 +97,25 @@ body {
     font-size: 1.2em;
     color: #000;
     line-height: 1.6;
+}
+
+#installButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: #c05510;
+    color: white;
+    font-size: 30px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+#installButton:focus {
+    outline: none;
 }
