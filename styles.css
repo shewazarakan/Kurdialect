@@ -19,13 +19,13 @@ body {
     flex-direction: column;
     font-size: 1.5em;
     font-weight: bold;
-    color: #c05510; /* Updated to the new سۆرانی color */
+    color: #2e6095;
     z-index: 9999;
 }
 
 .spinner {
     border: 6px solid #f3f3f3;
-    border-top: 6px solid #c05510; /* Updated to the new سۆرانی color */
+    border-top: 6px solid #2e6095;
     border-radius: 50%;
     width: 50px;
     height: 50px;
@@ -65,7 +65,7 @@ body {
     padding: 10px 15px;
     font-size: 1em;
     cursor: pointer;
-    background-color: #c05510; /* Updated to the new سۆرانی color */
+    background-color: #2e6095;  /* Color updated to هەورامی column */
     color: white;
     border: none;
     border-radius: 4px;
@@ -76,25 +76,11 @@ body {
     padding: 10px 15px;
     font-size: 1em;
     cursor: pointer;
-    background-color: #f5c265;
+    background-color: #f5c265;  /* Color updated to بادینی column */
     color: white;
     border: none;
     border-radius: 4px;
     width: 48%;
-}
-
-.install-btn {
-    padding: 15px;
-    border-radius: 50%;
-    background-color: #c05510; /* Updated to the new سۆرانی color */
-    color: white;
-    font-size: 2em;
-    border: none;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    cursor: pointer;
-    display: none;
 }
 
 #outputContainer {
