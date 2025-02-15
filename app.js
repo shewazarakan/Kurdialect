@@ -78,38 +78,29 @@ function displayResults(results, query) {
                 const hawramiColor = '#2e6095'; 
 
                 // Determine the column where the match is found
-                let headerText = '';
                 let matchedColumn = '';
+                let columnColor = '';
 
                 if (result.سۆرانی && result.سۆرانی.toLowerCase().includes(query.toLowerCase())) {
-                    headerText = 'سۆرانی';
                     matchedColumn = result.سۆرانی;
+                    columnColor = soraniColor;
                 } else if (result.بادینی && result.بادینی.toLowerCase().includes(query.toLowerCase())) {
-                    headerText = 'بادینی';
                     matchedColumn = result.بادینی;
+                    columnColor = badiniColor;
                 } else if (result.هەورامی && result.هەورامی.toLowerCase().includes(query.toLowerCase())) {
-                    headerText = 'هەورامی';
                     matchedColumn = result.هەورامی;
+                    columnColor = hawramiColor;
                 }
 
-                // Always use fixed colors for the columns
+                // Create the result row with the matched column at the top
                 row.innerHTML = `
-                    <p style="color: black;"><strong>${headerText}:</strong> ${matchedColumn}</p>
-                    <p style="color: black;"><strong>سۆرانی:</strong> ${result.سۆرانی}</p>
-                    <p style="color: black;"><strong>بادینی:</strong> ${result.بادینی}</p>
-                    <p style="color: black;"><strong>هەورامی:</strong> ${result.هەورامی}</p>
+                    <p style="color: black;"><strong>${matchedColumn}</strong></p>
+                    <p style="color: ${soraniColor};"><strong>سۆرانی:</strong> ${result.سۆرانی}</p>
+                    <p style="color: ${badiniColor};"><strong>بادینی:</strong> ${result.بادینی}</p>
+                    <p style="color: ${hawramiColor};"><strong>هەورامی:</strong> ${result.هەورامی}</p>
                 `;
 
-                // Apply the colors to the columns
-                row.querySelector('p:nth-child(1)').style.color = soraniColor;
-                row.querySelector('p:nth-child(2)').style.color = badiniColor;
-                row.querySelector('p:nth-child(3)').style.color = hawramiColor;
-
-                // Add the header showing which column was used
-                const header = document.createElement('h4');
-                header.textContent = `Search Results - ${headerText}`;
-                header.style.color = '#000'; // Default header color
-                outputContainer.appendChild(header);
+                // Add the result row to the output container
                 outputContainer.appendChild(row);
             });
         }
