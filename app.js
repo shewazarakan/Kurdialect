@@ -54,20 +54,22 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        // Define fixed column colors
+        const columnColors = {
+            "سۆرانی": "#C05510",   // Sorani color
+            "بادینی": "#f5c265",    // Badini color
+            "هەورامی": "#2e6095"    // Hawrami color
+        };
+
         // Display Results
         outputContainer.innerHTML = `<h3 style="font-size: 1.5em;">Search Results:</h3>`;
         results.forEach(row => {
             let searchColumn = Object.keys(row).find(key => row[key].toLowerCase().includes(searchTerm));
 
-            // Colors for columns
-            const columnColors = {
-                "سۆرانی": "#f5c265",  // Sorani color
-                "بادینی": "#c05510",   // Badini color
-                "هەورامی": "#2e6095"   // Hawrami color
-            };
-
+            // Generate HTML for the columns with their fixed colors
             let columnsHTML = Object.keys(row).map(key => {
-                let headerColor = (key === searchColumn) ? columnColors[key] || "#000000" : "#f5c400"; // Default color if no match
+                // Use the color mapping for each column
+                let headerColor = columnColors[key] || "#f5c400"; // Default color if no match
                 return `<p><strong style="color: ${headerColor};">${key}:</strong> <span style="color: black;">${row[key]}</span></p>`;
             }).join("");
 
