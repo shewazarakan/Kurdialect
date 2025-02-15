@@ -39,7 +39,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Function to search data
     function searchData() {
-        const searchTerm = searchInput.value.trim().toLowerCase();
+        let searchTerm = searchInput.value.trim().toLowerCase();
+        
+        // Remove multiple spaces between words
+        searchTerm = searchTerm.replace(/\s+/g, ' ');
+
         if (!searchTerm) {
             outputContainer.innerHTML = "<p>Please enter a search term.</p>";
             return;
