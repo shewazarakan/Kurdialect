@@ -1,6 +1,6 @@
 {
-  "name": "Kurdlect",
-  "short_name": "Kurdlect",
+  "name": "Kurdilect",
+  "short_name": "Kurdilect",
   "description": "Kurdish dialects translator",
   "start_url": "./",
   "display": "standalone",
