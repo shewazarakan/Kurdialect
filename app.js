@@ -1,106 +1,47 @@
-// Fetching the data from the Google Sheets API (via SheetDB)
-const sheetApiUrl = 'https://sheetdb.io/api/v1/cg3gwaj5yfawg'; // Your API URL
-const searchButton = document.getElementById('searchButton');
-const clearButton = document.getElementById('clearButton');
-const searchInput = document.getElementById('searchInput');
-const outputContainer = document.getElementById('output');
-
-// Function to perform search
-const performSearch = async () => {
-    const searchTerm = searchInput.value.trim().toLowerCase();
-    if (!searchTerm) return; // Do nothing if the search term is empty
-
-    try {
-        const response = await fetch(sheetApiUrl);
-        const data = await response.json();
-
-        const results = data.filter((row) => {
-            // Check if the search term matches any column (case-insensitive)
-            return (
-                row['سۆرانی'].toLowerCase().includes(searchTerm) ||
-                row['بادینی'].toLowerCase().includes(searchTerm) ||
-                row['هەورامی'].toLowerCase().includes(searchTerm)
-            );
-        });
-
-        displayResults(results, searchTerm);
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
+window.onload = () => {
+    const loadingScreen = document.getElementById('loadingScreen');
+    loadingScreen.style.display = 'none'; // Hide the loading screen when the page loads
 };
 
-// Function to display search results
-const displayResults = (results, searchTerm) => {
+// Show the loading screen when search starts
+document.getElementById('searchButton').addEventListener('click', () => {
+    document.getElementById('loadingScreen').style.display = 'flex'; // Show loading screen
+
+    const query = document.getElementById('searchInput').value;
+    if (query) {
+        fetchSearchResults(query).then(results => {
+            document.getElementById('loadingScreen').style.display = 'none'; // Hide loading screen
+            displayResults(results);
+        });
+    }
+});
+
+// Fetch the search results from your API
+function fetchSearchResults(query) {
+    return fetch(`https://sheetdb.io/api/v1/cg3gwaj5yfawg?search=${query}`)
+        .then(response => response.json())
+        .catch(error => {
+            console.error('Error fetching search results:', error);
+            document.getElementById('loadingScreen').style.display = 'none'; // Hide loading screen on error
+        });
+}
+
+// Display the results on the page
+function displayResults(results) {
+    const outputContainer = document.getElementById('output');
+    outputContainer.innerHTML = ''; // Clear previous results
+
     if (results.length === 0) {
-        outputContainer.innerHTML = 'No results found.';
-        return;
-    }
-
-    // Clear previous results
-    outputContainer.innerHTML = '';
-
-    // Create a table to display results
-    const table = document.createElement('table');
-    const headerRow = document.createElement('tr');
-
-    // Create table headers dynamically based on the columns
-    const headers = ['سۆرانی', 'بادینی', 'هەورامی'];
-    headers.forEach((header) => {
-        const th = document.createElement('th');
-        th.style.backgroundColor = searchTerm === header.toLowerCase() ? '#c05510' : '#f5c400';
-        th.textContent = header;
-        headerRow.appendChild(th);
-    });
-
-    table.appendChild(headerRow);
-
-    // Display each result as a table row
-    results.forEach((row) => {
-        const rowElement = document.createElement('tr');
-        headers.forEach((column) => {
-            const td = document.createElement('td');
-            td.style.color = '#000000';
-            td.textContent = row[column];
-            rowElement.appendChild(td);
-        });
-        table.appendChild(rowElement);
-    });
-
-    outputContainer.appendChild(table);
-};
-
-// Search button click handler
-searchButton.addEventListener('click', performSearch);
-
-// Clear button click handler
-clearButton.addEventListener('click', () => {
-    searchInput.value = '';
-    outputContainer.innerHTML = '';
-});
-
-// PWA Install Button
-let deferredPrompt;
-
-const installButton = document.querySelector('.install-btn');
-
-// Listen for beforeinstallprompt event
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault(); // Prevent the default install prompt
-    deferredPrompt = e; // Store the event for later use
-    installButton.style.display = 'block'; // Show the install button
-});
-
-// When the user clicks the install button, show the install prompt
-installButton.addEventListener('click', () => {
-    if (deferredPrompt) {
-        deferredPrompt.prompt(); // Show the install prompt
-        deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                console.log('User accepted the A2HS prompt');
-            } else {
-                console.log('User dismissed the A2HS prompt');
-            }
-            deferredPrompt = null; // Reset the deferred prompt
+        outputContainer.innerHTML = '<p>No results found.</p>';
+    } else {
+        results.forEach(result => {
+            const row = document.createElement('div');
+            row.innerHTML = `
+                <p><strong>سۆرانی:</strong> ${result.سۆرانی}</p>
+                <p><strong>بادینی:</strong> ${result.بادینی}</p>
+                <p><strong>هەورامی:</strong> ${result.هەورامی}</p>
+            `;
+            outputContainer.appendChild(row);
         });
     }
-});
+}
