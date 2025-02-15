@@ -15,11 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const query = document.getElementById('searchInput').value.trim();
             if (query) {
-                fetchSearchResults(query).then(results => {
+                fetchSearchResults().then(results => {
                     if (loadingScreen) {
                         loadingScreen.style.display = 'none'; // Hide loading screen after results
                     }
-                    displayResults(results, query);
+                    const filteredResults = filterResults(results, query); // Manually filter results
+                    displayResults(filteredResults, query);
                 });
             }
         });
@@ -36,9 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Fetch the search results from your API
-function fetchSearchResults(query) {
-    return fetch(`https://sheetdb.io/api/v1/cg3gwaj5yfawg?search=${query}`)
+// Fetch all the data from the API (without search filtering)
+function fetchSearchResults() {
+    return fetch("https://sheetdb.io/api/v1/cg3gwaj5yfawg")
         .then(response => response.json())
         .catch(error => {
             console.error('Error fetching search results:', error);
@@ -47,6 +48,16 @@ function fetchSearchResults(query) {
                 loadingScreen.style.display = 'none'; // Hide loading screen on error
             }
         });
+}
+
+// Filter the results based on the query
+function filterResults(results, query) {
+    return results.filter(result => {
+        // Check if any of the columns contain the search query (case insensitive)
+        return (result.سۆرانی && result.سۆرانی.toLowerCase().includes(query.toLowerCase())) ||
+               (result.بادینی && result.بادینی.toLowerCase().includes(query.toLowerCase())) ||
+               (result.هەورامی && result.هەورامی.toLowerCase().includes(query.toLowerCase()));
+    });
 }
 
 // Display the results on the page with proper colors and formatting
