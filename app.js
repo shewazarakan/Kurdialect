@@ -52,25 +52,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (filteredData.length > 0) {
                         // Clear previous results
-                        outputContainer.innerHTML = '<h3><strong>SEARCH RESULTS</strong></h3>';
+                        outputContainer.innerHTML = '';
+
+                        // Add search result heading
+                        const resultHeading = document.createElement('h3');
+                        resultHeading.innerHTML = '<strong>SEARCH RESULTS</strong>';
+                        outputContainer.appendChild(resultHeading);
 
                         filteredData.forEach(row => {
                             const resultDiv = document.createElement('div');
                             let resultHTML = '';
 
-                            // Find the column the data comes from
+                            // Determine which column the match is in and format the result
                             if (row['سۆرانی'].includes(searchTerm)) {
-                                resultHTML += `<p><strong>سۆرانی</strong>: ${row['سۆرانی']}</p>`;
-                                resultHTML += `<p><strong>بادینی</strong>: ${row['بادینی']}</p>`;
-                                resultHTML += `<p><strong>هەورامی</strong>: ${row['هەورامی']}</p>`;
+                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row['سۆرانی']}</p>`;
+                                resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row['بادینی']}</p>`;
+                                resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row['هەورامی']}</p>`;
                             } else if (row['بادینی'].includes(searchTerm)) {
-                                resultHTML += `<p><strong>بادینی</strong>: ${row['بادینی']}</p>`;
-                                resultHTML += `<p><strong>سۆرانی</strong>: ${row['سۆرانی']}</p>`;
-                                resultHTML += `<p><strong>هەورامی</strong>: ${row['هەورامی']}</p>`;
+                                resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row['بادینی']}</p>`;
+                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row['سۆرانی']}</p>`;
+                                resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row['هەورامی']}</p>`;
                             } else if (row['هەورامی'].includes(searchTerm)) {
-                                resultHTML += `<p><strong>هەورامی</strong>: ${row['هەورامی']}</p>`;
-                                resultHTML += `<p><strong>سۆرانی</strong>: ${row['سۆرانی']}</p>`;
-                                resultHTML += `<p><strong>بادینی</strong>: ${row['بادینی']}</p>`;
+                                resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row['هەورامی']}</p>`;
+                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row['سۆرانی']}</p>`;
+                                resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row['بادینی']}</p>`;
                             }
 
                             resultDiv.innerHTML = resultHTML;
