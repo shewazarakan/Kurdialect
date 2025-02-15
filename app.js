@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchButton = document.getElementById('searchButton');
     const clearButton = document.getElementById('clearButton');
     const installButton = document.getElementById('installButton');
+    const outputContainer = document.getElementById('output');
     let deferredPrompt;
 
     // Show the install prompt when available
@@ -26,103 +27,59 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (loadingScreen) {
-        loadingScreen.style.display = 'none'; // Hide loading screen when page is loaded
-    }
+    // Fetch data and perform the search
+    const fetchData = async () => {
+        try {
+            const response = await fetch('https://sheetdb.io/api/v1/cg3gwaj5yfawg');
+            const data = await response.json();
 
-    if (searchButton) {
-        searchButton.addEventListener('click', () => {
-            if (loadingScreen) {
-                loadingScreen.style.display = 'flex'; // Show loading screen
-            }
+            // Handle the search functionality
+            searchButton.addEventListener('click', () => {
+                const searchTerm = document.getElementById('searchInput').value.trim();
+                if (searchTerm) {
+                    // Filter the data based on search term
+                    const filteredData = data.filter(row => 
+                        row['سۆرانی'].includes(searchTerm) || 
+                        row['بادینی'].includes(searchTerm) || 
+                        row['هەورامی'].includes(searchTerm)
+                    );
 
-            const query = document.getElementById('searchInput').value.trim();
-            if (query) {
-                fetchSearchResults().then(results => {
-                    if (loadingScreen) {
-                        loadingScreen.style.display = 'none'; // Hide loading screen after results
+                    if (filteredData.length > 0) {
+                        // Only display one matching row
+                        const row = filteredData[0]; // Use the first matched row
+
+                        outputContainer.innerHTML = `
+                            <table>
+                                <tr>
+                                    <th style="background-color: #c05510;">سۆرانی</th>
+                                    <th style="background-color: #f5c265;">بادینی</th>
+                                    <th style="background-color: #2e6095;">هەورامی</th>
+                                </tr>
+                                <tr>
+                                    <td style="color: #000;">${row['سۆرانی']}</td>
+                                    <td style="color: #000;">${row['بادینی']}</td>
+                                    <td style="color: #000;">${row['هەورامی']}</td>
+                                </tr>
+                            </table>
+                        `;
+                    } else {
+                        outputContainer.innerHTML = `<p>No results found for "${searchTerm}".</p>`;
                     }
-                    const filteredResults = filterResults(results, query); // Manually filter results
-                    displayResults(filteredResults, query);
-                });
-            }
-        });
-    }
-
-    if (clearButton) {
-        clearButton.addEventListener('click', () => {
-            document.getElementById('searchInput').value = ''; // Clear input field
-            const outputContainer = document.getElementById('output');
-            if (outputContainer) {
-                outputContainer.innerHTML = ''; // Clear results
-            }
-        });
-    }
-});
-
-// Fetch all the data from the API (without search filtering)
-function fetchSearchResults() {
-    return fetch("https://sheetdb.io/api/v1/cg3gwaj5yfawg")
-        .then(response => response.json())
-        .catch(error => {
-            console.error('Error fetching search results:', error);
-            const loadingScreen = document.getElementById('loadingScreen');
-            if (loadingScreen) {
-                loadingScreen.style.display = 'none'; // Hide loading screen on error
-            }
-        });
-}
-
-// Filter the results based on the query
-function filterResults(results, query) {
-    return results.filter(result => {
-        // Check if any of the columns contain the search query (case insensitive)
-        return (result.سۆرانی && result.سۆرانی.toLowerCase().includes(query.toLowerCase())) ||
-               (result.بادینی && result.بادینی.toLowerCase().includes(query.toLowerCase())) ||
-               (result.هەورامی && result.هەورامی.toLowerCase().includes(query.toLowerCase()));
-    });
-}
-
-// Display the results on the page with proper colors and formatting
-function displayResults(results, query) {
-    const outputContainer = document.getElementById('output');
-    if (outputContainer) {
-        outputContainer.innerHTML = ''; // Clear previous results
-
-        if (results.length === 0) {
-            outputContainer.innerHTML = '<p>No results found.</p>';
-        } else {
-            results.forEach(result => {
-                const row = document.createElement('div');
-
-                // Define fixed colors for each column
-                const soraniColor = '#c05510'; 
-                const badiniColor = '#f5c265'; 
-                const hawramiColor = '#2e6095'; 
-
-                // Determine which column the match is from
-                let soraniMatch = result.سۆرانی && result.سۆرانی.toLowerCase().includes(query.toLowerCase());
-                let badiniMatch = result.بادینی && result.بادینی.toLowerCase().includes(query.toLowerCase());
-                let hawramiMatch = result.هەورامی && result.هەورامی.toLowerCase().includes(query.toLowerCase());
-
-                // Only show the columns with matching data
-                let resultHTML = '';
-
-                if (soraniMatch) {
-                    resultHTML += `<p style="color: ${soraniColor};"><strong>سۆرانی:</strong> ${result.سۆرانی}</p>`;
+                } else {
+                    outputContainer.innerHTML = '';
                 }
-                if (badiniMatch) {
-                    resultHTML += `<p style="color: ${badiniColor};"><strong>بادینی:</strong> ${result.بادینی}</p>`;
-                }
-                if (hawramiMatch) {
-                    resultHTML += `<p style="color: ${hawramiColor};"><strong>هەورامی:</strong> ${result.هەورامی}</p>`;
-                }
-
-                row.innerHTML = resultHTML;
-
-                // Add the result row to the output container
-                outputContainer.appendChild(row);
             });
+
+            // Clear input
+            clearButton.addEventListener('click', () => {
+                document.getElementById('searchInput').value = '';
+                outputContainer.innerHTML = '';
+            });
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
         }
-    }
-}
+    };
+
+    fetchData();
+});
