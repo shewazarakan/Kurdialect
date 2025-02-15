@@ -64,10 +64,17 @@ document.addEventListener("DOMContentLoaded", function () {
         // Display Results
         outputContainer.innerHTML = `<h3 style="font-size: 1.5em;">Search Results:</h3>`;
         results.forEach(row => {
+            // Find the column that matches the search term
             let searchColumn = Object.keys(row).find(key => row[key].toLowerCase().includes(searchTerm));
 
+            // Sort columns: move the matched column to the top
+            let sortedColumns = Object.keys(row).sort((a, b) => {
+                if (a === searchColumn) return -1;  // Move matched column to the top
+                return 0;  // Keep other columns in original order
+            });
+
             // Generate HTML for the columns with their fixed colors
-            let columnsHTML = Object.keys(row).map(key => {
+            let columnsHTML = sortedColumns.map(key => {
                 // Use the color mapping for each column
                 let headerColor = columnColors[key] || "#f5c400"; // Default color if no match
                 return `<p><strong style="color: ${headerColor};">${key}:</strong> <span style="color: black;">${row[key]}</span></p>`;
