@@ -23,16 +23,14 @@
         </div>
     </div>
 
+    <!-- Install Button (PWA) -->
+    <button class="install-btn" style="display: none;">+</button>
+
     <!-- Search Results -->
     <div id="outputContainer">
         <h3>Search Results:</h3>
         <div id="output"></div>
     </div>
-
-    <!-- Install Button -->
-    <button class="install-btn" aria-label="Install Kurdişiv">
-        <span class="install-icon">+</span>
-    </button>
 
     <script src="app.js"></script>
 
@@ -43,29 +41,6 @@
                 .then(() => console.log("Service Worker Registered"))
                 .catch(error => console.error("Service Worker Registration Failed:", error));
         }
-
-        let deferredPrompt;
-        const installButton = document.querySelector('.install-btn');
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installButton.style.display = 'block'; // Show the button once the event is triggered
-        });
-
-        installButton.addEventListener('click', () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('User accepted the A2HS prompt');
-                    } else {
-                        console.log('User dismissed the A2HS prompt');
-                    }
-                    deferredPrompt = null;
-                });
-            }
-        });
     </script>
 </body>
 </html>
