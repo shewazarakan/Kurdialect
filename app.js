@@ -58,8 +58,19 @@ document.addEventListener("DOMContentLoaded", function () {
         outputContainer.innerHTML = `<h3 style="font-size: 1.5em;">Search Results:</h3>`;
         results.forEach(row => {
             let searchColumn = Object.keys(row).find(key => row[key].toLowerCase().includes(searchTerm));
-            let columnsHTML = Object.keys(row).map(key => {
-                let headerColor = key === searchColumn ? "#012169" : "#f5c400";
+
+            // Define column colors
+            const columnColors = {
+                "سۆرانی": "#c05510",
+                "بادینی": "#f5c265",
+                "هەورامی": "#2e6095"
+            };
+
+            // Ensure the searched column appears first
+            let sortedKeys = Object.keys(row).sort((a, b) => (a === searchColumn ? -1 : b === searchColumn ? 1 : 0));
+
+            let columnsHTML = sortedKeys.map(key => {
+                let headerColor = columnColors[key] || "#000"; // Default black if column name is unknown
                 return `<p><strong style="color: ${headerColor};">${key}:</strong> <span style="color: black;">${row[key]}</span></p>`;
             }).join("");
 
