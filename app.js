@@ -13,13 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadingScreen.style.display = 'flex'; // Show loading screen
             }
 
-            const query = document.getElementById('searchInput').value;
+            const query = document.getElementById('searchInput').value.trim();
             if (query) {
                 fetchSearchResults(query).then(results => {
                     if (loadingScreen) {
                         loadingScreen.style.display = 'none'; // Hide loading screen after results
                     }
-                    displayResults(results);
+                    displayResults(results, query);
                 });
             }
         });
@@ -49,8 +49,8 @@ function fetchSearchResults(query) {
         });
 }
 
-// Display the results on the page
-function displayResults(results) {
+// Display the results on the page with proper colors and formatting
+function displayResults(results, query) {
     const outputContainer = document.getElementById('output');
     if (outputContainer) {
         outputContainer.innerHTML = ''; // Clear previous results
@@ -60,10 +60,27 @@ function displayResults(results) {
         } else {
             results.forEach(result => {
                 const row = document.createElement('div');
+                let soraniColor = '#f5c265', badiniColor = '#c05510', hawramiColor = '#2e6095';
+
+                // Check where the query matches to set the correct color headers
+                if (result.سۆرانی && result.سۆرانی.includes(query)) {
+                    soraniColor = '#c05510';
+                    badiniColor = '#f5c265';
+                    hawramiColor = '#2e6095';
+                } else if (result.بادینی && result.بادینی.includes(query)) {
+                    soraniColor = '#f5c265';
+                    badiniColor = '#c05510';
+                    hawramiColor = '#2e6095';
+                } else if (result.هەورامی && result.هەورامی.includes(query)) {
+                    soraniColor = '#f5c265';
+                    badiniColor = '#f5c265';
+                    hawramiColor = '#2e6095';
+                }
+
                 row.innerHTML = `
-                    <p><strong>سۆرانی:</strong> ${result.سۆرانی}</p>
-                    <p><strong>بادینی:</strong> ${result.بادینی}</p>
-                    <p><strong>هەورامی:</strong> ${result.هەورامی}</p>
+                    <p style="color: ${soraniColor};"><strong>سۆرانی:</strong> ${result.سۆرانی}</p>
+                    <p style="color: ${badiniColor};"><strong>بادینی:</strong> ${result.بادینی}</p>
+                    <p style="color: ${hawramiColor};"><strong>هەورامی:</strong> ${result.هەورامی}</p>
                 `;
                 outputContainer.appendChild(row);
             });
