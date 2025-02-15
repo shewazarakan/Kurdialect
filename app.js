@@ -63,25 +63,31 @@ function displayResults(results, query) {
                 let soraniColor = '#f5c265', badiniColor = '#c05510', hawramiColor = '#2e6095';
 
                 // Check where the query matches to set the correct color headers
-                if (result.سۆرانی && result.سۆرانی.includes(query)) {
-                    soraniColor = '#c05510';
-                    badiniColor = '#f5c265';
+                if (result.سۆرانی && result.سۆرانی.toLowerCase().includes(query.toLowerCase())) {
+                    soraniColor = '#c05510'; // Sorani matched, change its header color
+                    badiniColor = '#f5c265'; // Other columns have the opposite color
                     hawramiColor = '#2e6095';
-                } else if (result.بادینی && result.بادینی.includes(query)) {
+                } else if (result.بادینی && result.بادینی.toLowerCase().includes(query.toLowerCase())) {
                     soraniColor = '#f5c265';
-                    badiniColor = '#c05510';
+                    badiniColor = '#c05510'; // Badini matched, change its header color
                     hawramiColor = '#2e6095';
-                } else if (result.هەورامی && result.هەورامی.includes(query)) {
+                } else if (result.هەورامی && result.هەورامی.toLowerCase().includes(query.toLowerCase())) {
                     soraniColor = '#f5c265';
                     badiniColor = '#f5c265';
-                    hawramiColor = '#2e6095';
+                    hawramiColor = '#2e6095'; // Hawrami matched, change its header color
                 }
 
+                // Display the results with black text, and the colored headers for matching columns
                 row.innerHTML = `
-                    <p style="color: ${soraniColor};"><strong>سۆرانی:</strong> ${result.سۆرانی}</p>
-                    <p style="color: ${badiniColor};"><strong>بادینی:</strong> ${result.بادینی}</p>
-                    <p style="color: ${hawramiColor};"><strong>هەورامی:</strong> ${result.هەورامی}</p>
+                    <p style="color: black;"><strong>سۆرانی:</strong> ${result.سۆرانی}</p>
+                    <p style="color: black;"><strong>بادینی:</strong> ${result.بادینی}</p>
+                    <p style="color: black;"><strong>هەورامی:</strong> ${result.هەورامی}</p>
                 `;
+                // Apply the colors to the headers based on matching term
+                row.querySelector('p:nth-child(1)').style.color = soraniColor;
+                row.querySelector('p:nth-child(2)').style.color = badiniColor;
+                row.querySelector('p:nth-child(3)').style.color = hawramiColor;
+
                 outputContainer.appendChild(row);
             });
         }
