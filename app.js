@@ -2,6 +2,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadingScreen = document.getElementById('loadingScreen');
     const searchButton = document.getElementById('searchButton');
     const clearButton = document.getElementById('clearButton');
+    const installButton = document.getElementById('installButton');
+    let deferredPrompt;
+
+    // Show the install prompt when available
+    window.addEventListener('beforeinstallprompt', (event) => {
+        event.preventDefault();
+        deferredPrompt = event;
+        if (installButton) {
+            installButton.style.display = 'block'; // Show the install button
+        }
+    });
+
+    if (installButton) {
+        installButton.addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    console.log(choiceResult.outcome);
+                    deferredPrompt = null; // Reset the prompt
+                });
+            }
+        });
+    }
 
     if (loadingScreen) {
         loadingScreen.style.display = 'none'; // Hide loading screen when page is loaded
@@ -77,28 +100,25 @@ function displayResults(results, query) {
                 const badiniColor = '#f5c265'; 
                 const hawramiColor = '#2e6095'; 
 
-                // Determine the column where the match is found
-                let matchedColumn = '';
-                let columnColor = '';
+                // Determine which column the match is from
+                let soraniMatch = result.سۆرانی && result.سۆرانی.toLowerCase().includes(query.toLowerCase());
+                let badiniMatch = result.بادینی && result.بادینی.toLowerCase().includes(query.toLowerCase());
+                let hawramiMatch = result.هەورامی && result.هەورامی.toLowerCase().includes(query.toLowerCase());
 
-                if (result.سۆرانی && result.سۆرانی.toLowerCase().includes(query.toLowerCase())) {
-                    matchedColumn = result.سۆرانی;
-                    columnColor = soraniColor;
-                } else if (result.بادینی && result.بادینی.toLowerCase().includes(query.toLowerCase())) {
-                    matchedColumn = result.بادینی;
-                    columnColor = badiniColor;
-                } else if (result.هەورامی && result.هەورامی.toLowerCase().includes(query.toLowerCase())) {
-                    matchedColumn = result.هەورامی;
-                    columnColor = hawramiColor;
+                // Only show the columns with matching data
+                let resultHTML = '';
+
+                if (soraniMatch) {
+                    resultHTML += `<p style="color: ${soraniColor};"><strong>سۆرانی:</strong> ${result.سۆرانی}</p>`;
+                }
+                if (badiniMatch) {
+                    resultHTML += `<p style="color: ${badiniColor};"><strong>بادینی:</strong> ${result.بادینی}</p>`;
+                }
+                if (hawramiMatch) {
+                    resultHTML += `<p style="color: ${hawramiColor};"><strong>هەورامی:</strong> ${result.هەورامی}</p>`;
                 }
 
-                // Create the result row with the matched column at the top
-                row.innerHTML = `
-                    <p style="color: black;"><strong>${matchedColumn}</strong></p>
-                    <p style="color: ${soraniColor};"><strong>سۆرانی:</strong> ${result.سۆرانی}</p>
-                    <p style="color: ${badiniColor};"><strong>بادینی:</strong> ${result.بادینی}</p>
-                    <p style="color: ${hawramiColor};"><strong>هەورامی:</strong> ${result.هەورامی}</p>
-                `;
+                row.innerHTML = resultHTML;
 
                 // Add the result row to the output container
                 outputContainer.appendChild(row);
