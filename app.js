@@ -1,88 +1,71 @@
-let searchResults = [];
-const apiUrl = 'https://sheets.googleapis.com/v4/spreadsheets/1nE2ohOnINWPDd2u3_ajVBXaM8lR3gQqvUSe0pE9UJH4/values/database3!A1:C1000?key=YOUR_API_KEY';
-const installButton = document.getElementById('install-btn');
+const apiUrl = 'https://sheets.googleapis.com/v4/spreadsheets/1nE2ohOnINWPDd2u3_ajVBXaM8lR3gQqvUSe0pE9UJH4/values/Sheet1?key=AIzaSyAf5iWmlgcpHOOib8wClGC5hH2DoX0g3OM';
+const searchButton = document.getElementById('searchButton');
+const clearButton = document.getElementById('clearButton');
+const searchBox = document.getElementById('searchBox');
+const searchResults = document.getElementById('searchResults');
+const searchResultsContainer = document.getElementById('searchResultsContainer');
 
-// Listen for search input change
-document.getElementById('searchInput').addEventListener('input', function() {
-    searchResults = [];
-    document.getElementById('resultsBox').style.display = 'none';
-    document.getElementById('errorMessages').textContent = '';
-});
+searchButton.addEventListener('click', search);
+clearButton.addEventListener('click', clearSearch);
 
-// Perform search when Search button is clicked
-function searchData() {
-    const searchTerm = document.getElementById('searchInput').value.trim();
-    if (!searchTerm) {
-        document.getElementById('errorMessages').textContent = 'Please enter a search term.';
-        return;
-    }
-    
-    fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            searchResults = [];
-            const values = data.values;
-            for (let row of values) {
-                if (row[0].includes(searchTerm) || row[1].includes(searchTerm) || row[2].includes(searchTerm)) {
-                    searchResults.push(row);
-                }
-            }
+function search() {
+  const query = searchBox.value.trim().toLowerCase();
+  if (query === "") {
+    displayError("Please enter a search term.");
+    return;
+  }
 
-            if (searchResults.length === 0) {
-                document.getElementById('errorMessages').textContent = 'No results found.';
-            } else {
-                displayResults();
-            }
-        })
-        .catch(error => {
-            document.getElementById('errorMessages').textContent = 'Error fetching data.';
-            console.error(error);
-        });
+  fetch(apiUrl)
+    .then(response => response.json())
+    .then(data => {
+      const rows = data.values;
+      const filteredResults = rows.filter(row => row.some(cell => cell.toLowerCase().includes(query)));
+
+      if (filteredResults.length > 0) {
+        displaySearchResults(filteredResults);
+      } else {
+        displayError("No results found.");
+      }
+    })
+    .catch(error => {
+      displayError("An error occurred while fetching data.");
+      console.error(error);
+    });
 }
 
-// Display results in the results box
-function displayResults() {
-    const resultsDiv = document.getElementById('results');
-    resultsDiv.innerHTML = '';
-    searchResults.forEach(result => {
-        const rowDiv = document.createElement('div');
-        
-        rowDiv.innerHTML = `
-            <div class="column sorani">سۆرانی: <span class="data">${result[0]}</span></div>
-            <div class="column badini">بادینی: <span class="data">${result[1]}</span></div>
-            <div class="column herami">هەورامی: <span class="data">${result[2]}</span></div>
-        `;
-        resultsDiv.appendChild(rowDiv);
+function displaySearchResults(results) {
+  searchResultsContainer.style.display = 'block';
+  searchResults.innerHTML = '';
+
+  results.forEach(row => {
+    const resultDiv = document.createElement('div');
+    resultDiv.classList.add('result-row');
+
+    row.forEach((cell, index) => {
+      const columnDiv = document.createElement('div');
+      columnDiv.classList.add('result-column');
+      columnDiv.style.color = getColumnColor(index);
+      columnDiv.textContent = cell;
+      resultDiv.appendChild(columnDiv);
     });
 
-    document.getElementById('resultsBox').style.display = 'block';
+    searchResults.appendChild(resultDiv);
+  });
 }
 
-// Clear the search input and results
+function displayError(message) {
+  searchResultsContainer.style.display = 'block';
+  searchResults.innerHTML = `<p style="color: red;">${message}</p>`;
+}
+
 function clearSearch() {
-    document.getElementById('searchInput').value = '';
-    document.getElementById('errorMessages').textContent = '';
-    document.getElementById('resultsBox').style.display = 'none';
+  searchBox.value = '';
+  searchResults.innerHTML = '';
+  searchResultsContainer.style.display = 'none';
 }
 
-// Service Worker install logic for PWA
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (event) => {
-    deferredPrompt = event;
-    installButton.style.display = 'block';
-});
-
-installButton.addEventListener('click', () => {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                console.log('User accepted the install prompt');
-            } else {
-                console.log('User dismissed the install prompt');
-            }
-            deferredPrompt = null;
-            installButton.style.display = 'none';
-        });
-    }
-});
+function getColumnColor(index) {
+  // Customize your column colors here
+  const columnColors = ['#c05510', '#f5c265', '#2e6095']; // Add or modify as needed
+  return columnColors[index % columnColors.length];
+}
