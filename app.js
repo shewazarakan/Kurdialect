@@ -3,8 +3,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchButton = document.getElementById('searchButton');
     const clearButton = document.getElementById('clearButton');
     const outputContainer = document.getElementById('output');
+    let deferredPrompt;
 
-    // Fetch data from Google Sheets
+    // Show the install prompt when available
+    window.addEventListener('beforeinstallprompt', (event) => {
+        event.preventDefault();
+        deferredPrompt = event;
+        const installButton = document.getElementById('installButton');
+        if (installButton) {
+            installButton.style.display = 'block'; // Show the install button
+        }
+    });
+
+    if (installButton) {
+        installButton.addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    console.log(choiceResult.outcome);
+                    deferredPrompt = null; // Reset the prompt
+                });
+            }
+        });
+    }
+
+    // Fetch data and perform the search
     const fetchData = async () => {
         try {
             // Show loading screen
@@ -22,16 +45,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (searchTerm) {
                     // Filter the data based on search term
                     const filteredData = data.values.filter(row => 
-                        row[0].includes(searchTerm) ||  // column سۆرانی
-                        row[1].includes(searchTerm) ||  // column بادینی
-                        row[2].includes(searchTerm)     // column هەورامی
+                        row[0].includes(searchTerm) || 
+                        row[1].includes(searchTerm) || 
+                        row[2].includes(searchTerm)
                     );
 
                     if (filteredData.length > 0) {
                         // Clear previous results
                         outputContainer.innerHTML = '';
 
-                        // Add search result heading
+                        // Add search result heading only once
                         const resultHeading = document.createElement('h3');
                         resultHeading.innerHTML = '<strong>SEARCH RESULTS</strong>';
                         outputContainer.appendChild(resultHeading);
