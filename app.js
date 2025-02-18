@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const outputContainer = document.getElementById('output');
     let deferredPrompt;
 
-    // Show the install prompt when available
+    // Show the install prompt when available (but remove this part if you don't want the install prompt)
     window.addEventListener('beforeinstallprompt', (event) => {
         event.preventDefault();
         deferredPrompt = event;
@@ -27,13 +27,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Fetch data from the local JSON file
+    // Fetch data and perform the search
     const fetchData = async () => {
         try {
             // Show loading screen
             loadingScreen.style.display = 'flex';
 
-            const response = await fetch('data/data.json'); // Ensure the JSON file is in the correct directory
+            // Fetch data from the local 'data.json' file
+            const response = await fetch('./data.json');
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
             const data = await response.json();
 
             // Hide loading screen once data is fetched
@@ -43,11 +47,11 @@ document.addEventListener('DOMContentLoaded', () => {
             searchButton.addEventListener('click', () => {
                 const searchTerm = document.getElementById('searchInput').value.trim();
                 if (searchTerm) {
-                    // Filter the data based on the search term
-                    const filteredData = data.filter(row => 
-                        row['سۆرانی'].includes(searchTerm) || 
-                        row['بادینی'].includes(searchTerm) || 
-                        row['هەورامی'].includes(searchTerm)
+                    // Filter the data based on search term
+                    const filteredData = data.values.filter(row =>
+                        row[0].includes(searchTerm) ||
+                        row[1].includes(searchTerm) ||
+                        row[2].includes(searchTerm)
                     );
 
                     if (filteredData.length > 0) {
@@ -59,36 +63,28 @@ document.addEventListener('DOMContentLoaded', () => {
                         resultHeading.innerHTML = '<strong>SEARCH RESULTS</strong>';
                         outputContainer.appendChild(resultHeading);
 
-                        // Create a container div for the search results
-                        const resultsContainer = document.createElement('div');
-                        resultsContainer.style.border = '2px solid #ddd'; // Border around search results
-                        resultsContainer.style.padding = '10px';
-                        resultsContainer.style.backgroundColor = 'white';
-
                         filteredData.forEach(row => {
                             const resultDiv = document.createElement('div');
                             let resultHTML = '';
 
                             // Determine which column the match is in and format the result
-                            if (row['سۆرانی'].includes(searchTerm)) {
-                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row['سۆرانی']}</p>`;
-                                resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row['بادینی']}</p>`;
-                                resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row['هەورامی']}</p>`;
-                            } else if (row['بادینی'].includes(searchTerm)) {
-                                resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row['بادینی']}</p>`;
-                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row['سۆرانی']}</p>`;
-                                resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row['هەورامی']}</p>`;
-                            } else if (row['هەورامی'].includes(searchTerm)) {
-                                resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row['هەورامی']}</p>`;
-                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row['سۆرانی']}</p>`;
-                                resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row['بادینی']}</p>`;
+                            if (row[0].includes(searchTerm)) {
+                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
+                                resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row[1]}</p>`;
+                                resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row[2]}</p>`;
+                            } else if (row[1].includes(searchTerm)) {
+                                resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row[1]}</p>`;
+                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
+                                resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row[2]}</p>`;
+                            } else if (row[2].includes(searchTerm)) {
+                                resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row[2]}</p>`;
+                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
+                                resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row[1]}</p>`;
                             }
 
                             resultDiv.innerHTML = resultHTML;
-                            resultsContainer.appendChild(resultDiv);
+                            outputContainer.appendChild(resultDiv);
                         });
-
-                        outputContainer.appendChild(resultsContainer);
                     } else {
                         outputContainer.innerHTML = '<p>No results found.</p>';
                     }
@@ -103,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Error fetching data:', error);
+            loadingScreen.style.display = 'none'; // Hide loading screen if error occurs
         }
     };
 
