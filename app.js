@@ -1,71 +1,102 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener('DOMContentLoaded', () => {
+    const loadingScreen = document.getElementById('loadingScreen');
     const searchButton = document.getElementById('searchButton');
     const clearButton = document.getElementById('clearButton');
-    const searchInput = document.getElementById('searchInput');
-    const searchResultsContainer = document.getElementById('searchResults');
-    
-    // Hide the search results initially
-    searchResultsContainer.style.display = 'none';  // Ensure it’s hidden initially
+    const installButton = document.getElementById('installButton');
+    const outputContainer = document.getElementById('output');
+    let deferredPrompt;
 
-    searchButton.addEventListener('click', function() {
-        const searchQuery = searchInput.value.trim();
-
-        // Check if there's a search term
-        if (!searchQuery) {
-            alert("Please enter a search term");
-            return;
+    // Show the install prompt when available
+    window.addEventListener('beforeinstallprompt', (event) => {
+        event.preventDefault();
+        deferredPrompt = event;
+        if (installButton) {
+            installButton.style.display = 'block'; // Show the install button
         }
-
-        // Fetch data from Google Sheets API (Replace the URL with actual endpoint)
-        fetchData(searchQuery);
     });
 
-    clearButton.addEventListener('click', function() {
-        searchInput.value = '';
-        searchResultsContainer.style.display = 'none'; // Hide results when cleared
-    });
-
-    function fetchData(query) {
-        fetch(`https://sheets.googleapis.com/v4/spreadsheets/1nE2ohOnINWPDd2u3_ajVBXaM8lR3gQqvUSe0pE9UJH4/values:batchGet?ranges=Sheet1!A1:C1000&key=AIzaSyAf5iWmlgcpHOOib8wClGC5hH2DoX0g3OM`)
-            .then(response => response.json())
-            .then(data => {
-                const rows = data.valueRanges[0].values;
-                const results = [];
-                let found = false;
-
-                rows.forEach(row => {
-                    if (row[0].toLowerCase().includes(query.toLowerCase())) {
-                        results.push(row);
-                        found = true;
-                    }
+    if (installButton) {
+        installButton.addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    console.log(choiceResult.outcome);
+                    deferredPrompt = null; // Reset the prompt
                 });
-
-                if (found) {
-                    displayResults(results);
-                } else {
-                    searchResultsContainer.innerHTML = "No results found.";
-                    searchResultsContainer.style.display = 'block';
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-                searchResultsContainer.innerHTML = "Error fetching data.";
-                searchResultsContainer.style.display = 'block';
-            });
-    }
-
-    function displayResults(results) {
-        let output = '';
-        results.forEach(result => {
-            output += `
-                <div class="result-row">
-                    <span class="column-sorani">${result[0]}</span>: 
-                    <span class="column-badini">${result[1]}</span>, 
-                    <span class="column-hawarami">${result[2]}</span>
-                </div>
-            `;
+            }
         });
-        searchResultsContainer.innerHTML = output;
-        searchResultsContainer.style.display = 'block'; // Show the results
     }
+
+    // Fetch data from Google Sheets API
+    const fetchData = async () => {
+        try {
+            // Show loading screen
+            loadingScreen.style.display = 'flex';
+
+            const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/1nE2ohOnINWPDd2u3_ajVBXaM8lR3gQqvUSe0pE9UJH4/values/Data?key=AIzaSyAf5iWmlgcpHOOib8wClGC5hH2DoX0g3OM`);
+            const data = await response.json();
+
+            // Hide loading screen once data is fetched
+            loadingScreen.style.display = 'none';
+
+            // Handle the search functionality
+            searchButton.addEventListener('click', () => {
+                const searchTerm = document.getElementById('searchInput').value.trim();
+                if (searchTerm) {
+                    // Filter the data based on search term
+                    const filteredData = data.values.filter(row => 
+                        row[0].includes(searchTerm) || 
+                        row[1].includes(searchTerm) || 
+                        row[2].includes(searchTerm)
+                    );
+
+                    if (filteredData.length > 0) {
+                        // Clear previous results
+                        outputContainer.innerHTML = '';
+
+                        // Add search result heading
+                        const resultHeading = document.createElement('h3');
+                        resultHeading.innerHTML = '<strong>SEARCH RESULTS</strong>';
+                        outputContainer.appendChild(resultHeading);
+
+                        filteredData.forEach(row => {
+                            const resultDiv = document.createElement('div');
+                            let resultHTML = '';
+
+                            // Determine which column the match is in and format the result
+                            if (row[0].includes(searchTerm)) {
+                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
+                                resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row[1]}</p>`;
+                                resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row[2]}</p>`;
+                            } else if (row[1].includes(searchTerm)) {
+                                resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row[1]}</p>`;
+                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
+                                resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row[2]}</p>`;
+                            } else if (row[2].includes(searchTerm)) {
+                                resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row[2]}</p>`;
+                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
+                                resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row[1]}</p>`;
+                            }
+
+                            resultDiv.innerHTML = resultHTML;
+                            outputContainer.appendChild(resultDiv);
+                        });
+                    } else {
+                        outputContainer.innerHTML = '<p>No results found.</p>';
+                    }
+                }
+            });
+
+            // Handle clear button
+            clearButton.addEventListener('click', () => {
+                document.getElementById('searchInput').value = '';
+                outputContainer.innerHTML = '';
+            });
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    fetchData();
 });
