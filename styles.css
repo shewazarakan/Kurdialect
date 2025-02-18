@@ -1,132 +1,30 @@
-/* Global Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* Install button style */
+#installButton {
+    background-color: #c05510; /* Sorani column color */
+    color: white;
+    width: 60px; /* Adjust size for circular button */
+    height: 60px; /* Adjust size for circular button */
+    border-radius: 50%; /* Make the button circular */
+    border: none;
+    font-size: 30px; /* Size of the plus sign */
+    font-weight: bold;
+    text-align: center;
+    line-height: 60px; /* Vertically center the plus sign */
+    cursor: pointer;
+    display: none; /* Initially hidden */
+    position: fixed;
+    bottom: 20px; /* Positioned at the bottom left */
+    left: 20px; /* Positioned at the left */
+    z-index: 1000;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); /* Optional: Add a subtle shadow */
 }
 
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
+/* Hover effect */
+#installButton:hover {
+    background-color: #a53f05; /* Darker shade of Sorani for hover effect */
 }
 
-/* Header Section */
-h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-/* Search Box Section */
-#search-box-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-#search-input {
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-  margin-right: 10px;
-  width: 250px;
-}
-
-#search-button,
-#clear-button {
-  padding: 10px 15px;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-/* Search Button Color */
-#search-button {
-  background-color: #2e6095; /* Correct color */
-  color: white;
-  border: none;
-}
-
-/* Clear Button Color */
-#clear-button {
-  background-color: #f5c265; /* Correct color */
-  color: white;
-  border: none;
-}
-
-#clear-button:hover,
-#search-button:hover {
-  opacity: 0.9;
-}
-
-/* Search Results Section */
-#search-results-container {
-  width: 80%;
-  max-width: 800px;
-  margin-top: 30px;
-}
-
-#search-results {
-  display: none;
-  flex-direction: column;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: 20px;
-  background-color: white;
-}
-
-#search-results h2 {
-  margin-bottom: 15px;
-}
-
-#search-results p {
-  margin: 10px 0;
-  font-size: 18px;
-}
-
-.column-header {
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-.column-header.sorani {
-  color: #c05510;
-}
-
-.column-header.badini {
-  color: #f5c265;
-}
-
-.column-header.hawrami {
-  color: #2e6095;
-}
-
-.column-data {
-  color: black;
-  font-size: 16px;
-  margin-left: 10px;
-}
-
-/* Install Button */
-#install-button {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #2e6095;
-  color: white;
-  padding: 15px;
-  border-radius: 50%;
-  font-size: 30px;
-  cursor: pointer;
-  border: none;
-}
-
-#install-button:hover {
-  opacity: 0.9;
+/* Optional: Smooth transition for appearance */
+#installButton {
+    transition: all 0.3s ease-in-out;
 }
