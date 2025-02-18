@@ -56,6 +56,12 @@ document.getElementById('searchButton').addEventListener('click', async () => {
   }
 });
 
+// Handle Clear Button Click
+document.getElementById('clearButton').addEventListener('click', () => {
+  document.getElementById('searchInput').value = ''; // Clear the input field
+  document.getElementById('resultsContainer').innerHTML = ''; // Clear the results
+});
+
 // Function to display search results
 function displayResults(results) {
   const resultsContainer = document.getElementById('resultsContainer');
@@ -66,15 +72,25 @@ function displayResults(results) {
     return;
   }
 
+  // Display results with headers for each column
+  const headerHtml = `
+    <div class="result">
+      <p><strong>سۆرانی</strong></p>
+      <p><strong>بادینی</strong></p>
+      <p><strong>هەورامی</strong></p>
+    </div>
+  `;
+  resultsContainer.innerHTML += headerHtml;
+
+  // Loop through results and display them
   results.forEach(result => {
     const resultDiv = document.createElement('div');
     resultDiv.classList.add('result');
 
-    // Create the result display
     resultDiv.innerHTML = `
-      <p><strong>سۆرانی:</strong> <span style="color: #c05510;">${result.sorani}</span></p>
-      <p><strong>بادینی:</strong> <span style="color: #f5c265;">${result.badini}</span></p>
-      <p><strong>هەورامی:</strong> <span style="color: #2e6095;">${result.hewarami}</span></p>
+      <p style="color: #000000;">${result.sorani}</p>
+      <p style="color: #000000;">${result.badini}</p>
+      <p style="color: #000000;">${result.hewarami}</p>
     `;
     
     // Append each result to the container
