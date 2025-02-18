@@ -34,7 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingScreen.style.display = 'flex';
 
             // Fetch data from Google Sheets API
-            const response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/1nE2ohOnINWPDd2u3_ajVBXaM8lR3gQqvUSe0pE9UJH4/values/Sheet1!A:C?key=AIzaSyAf5iWmlgcpHOOib8wClGC5hH2DoX0g3OM');
+            const sheetID = 'kurdialect'; // Your Google Sheets ID
+            const apiKey = 'AIzaSyAf5iWmlgcpHOOib8wClGC5hH2DoX0g3OM'; // Your API Key
+            const range = 'Sheet1'; // Adjust according to the actual sheet name if needed
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetID}/values/${range}?key=${apiKey}`;
+            const response = await fetch(url);
             const data = await response.json();
 
             // Hide loading screen once data is fetched
@@ -46,9 +50,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (searchTerm) {
                     // Filter the data based on search term
                     const filteredData = data.values.filter(row => 
-                        row[0].includes(searchTerm) ||  // سۆرانی
-                        row[1].includes(searchTerm) ||  // بادینی
-                        row[2].includes(searchTerm)     // هەورامی
+                        row[0].includes(searchTerm) || // Column for سۆرانی
+                        row[1].includes(searchTerm) || // Column for بادینی
+                        row[2].includes(searchTerm)    // Column for هەورامی
                     );
 
                     if (filteredData.length > 0) {
