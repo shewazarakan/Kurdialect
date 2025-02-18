@@ -1,37 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kurdialect</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kurdialect</title>
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    /* Center search box and buttons */
+    .search-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 300px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #search-btn {
+      background-color: #2e6095; /* Search button color */
+      color: white;
+    }
+
+    #clear-btn {
+      background-color: #f5c265; /* Clear button color */
+      color: white;
+    }
+
+    /* Search results box style */
+    .results-container {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+
+    /* Column colors */
+    .column-sorani {
+      color: #c05510; /* سۆرانی column color */
+    }
+
+    .column-badini {
+      color: #f5c265; /* بادینی column color */
+    }
+
+    .column-hawrami {
+      color: #2e6095; /* هەورامی column color */
+    }
+
+    .data {
+      color: black; /* Data color */
+    }
+
+    /* Install button style */
+    #install-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #2e6095;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Kurdialect</h1>
-        
-        <!-- Search Box -->
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search...">
-            <div class="buttons">
-                <button class="search-btn" onclick="searchData()">Search</button>
-                <button class="clear-btn" onclick="clearSearch()">Clear</button>
-            </div>
-        </div>
 
-        <!-- Error Messages Box -->
-        <div id="errorMessages" style="color: red;"></div>
+  <!-- Search Section -->
+  <div class="search-container">
+    <input type="text" id="search-box" placeholder="Search..." />
+    <button id="search-btn">Search</button>
+    <button id="clear-btn">Clear</button>
+  </div>
 
-        <!-- Search Results Box -->
-        <div id="resultsBox" class="results-box" style="display: none;">
-            <h2>Search Results</h2>
-            <div id="results"></div>
-        </div>
-    </div>
+  <!-- Search Results Box -->
+  <div class="results-container" id="results-box">
+    <h3>Search Results</h3>
+    <div id="results"></div>
+  </div>
 
-    <!-- Install Button -->
-    <button id="install-btn">+</button>
+  <!-- Install Button -->
+  <button id="install-button">Install</button>
 
-    <script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
