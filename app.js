@@ -27,14 +27,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Fetch local data (offline usage)
+    // Fetch data and perform the search
     const fetchData = async () => {
         try {
             // Show loading screen
             loadingScreen.style.display = 'flex';
 
-            // Load data from local data.json file
-            const response = await fetch('data/data.json'); // Path to local file
+            // Fetch the local data (data.json)
+            const response = await fetch('data.json');
             const data = await response.json();
 
             // Hide loading screen once data is fetched
@@ -80,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
 
                             resultDiv.innerHTML = resultHTML;
+                            resultDiv.classList.add('result');
                             outputContainer.appendChild(resultDiv);
                         });
                     } else {
