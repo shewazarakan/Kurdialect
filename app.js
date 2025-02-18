@@ -2,44 +2,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadingScreen = document.getElementById('loadingScreen');
     const searchButton = document.getElementById('searchButton');
     const clearButton = document.getElementById('clearButton');
-    const installButton = document.getElementById('installButton');
     const outputContainer = document.getElementById('output');
-    let deferredPrompt;
-
-    // Show the install prompt when available
-    window.addEventListener('beforeinstallprompt', (event) => {
-        event.preventDefault();
-        deferredPrompt = event;
-        if (installButton) {
-            installButton.style.display = 'block'; // Show the install button
-        }
-    });
-
-    if (installButton) {
-        installButton.addEventListener('click', () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    console.log(choiceResult.outcome);
-                    deferredPrompt = null; // Reset the prompt
-                });
-            }
-        });
-    }
-
+    
     // Fetch data and perform the search
     const fetchData = async () => {
         try {
             // Show loading screen
             loadingScreen.style.display = 'flex';
 
-            // Fetch data from Google Sheets API
-            const sheetID = 'kurdialect'; // Your Google Sheets ID
-            const apiKey = 'AIzaSyAf5iWmlgcpHOOib8wClGC5hH2DoX0g3OM'; // Your API Key
-            const range = 'Sheet1'; // Adjust according to the actual sheet name if needed
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetID}/values/${range}?key=${apiKey}`;
-            const response = await fetch(url);
+            const response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/1nE2ohOnINWPDd2u3_ajVBXaM8lR3gQqvUSe0pE9UJH4/values/Sheet1?key=AIzaSyAf5iWmlgcpHOOib8wClGC5hH2DoX0g3OM');
             const data = await response.json();
+
+            // Get the actual sheet data (values) (excluding the header row)
+            const sheetData = data.values.slice(1);  // This removes the header row
 
             // Hide loading screen once data is fetched
             loadingScreen.style.display = 'none';
@@ -48,11 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
             searchButton.addEventListener('click', () => {
                 const searchTerm = document.getElementById('searchInput').value.trim();
                 if (searchTerm) {
-                    // Filter the data based on search term
-                    const filteredData = data.values.filter(row => 
-                        row[0].includes(searchTerm) || // Column for سۆرانی
-                        row[1].includes(searchTerm) || // Column for بادینی
-                        row[2].includes(searchTerm)    // Column for هەورامی
+                    // Filter the data based on search term across all columns
+                    const filteredData = sheetData.filter(row => 
+                        row[0].includes(searchTerm) || // سۆرانی
+                        row[1].includes(searchTerm) || // بادینی
+                        row[2].includes(searchTerm)   // هەورامی
                     );
 
                     if (filteredData.length > 0) {
