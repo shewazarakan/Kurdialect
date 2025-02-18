@@ -3,31 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchButton = document.getElementById('searchButton');
     const clearButton = document.getElementById('clearButton');
     const outputContainer = document.getElementById('output');
-    let deferredPrompt;
-
-    // Show the install prompt when available
-    window.addEventListener('beforeinstallprompt', (event) => {
-        event.preventDefault();
-        deferredPrompt = event;
-        const installButton = document.getElementById('installButton');
-        if (installButton) {
-            installButton.style.display = 'block'; // Show the install button
-        }
-    });
-
-    if (installButton) {
-        installButton.addEventListener('click', () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    console.log(choiceResult.outcome);
-                    deferredPrompt = null; // Reset the prompt
-                });
-            }
-        });
-    }
-
-    // Fetch data and perform the search
+    
+    // Fetch data from Google Sheets API
     const fetchData = async () => {
         try {
             // Show loading screen
@@ -45,38 +22,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (searchTerm) {
                     // Filter the data based on search term
                     const filteredData = data.values.filter(row => 
-                        row[0].includes(searchTerm) || 
-                        row[1].includes(searchTerm) || 
-                        row[2].includes(searchTerm)
+                        row[0].includes(searchTerm) || // سۆرانی
+                        row[1].includes(searchTerm) || // بادینی
+                        row[2].includes(searchTerm)    // هەورامی
                     );
 
                     if (filteredData.length > 0) {
                         // Clear previous results
                         outputContainer.innerHTML = '';
 
-                        // Add search result heading only once
-                        const resultHeading = document.createElement('h3');
-                        resultHeading.innerHTML = '<strong>SEARCH RESULTS</strong>';
-                        outputContainer.appendChild(resultHeading);
-
+                        // Loop through each result
                         filteredData.forEach(row => {
                             const resultDiv = document.createElement('div');
                             let resultHTML = '';
 
                             // Determine which column the match is in and format the result
                             if (row[0].includes(searchTerm)) {
-                                resultHTML += `<p style="color: #000000;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
+                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
                                 resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row[1]}</p>`;
                                 resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row[2]}</p>`;
                             } else if (row[1].includes(searchTerm)) {
                                 resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row[1]}</p>`;
-                                resultHTML += `<p style="color: #000000;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
+                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
                                 resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row[2]}</p>`;
                             } else if (row[2].includes(searchTerm)) {
                                 resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row[2]}</p>`;
-                                resultHTML += `<p style="color: #000000;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
+                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
                                 resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row[1]}</p>`;
                             }
+
+                            // Change the data text to black
+                            resultHTML = resultHTML.replace(/<p style=".*?">(.*?)<\/p>/g, (match, p1) => {
+                                return `<p style="color: #000000;">${p1}</p>`; // Make data black
+                            });
 
                             resultDiv.innerHTML = resultHTML;
                             outputContainer.appendChild(resultDiv);
