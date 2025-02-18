@@ -4,13 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearButton = document.getElementById('clearButton');
     const outputContainer = document.getElementById('output');
 
-    // Fetch data from the local file (data.json) in the root folder
+    // Fetch data from the local file (data.json)
     const fetchData = async () => {
         try {
             // Show loading screen
             loadingScreen.style.display = 'flex';
 
-            const response = await fetch('data.json'); // Updated path to fetch from the root folder
+            const response = await fetch('data.json'); // Ensure this path is correct
             const data = await response.json();
 
             // Hide loading screen once data is fetched
@@ -56,6 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
 
                             resultDiv.innerHTML = resultHTML;
+                            resultDiv.style.border = '1px solid #ccc'; // Border for the result
+                            resultDiv.style.padding = '10px'; // Padding for better readability
+                            resultDiv.style.marginBottom = '10px'; // Margin between results
+                            resultDiv.style.backgroundColor = '#ffffff'; // White background for results
                             outputContainer.appendChild(resultDiv);
                         });
                     } else {
@@ -79,13 +83,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fetchData();
 
-    // Floating button logic
+    // Floating button logic (Install button)
     const floatingButton = document.createElement('button');
     floatingButton.innerHTML = '+'; // Plus sign inside the button
     floatingButton.id = 'floatingButton';
     document.body.appendChild(floatingButton);
 
-    // Apply styles to the floating button
+    // Apply styles to the floating button (install button)
     const buttonStyles = `
         #floatingButton {
             position: fixed;
@@ -111,4 +115,46 @@ document.addEventListener('DOMContentLoaded', () => {
     styleSheet.type = 'text/css';
     styleSheet.innerText = buttonStyles;
     document.head.appendChild(styleSheet);
+
+    // Apply styles to the search and clear buttons (square shape)
+    const buttonSquareStyles = `
+        #searchButton, #clearButton {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #searchButton {
+            background-color: #2e6095; /* Search button color */
+            color: white;
+            border: none;
+        }
+
+        #clearButton {
+            background-color: #f5c265; /* Clear button color */
+            color: black;
+            border: none;
+        }
+    `;
+    
+    const styleButtonSheet = document.createElement('style');
+    styleButtonSheet.type = 'text/css';
+    styleButtonSheet.innerText = buttonSquareStyles;
+    document.head.appendChild(styleButtonSheet);
+
+    // Set page background color to pure white
+    const bodyStyle = `
+        body {
+            background-color: #ffffff; /* Pure white background */
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+    `;
+
+    const bodyStyleSheet = document.createElement('style');
+    bodyStyleSheet.type = 'text/css';
+    bodyStyleSheet.innerText = bodyStyle;
+    document.head.appendChild(bodyStyleSheet);
 });
