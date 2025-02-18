@@ -1,99 +1,62 @@
-// Define the Google Sheets API URL
-const sheetId = '1nE2ohOnINWPDd2u3_ajVBXaM8lR3gQqvUSe0pE9UJH4'; // Your Sheet ID
-const apiKey = 'AIzaSyAf5iWmlgcpHOOib8wClGC5hH2DoX0g3OM'; // Your API Key
-const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/database3!A1:Z1000?key=${apiKey}`;
+// Loading Screen Element
+const loadingScreen = document.getElementById('loading');
+const appContent = document.getElementById('app');
+const searchResultsDiv = document.getElementById('results');
+const searchButton = document.getElementById('search-button');
+const clearButton = document.getElementById('clear-button');
 
-// Install Button Logic
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault(); // Prevent the default install prompt
-  deferredPrompt = e;
-  document.getElementById('installButton').style.display = 'block'; // Show install button
-});
+// Google Sheets API URL (this is your SheetDB API endpoint, automatically set from the URL)
+const googleSheetsAPI = 'https://sheetdb.io/api/v1/cg3gwaj5yfawg';
 
-document.getElementById('installButton').addEventListener('click', () => {
-  deferredPrompt.prompt(); // Show the install prompt when clicked
-  deferredPrompt.userChoice.then((choiceResult) => {
-    if (choiceResult.outcome === 'accepted') {
-      console.log('User accepted the A2HS prompt');
-    } else {
-      console.log('User dismissed the A2HS prompt');
-    }
-    deferredPrompt = null;
-  });
-});
+// Fetch the data from Google Sheets API
+fetch(googleSheetsAPI)
+    .then(response => response.json()) // Parse the JSON response
+    .then(data => {
+        // Hide the loading screen once the data is fetched
+        loadingScreen.style.display = 'none';
+        appContent.style.display = 'block'; // Show the app content
 
-// Handle Search Button Click
-document.getElementById('searchButton').addEventListener('click', async () => {
-  const searchInput = document.getElementById('searchInput').value.trim();
-  if (!searchInput) {
-    alert('Please enter a search term!');
-    return;
-  }
-
-  // Fetch data from Google Sheets
-  try {
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    const rows = data.values;
-    const searchResults = [];
-
-    // Loop through rows to find matches
-    rows.forEach((row) => {
-      if (row[0] && row[0].includes(searchInput)) {
-        searchResults.push({ sorani: row[0], badini: row[1], hewarami: row[2] });
-      } else if (row[1] && row[1].includes(searchInput)) {
-        searchResults.push({ sorani: row[0], badini: row[1], hewarami: row[2] });
-      } else if (row[2] && row[2].includes(searchInput)) {
-        searchResults.push({ sorani: row[0], badini: row[1], hewarami: row[2] });
-      }
+        // Handle the data and set up search functionality
+        setupSearch(data);
+    })
+    .catch(error => {
+        // Handle errors (if the API request fails)
+        console.error('Error fetching data:', error);
+        loadingScreen.innerHTML = 'Failed to load data. Please try again later.';
     });
 
-    displayResults(searchResults);
+// Setup Search functionality
+function setupSearch(data) {
+    searchButton.addEventListener('click', () => {
+        const searchTerm = document.getElementById('search-input').value.toLowerCase();
+        const filteredData = data.filter(row => row.sورانی.toLowerCase().includes(searchTerm) || row.bادینی.toLowerCase().includes(searchTerm) || row.hەورامی.toLowerCase().includes(searchTerm));
 
-  } catch (error) {
-    console.error('Error fetching data from Google Sheets:', error);
-  }
-});
+        displaySearchResults(filteredData);
+    });
 
-// Handle Clear Button Click
-document.getElementById('clearButton').addEventListener('click', () => {
-  document.getElementById('searchInput').value = ''; // Clear the input field
-  document.getElementById('resultsContainer').innerHTML = ''; // Clear the results
-});
+    clearButton.addEventListener('click', () => {
+        document.getElementById('search-input').value = '';
+        searchResultsDiv.innerHTML = ''; // Clear the results
+    });
+}
 
-// Function to display search results
-function displayResults(results) {
-  const resultsContainer = document.getElementById('resultsContainer');
-  resultsContainer.innerHTML = ''; // Clear previous results
+// Display Search Results
+function displaySearchResults(results) {
+    searchResultsDiv.innerHTML = ''; // Clear any previous results
 
-  if (results.length === 0) {
-    resultsContainer.innerHTML = 'No results found.';
-    return;
-  }
+    if (results.length === 0) {
+        searchResultsDiv.innerHTML = '<p>No results found.</p>';
+        return;
+    }
 
-  // Display results with headers for each column
-  const headerHtml = `
-    <div class="result">
-      <p><strong>سۆرانی</strong></p>
-      <p><strong>بادینی</strong></p>
-      <p><strong>هەورامی</strong></p>
-    </div>
-  `;
-  resultsContainer.innerHTML += headerHtml;
-
-  // Loop through results and display them
-  results.forEach(result => {
-    const resultDiv = document.createElement('div');
-    resultDiv.classList.add('result');
-
-    resultDiv.innerHTML = `
-      <p style="color: #000000;">${result.sorani}</p>
-      <p style="color: #000000;">${result.badini}</p>
-      <p style="color: #000000;">${result.hewarami}</p>
-    `;
-    
-    // Append each result to the container
-    resultsContainer.appendChild(resultDiv);
-  });
+    // Render the results (for simplicity, just display all the data in the search result)
+    results.forEach(row => {
+        const resultDiv = document.createElement('div');
+        resultDiv.innerHTML = `
+            <div style="color: #c05510;">Data: ${row.sورانی}</div>
+            <div style="color: #f5c265;">Data: ${row.bادینی}</div>
+            <div style="color: #2e6095;">Data: ${row.hەورامی}</div>
+        `;
+        searchResultsDiv.appendChild(resultDiv);
+    });
 }
