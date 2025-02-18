@@ -1,95 +1,88 @@
-const searchButton = document.getElementById("search-button");
-const clearButton = document.getElementById("clear-button");
-const searchInput = document.getElementById("search-input");
-const resultsContainer = document.getElementById("results-body");
-const loadingScreen = document.getElementById("loading");
-const appContent = document.getElementById("app");
-const installButton = document.getElementById("install-button");
+let searchResults = [];
+const apiUrl = 'https://sheets.googleapis.com/v4/spreadsheets/1nE2ohOnINWPDd2u3_ajVBXaM8lR3gQqvUSe0pE9UJH4/values/database3!A1:C1000?key=YOUR_API_KEY';
+const installButton = document.getElementById('install-btn');
 
-let deferredPrompt; // To store the install event
+// Listen for search input change
+document.getElementById('searchInput').addEventListener('input', function() {
+    searchResults = [];
+    document.getElementById('resultsBox').style.display = 'none';
+    document.getElementById('errorMessages').textContent = '';
+});
 
-// Google Sheets API URL
-let apiUrl = "https://sheets.googleapis.com/v4/spreadsheets/1nE2ohOnINWPDd2u3_ajVBXaM8lR3gQqvUSe0pE9UJH4/values/database3?key=YOUR_API_KEY";
+// Perform search when Search button is clicked
+function searchData() {
+    const searchTerm = document.getElementById('searchInput').value.trim();
+    if (!searchTerm) {
+        document.getElementById('errorMessages').textContent = 'Please enter a search term.';
+        return;
+    }
+    
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            searchResults = [];
+            const values = data.values;
+            for (let row of values) {
+                if (row[0].includes(searchTerm) || row[1].includes(searchTerm) || row[2].includes(searchTerm)) {
+                    searchResults.push(row);
+                }
+            }
 
-// Show loading screen while fetching data
-function showLoading() {
-    loadingScreen.style.display = "block";
-    appContent.style.display = "none";
+            if (searchResults.length === 0) {
+                document.getElementById('errorMessages').textContent = 'No results found.';
+            } else {
+                displayResults();
+            }
+        })
+        .catch(error => {
+            document.getElementById('errorMessages').textContent = 'Error fetching data.';
+            console.error(error);
+        });
 }
 
-// Hide loading screen and show app content
-function hideLoading() {
-    loadingScreen.style.display = "none";
-    appContent.style.display = "block";
-}
-
-// Fetch data from Google Sheets API
-async function fetchData(query) {
-    showLoading();
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    const rows = data.values.slice(1); // Exclude header row
-    const results = [];
-
-    rows.forEach((row) => {
-        if (row[0].includes(query) || row[1].includes(query) || row[2].includes(query)) {
-            results.push(row);
-        }
+// Display results in the results box
+function displayResults() {
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = '';
+    searchResults.forEach(result => {
+        const rowDiv = document.createElement('div');
+        
+        rowDiv.innerHTML = `
+            <div class="column sorani">سۆرانی: <span class="data">${result[0]}</span></div>
+            <div class="column badini">بادینی: <span class="data">${result[1]}</span></div>
+            <div class="column herami">هەورامی: <span class="data">${result[2]}</span></div>
+        `;
+        resultsDiv.appendChild(rowDiv);
     });
 
-    displayResults(results);
+    document.getElementById('resultsBox').style.display = 'block';
 }
 
-// Display search results
-function displayResults(results) {
-    resultsContainer.innerHTML = "";
-
-    if (results.length > 0) {
-        results.forEach((row) => {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td>${row[0]}</td>
-                <td>${row[1]}</td>
-                <td>${row[2]}</td>
-            `;
-            resultsContainer.appendChild(tr);
-        });
-    } else {
-        resultsContainer.innerHTML = "<tr><td colspan='3'>No results found</td></tr>";
-    }
-
-    hideLoading();
+// Clear the search input and results
+function clearSearch() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('errorMessages').textContent = '';
+    document.getElementById('resultsBox').style.display = 'none';
 }
 
-// Clear search results
-clearButton.addEventListener("click", () => {
-    searchInput.value = "";
-    resultsContainer.innerHTML = "";
-});
-
-// Search button event
-searchButton.addEventListener("click", () => {
-    const query = searchInput.value.trim();
-    if (query) {
-        fetchData(query);
-    }
-});
-
-// Handle Install Button Logic
-window.addEventListener("beforeinstallprompt", (event) => {
-    event.preventDefault();
+// Service Worker install logic for PWA
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (event) => {
     deferredPrompt = event;
-    installButton.style.display = "block"; // Show the install button
+    installButton.style.display = 'block';
 });
 
-installButton.addEventListener("click", () => {
+installButton.addEventListener('click', () => {
     if (deferredPrompt) {
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === "accepted") {
-                installButton.style.display = "none"; // Hide button after install
+            if (choiceResult.outcome === 'accepted') {
+                console.log('User accepted the install prompt');
+            } else {
+                console.log('User dismissed the install prompt');
             }
             deferredPrompt = null;
+            installButton.style.display = 'none';
         });
     }
 });
