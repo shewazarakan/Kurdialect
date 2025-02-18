@@ -33,8 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Show loading screen
             loadingScreen.style.display = 'flex';
 
-            const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/1nE2ohOnINWPDd2u3_ajVBXaM8lR3gQqvUSe0pE9UJH4/values/Data?key=AIzaSyAf5iWmlgcpHOOib8wClGC5hH2DoX0g3OM`);
+            const response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/1nE2ohOnINWPDd2u3_ajVBXaM8lR3gQqvUSe0pE9UJH4/values/database3?key=AIzaSyAf5iWmlgcpHOOib8wClGC5hH2DoX0g3OM');
             const data = await response.json();
+            const rows = data.values.slice(1); // Skip header row
 
             // Hide loading screen once data is fetched
             loadingScreen.style.display = 'none';
@@ -44,10 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const searchTerm = document.getElementById('searchInput').value.trim();
                 if (searchTerm) {
                     // Filter the data based on search term
-                    const filteredData = data.values.filter(row => 
-                        row[0].includes(searchTerm) || 
-                        row[1].includes(searchTerm) || 
-                        row[2].includes(searchTerm)
+                    const filteredData = rows.filter(row => 
+                        row[0].includes(searchTerm) ||  // سۆرانی
+                        row[1].includes(searchTerm) ||  // بادینی
+                        row[2].includes(searchTerm)     // هەورامی
                     );
 
                     if (filteredData.length > 0) {
