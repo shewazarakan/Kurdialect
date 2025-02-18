@@ -3,6 +3,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchButton = document.getElementById('searchButton');
     const clearButton = document.getElementById('clearButton');
     const outputContainer = document.getElementById('output');
+    const installButton = document.getElementById('installButton');  // Install button element
+    let deferredPrompt;
+
+    // Show the install prompt when available
+    window.addEventListener('beforeinstallprompt', (event) => {
+        event.preventDefault();
+        deferredPrompt = event;
+        if (installButton) {
+            installButton.style.display = 'block'; // Show the install button
+        }
+    });
+
+    if (installButton) {
+        installButton.addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    console.log(choiceResult.outcome);
+                    deferredPrompt = null; // Reset the prompt
+                });
+            }
+        });
+    }
 
     // Fetch data and perform the search
     const fetchData = async () => {
