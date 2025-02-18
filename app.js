@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Show loading screen
             loadingScreen.style.display = 'flex';
 
-            const response = await fetch('data/data.json'); // Make sure the file is in the correct directory
+            const response = await fetch('data/data.json'); // Ensure the JSON file is in the correct directory
             const data = await response.json();
 
             // Hide loading screen once data is fetched
@@ -79,9 +79,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
 
                             resultDiv.innerHTML = resultHTML;
-                            resultDiv.style.border = "1px solid #ccc"; // Add border to result
-                            resultDiv.style.marginBottom = "10px"; // Space between results
-                            resultDiv.style.padding = "10px"; // Padding inside the result box
+                            resultDiv.style.border = '1px solid #ddd'; // Border for search results
+                            resultDiv.style.backgroundColor = 'white'; // White background for results
+                            resultDiv.style.padding = '10px';
+                            resultDiv.style.marginBottom = '10px';
                             outputContainer.appendChild(resultDiv);
                         });
                     } else {
