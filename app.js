@@ -6,7 +6,9 @@ const loadingScreen = document.getElementById("loading");
 const appContent = document.getElementById("app");
 const installButton = document.getElementById("install-button");
 
-let deferredPrompt;
+let deferredPrompt; // To store the install event
+
+// Google Sheets API URL
 let apiUrl = "https://sheets.googleapis.com/v4/spreadsheets/1nE2ohOnINWPDd2u3_ajVBXaM8lR3gQqvUSe0pE9UJH4/values/database3?key=YOUR_API_KEY";
 
 // Show loading screen while fetching data
@@ -73,20 +75,21 @@ searchButton.addEventListener("click", () => {
     }
 });
 
-// Handle install prompt
+// Handle Install Button Logic
 window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
     deferredPrompt = event;
-    installButton.style.display = "block";
+    installButton.style.display = "block"; // Show the install button
 });
 
 installButton.addEventListener("click", () => {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === "accepted") {
-            console.log("User accepted the A2HS prompt");
-        } else {
-            console.log("User dismissed the A2HS prompt");
-        }
-        deferredPrompt = null;
-    });
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === "accepted") {
+                installButton.style.display = "none"; // Hide button after install
+            }
+            deferredPrompt = null;
+        });
+    }
 });
