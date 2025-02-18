@@ -4,19 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kurdialect</title>
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="loadingScreen" style="display: none;">
-        Loading...
-    </div>
-    <div id="app">
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">Loading...</div>
+
+    <!-- Search and Clear Section -->
+    <div class="search-container">
         <input type="text" id="searchInput" placeholder="Search...">
         <button id="searchButton">Search</button>
         <button id="clearButton">Clear</button>
-        <div id="output"></div>
     </div>
-    <button id="installButton" style="display: none;">Install</button>
+
+    <!-- Output Container -->
+    <div id="output"></div>
+
+    <!-- Install Button (PWA install prompt) -->
+    <button id="installButton" style="display:none;">Install App</button>
 
     <script src="app.js"></script>
 </body>
