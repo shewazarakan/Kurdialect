@@ -2,32 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadingScreen = document.getElementById('loadingScreen');
     const searchButton = document.getElementById('searchButton');
     const clearButton = document.getElementById('clearButton');
-    const installButton = document.getElementById('installButton');
     const outputContainer = document.getElementById('output');
-    let deferredPrompt;
 
-    // Show the install prompt when available
-    window.addEventListener('beforeinstallprompt', (event) => {
-        event.preventDefault();
-        deferredPrompt = event;
-        if (installButton) {
-            installButton.style.display = 'block'; // Show the install button
-        }
-    });
-
-    if (installButton) {
-        installButton.addEventListener('click', () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    console.log(choiceResult.outcome);
-                    deferredPrompt = null; // Reset the prompt
-                });
-            }
-        });
-    }
-
-    // Fetch data and perform the search
+    // Fetch data from Google Sheets
     const fetchData = async () => {
         try {
             // Show loading screen
@@ -45,9 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (searchTerm) {
                     // Filter the data based on search term
                     const filteredData = data.values.filter(row => 
-                        row[0].includes(searchTerm) || 
-                        row[1].includes(searchTerm) || 
-                        row[2].includes(searchTerm)
+                        row[0].includes(searchTerm) ||  // column سۆرانی
+                        row[1].includes(searchTerm) ||  // column بادینی
+                        row[2].includes(searchTerm)     // column هەورامی
                     );
 
                     if (filteredData.length > 0) {
