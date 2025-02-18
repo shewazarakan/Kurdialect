@@ -1,59 +1,83 @@
-document.getElementById("searchButton").addEventListener("click", searchData);
-document.getElementById("clearButton").addEventListener("click", clearSearch);
+// Define the Google Sheets API URL
+const sheetId = '1nE2ohOnINWPDd2u3_ajVBXaM8lR3gQqvUSe0pE9UJH4'; // Your Sheet ID
+const apiKey = 'AIzaSyAf5iWmlgcpHOOib8wClGC5hH2DoX0g3OM'; // Your API Key
+const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/database3!A1:Z1000?key=${apiKey}`;
 
-function searchData() {
-    const searchTerm = document.getElementById("searchInput").value.toLowerCase();
-    if (searchTerm) {
-        fetch(`https://sheets.googleapis.com/v4/spreadsheets/1nE2ohOnINWPDd2u3_ajVBXaM8lR3gQqvUSe0pE9UJH4/values/database3!A1:C1000?key=AIzaSyAf5iWmlgcpHOOib8wClGC5hH2DoX0g3OM`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("API request failed with status " + response.status);
-                }
-                return response.json();
-            })
-            .then(data => {
-                const rows = data.values;
-                const results = rows.filter(row => 
-                    row.some(cell => cell.toLowerCase().includes(searchTerm))
-                );
+// Install Button Logic
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault(); // Prevent the default install prompt
+  deferredPrompt = e;
+  document.getElementById('installButton').style.display = 'block'; // Show install button
+});
 
-                const outputContainer = document.getElementById("output");
-                outputContainer.innerHTML = ""; // Clear previous results
-                
-                if (results.length > 0) {
-                    results.forEach(row => {
-                        const resultRow = document.createElement("div");
-                        resultRow.style.marginBottom = "10px";
-
-                        row.forEach((cell, index) => {
-                            const cellElement = document.createElement("div");
-                            cellElement.textContent = cell;
-                            cellElement.style.color = "#000000"; // Data color (black)
-                            if (index === 0) {
-                                cellElement.style.backgroundColor = "#c05510"; // سۆرانی color
-                            } else if (index === 1) {
-                                cellElement.style.backgroundColor = "#f5c265"; // بادینی color
-                            } else if (index === 2) {
-                                cellElement.style.backgroundColor = "#2e6095"; // هەورامی color
-                            }
-                            resultRow.appendChild(cellElement);
-                        });
-
-                        outputContainer.appendChild(resultRow);
-                    });
-                } else {
-                    outputContainer.innerHTML = "<p>No results found.</p>";
-                }
-            })
-            .catch(error => {
-                console.error("Error fetching data:", error);
-                const outputContainer = document.getElementById("output");
-                outputContainer.innerHTML = "<p>There was an error fetching data. Please try again later.</p>";
-            });
+document.getElementById('installButton').addEventListener('click', () => {
+  deferredPrompt.prompt(); // Show the install prompt when clicked
+  deferredPrompt.userChoice.then((choiceResult) => {
+    if (choiceResult.outcome === 'accepted') {
+      console.log('User accepted the A2HS prompt');
+    } else {
+      console.log('User dismissed the A2HS prompt');
     }
-}
+    deferredPrompt = null;
+  });
+});
 
-function clearSearch() {
-    document.getElementById("searchInput").value = "";
-    document.getElementById("output").innerHTML = "";
+// Handle Search Button Click
+document.getElementById('searchButton').addEventListener('click', async () => {
+  const searchInput = document.getElementById('searchInput').value.trim();
+  if (!searchInput) {
+    alert('Please enter a search term!');
+    return;
+  }
+
+  // Fetch data from Google Sheets
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    const rows = data.values;
+    const searchResults = [];
+
+    // Loop through rows to find matches
+    rows.forEach((row) => {
+      if (row[0] && row[0].includes(searchInput)) {
+        searchResults.push({ sorani: row[0], badini: row[1], hewarami: row[2] });
+      } else if (row[1] && row[1].includes(searchInput)) {
+        searchResults.push({ sorani: row[0], badini: row[1], hewarami: row[2] });
+      } else if (row[2] && row[2].includes(searchInput)) {
+        searchResults.push({ sorani: row[0], badini: row[1], hewarami: row[2] });
+      }
+    });
+
+    displayResults(searchResults);
+
+  } catch (error) {
+    console.error('Error fetching data from Google Sheets:', error);
+  }
+});
+
+// Function to display search results
+function displayResults(results) {
+  const resultsContainer = document.getElementById('resultsContainer');
+  resultsContainer.innerHTML = ''; // Clear previous results
+
+  if (results.length === 0) {
+    resultsContainer.innerHTML = 'No results found.';
+    return;
+  }
+
+  results.forEach(result => {
+    const resultDiv = document.createElement('div');
+    resultDiv.classList.add('result');
+
+    // Create the result display
+    resultDiv.innerHTML = `
+      <p><strong>سۆرانی:</strong> <span style="color: #c05510;">${result.sorani}</span></p>
+      <p><strong>بادینی:</strong> <span style="color: #f5c265;">${result.badini}</span></p>
+      <p><strong>هەورامی:</strong> <span style="color: #2e6095;">${result.hewarami}</span></p>
+    `;
+    
+    // Append each result to the container
+    resultsContainer.appendChild(resultDiv);
+  });
 }
