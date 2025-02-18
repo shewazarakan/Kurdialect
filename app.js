@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchButton = document.getElementById('searchButton');
     const clearButton = document.getElementById('clearButton');
     const outputContainer = document.getElementById('output');
-    const installButton = document.getElementById('installButton');  // Install button element
+    const installButton = document.getElementById('installButton');
     let deferredPrompt;
 
     // Show the install prompt when available
