@@ -1,37 +1,130 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kurdialect</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Kurdialect</h1>
-        
-        <!-- Search Box -->
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search...">
-            <div class="buttons">
-                <button class="search-btn" onclick="searchData()">Search</button>
-                <button class="clear-btn" onclick="clearSearch()">Clear</button>
-            </div>
-        </div>
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-        <!-- Error Messages Box -->
-        <div id="errorMessages" style="color: red;"></div>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
 
-        <!-- Search Results Box -->
-        <div id="resultsBox" class="results-box" style="display: none;">
-            <h2>Search Results</h2>
-            <div id="results"></div>
-        </div>
-    </div>
+/* Header Section */
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
 
-    <!-- Install Button -->
-    <button id="install-btn">+</button>
+/* Search Box Section */
+#search-box-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
 
-    <script src="app.js"></script>
-</body>
-</html>
+#search-input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  margin-right: 10px;
+  width: 250px;
+}
+
+#search-button,
+#clear-button {
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#search-button {
+  background-color: #2e6095;
+  color: white;
+  border: none;
+}
+
+#clear-button {
+  background-color: #f5c265;
+  color: white;
+  border: none;
+}
+
+#clear-button:hover,
+#search-button:hover {
+  opacity: 0.9;
+}
+
+/* Search Results Section */
+#search-results-container {
+  width: 80%;
+  max-width: 800px;
+  margin-top: 30px;
+}
+
+#search-results {
+  display: none;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
+  background-color: white;
+}
+
+#search-results h2 {
+  margin-bottom: 15px;
+}
+
+#search-results p {
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+.column-header {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.column-header.sorani {
+  color: #c05510;
+}
+
+.column-header.badini {
+  color: #f5c265;
+}
+
+.column-header.hawrami {
+  color: #2e6095;
+}
+
+.column-data {
+  color: black;
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+/* Install Button */
+#install-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #2e6095;
+  color: white;
+  padding: 15px;
+  border-radius: 50%;
+  font-size: 30px;
+  cursor: pointer;
+  border: none;
+}
+
+#install-button:hover {
+  opacity: 0.9;
+}
