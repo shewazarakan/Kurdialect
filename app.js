@@ -52,8 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
 
                             // Change the data text to black
-                            resultHTML = resultHTML.replace(/<p style=".*?">(.*?)<\/p>/g, (match, p1) => {
-                                return `<p style="color: #000000;">${p1}</p>`; // Make data black
+                            resultHTML = resultHTML.replace(/<p style="color: .*?;">(.*?)<\/p>/g, (match, p1) => {
+                                return `<p style="color: #000000;">${p1}</p>`; // Make the data black
                             });
 
                             resultDiv.innerHTML = resultHTML;
