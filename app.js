@@ -65,16 +65,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             // Determine which column the match is in and format the result
                             if (row[0].includes(searchTerm)) {
-                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
+                                resultHTML += `<p style="color: #000000;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
                                 resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row[1]}</p>`;
                                 resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row[2]}</p>`;
                             } else if (row[1].includes(searchTerm)) {
                                 resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row[1]}</p>`;
-                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
+                                resultHTML += `<p style="color: #000000;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
                                 resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row[2]}</p>`;
                             } else if (row[2].includes(searchTerm)) {
                                 resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row[2]}</p>`;
-                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
+                                resultHTML += `<p style="color: #000000;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
                                 resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row[1]}</p>`;
                             }
 
