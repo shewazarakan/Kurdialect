@@ -2,39 +2,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadingScreen = document.getElementById('loadingScreen');
     const searchButton = document.getElementById('searchButton');
     const clearButton = document.getElementById('clearButton');
-    const installButton = document.getElementById('installButton');
     const outputContainer = document.getElementById('output');
-    let deferredPrompt;
 
-    // Show the install prompt when available
-    window.addEventListener('beforeinstallprompt', (event) => {
-        event.preventDefault();
-        deferredPrompt = event;
-        if (installButton) {
-            installButton.style.display = 'block'; // Show the install button
-        }
-    });
-
-    if (installButton) {
-        installButton.addEventListener('click', () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    console.log(choiceResult.outcome);
-                    deferredPrompt = null; // Reset the prompt
-                });
-            }
-        });
-    }
-
-    // Fetch data and perform the search
+    // Fetch data from the local file (data.json) in the root folder
     const fetchData = async () => {
         try {
             // Show loading screen
             loadingScreen.style.display = 'flex';
 
-            // Fetch the local data (data.json)
-            const response = await fetch('data.json');
+            const response = await fetch('data.json'); // Updated path to fetch from the root folder
             const data = await response.json();
 
             // Hide loading screen once data is fetched
@@ -80,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
 
                             resultDiv.innerHTML = resultHTML;
-                            resultDiv.classList.add('result');
                             outputContainer.appendChild(resultDiv);
                         });
                     } else {
@@ -97,8 +72,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Error fetching data:', error);
+            loadingScreen.style.display = 'none'; // Hide loading screen
+            outputContainer.innerHTML = '<p>Error loading data. Please try again later.</p>';
         }
     };
 
     fetchData();
+
+    // Floating button logic
+    const floatingButton = document.createElement('button');
+    floatingButton.innerHTML = '+'; // Plus sign inside the button
+    floatingButton.id = 'floatingButton';
+    document.body.appendChild(floatingButton);
+
+    // Apply styles to the floating button
+    const buttonStyles = `
+        #floatingButton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #c05510; /* Same color as Sorani column */
+            color: white;
+            font-size: 30px;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 1000;
+        }
+    `;
+    
+    const styleSheet = document.createElement('style');
+    styleSheet.type = 'text/css';
+    styleSheet.innerText = buttonStyles;
+    document.head.appendChild(styleSheet);
 });
