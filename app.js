@@ -5,11 +5,23 @@ const RANGE = 'database3';  // The range you're using
 // Fetch data from Google Sheets API
 async function fetchData(query) {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${RANGE}?key=${API_KEY}`;
-    
-    const response = await fetch(url);
-    const data = await response.json();
+    console.log(`Fetching data from: ${url}`);
 
-    return data.values;
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if (data.error) {
+            console.error("Error fetching data:", data.error.message);
+            return [];
+        }
+        
+        console.log("Fetched data:", data.values);
+        return data.values;
+    } catch (error) {
+        console.error("Failed to fetch data:", error);
+        return [];
+    }
 }
 
 // Search functionality
@@ -22,6 +34,11 @@ document.getElementById("searchButton").addEventListener("click", async () => {
     }
 
     const data = await fetchData(searchTerm);
+    if (data.length === 0) {
+        alert("No data found or error occurred.");
+        return;
+    }
+
     const results = searchInData(data, searchTerm);
     displayResults(results);
 });
@@ -66,7 +83,7 @@ const installButton = document.getElementById("installButton");
 
 window.addEventListener("beforeinstallprompt", (event) => {
     deferredPrompt = event;
-    installButton.style.display = "block";
+    installButton.style.display = "block";  // Show the install button when the prompt is available
 });
 
 installButton.addEventListener("click", () => {
@@ -80,3 +97,17 @@ installButton.addEventListener("click", () => {
         deferredPrompt = null;
     });
 });
+
+// Register Service Worker for offline functionality
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker
+            .register('/service-worker.js')
+            .then((registration) => {
+                console.log('Service Worker registered:', registration);
+            })
+            .catch((error) => {
+                console.log('Service Worker registration failed:', error);
+            });
+    });
+}
