@@ -5,42 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kurdialect</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loadingScreen">
-        <div class="spinner"></div>
-        <p>Loading...</p>
-    </div>
+    <!-- Add this for the install button -->
+    <button id="installButton" style="display: none;">Install</button>
 
-    <!-- Search Section -->
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search">
-        <div class="button-group">
-            <button id="searchButton">Search</button>
-            <button id="clearButton">Clear</button>
-        </div>
-    </div>
+    <h1>Search Results</h1>
+    <input type="text" id="searchInput" placeholder="Search...">
+    <button id="searchButton">Search</button>
+    <button id="clearButton">Clear</button>
 
-    <!-- Search Results -->
-    <div id="outputContainer">
-        <h3><strong>SEARCH RESULTS</strong></h3>
-        <div id="output"></div>
-    </div>
-
-    <!-- Install Button -->
-    <button id="installButton" style="display: none; position: fixed; bottom: 20px; right: 20px; background-color: #c05510; color: white; border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 30px;">+</button>
+    <div id="output"></div>
 
     <script src="app.js"></script>
-
-    <!-- Register Service Worker for Offline Support -->
-    <script>
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("service-worker.js")
-                .then(() => console.log("Service Worker Registered"))
-                .catch(error => console.error("Service Worker Registration Failed:", error));
-        }
-    </script>
 </body>
 </html>
