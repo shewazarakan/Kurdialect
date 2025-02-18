@@ -4,128 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kurdialect</title>
-    <link rel="manifest" href="manifest.json">
-    <style>
-        /* Basic Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            text-align: center;
-        }
-
-        h1 {
-            margin-top: 20px;
-            color: #2e6095;
-        }
-
-        /* Search Box Styles */
-        .search-box {
-            margin: 20px auto;
-            width: 80%;
-            max-width: 600px;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .search-box input {
-            padding: 10px;
-            width: 60%;
-            border: 2px solid #2e6095;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        .search-box button {
-            padding: 10px 20px;
-            border: none;
-            background-color: #2e6095;
-            color: white;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 4px;
-        }
-
-        .search-box button:hover {
-            background-color: #1d4872;
-        }
-
-        .clear-button {
-            background-color: #f5c265;
-        }
-
-        .clear-button:hover {
-            background-color: #e5b245;
-        }
-
-        /* Results Box */
-        .results-box {
-            margin-top: 20px;
-            padding: 20px;
-            width: 80%;
-            max-width: 800px;
-            border: 2px solid #ccc;
-            border-radius: 8px;
-            background-color: white;
-            display: none;
-        }
-
-        .results-box h2 {
-            font-size: 20px;
-            color: #333;
-        }
-
-        /* Error Message */
-        .error {
-            color: red;
-            font-size: 16px;
-        }
-
-        /* Install Button */
-        #install-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #2e6095;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 18px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        }
-
-        #install-btn:hover {
-            background-color: #1d4872;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Kurdialect</h1>
-
-    <!-- Search Box -->
-    <div class="search-box">
-        <input type="text" id="searchTerm" placeholder="Search...">
-        <button id="searchBtn">Search</button>
-        <button id="clearBtn" class="clear-button">Clear</button>
+    <div id="loadingScreen" style="display: none;">
+        Loading...
     </div>
-
-    <!-- Search Results Box -->
-    <div class="results-box" id="resultsBox">
-        <h2>Search Results</h2>
-        <div id="error-message" class="error"></div>
-        <div id="results"></div>
+    <div id="app">
+        <input type="text" id="searchInput" placeholder="Search...">
+        <button id="searchButton">Search</button>
+        <button id="clearButton">Clear</button>
+        <div id="output"></div>
     </div>
-
-    <!-- Install Button -->
-    <button id="install-btn">+</button>
+    <button id="installButton" style="display: none;">Install</button>
 
     <script src="app.js"></script>
 </body>
