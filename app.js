@@ -59,6 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         resultHeading.innerHTML = '<strong>SEARCH RESULTS</strong>';
                         outputContainer.appendChild(resultHeading);
 
+                        // Create a container div for the search results
+                        const resultsContainer = document.createElement('div');
+                        resultsContainer.style.border = '2px solid #ddd'; // Border around search results
+                        resultsContainer.style.padding = '10px';
+                        resultsContainer.style.backgroundColor = 'white';
+
                         filteredData.forEach(row => {
                             const resultDiv = document.createElement('div');
                             let resultHTML = '';
@@ -79,12 +85,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
 
                             resultDiv.innerHTML = resultHTML;
-                            resultDiv.style.border = '1px solid #ddd'; // Border for search results
-                            resultDiv.style.backgroundColor = 'white'; // White background for results
-                            resultDiv.style.padding = '10px';
-                            resultDiv.style.marginBottom = '10px';
-                            outputContainer.appendChild(resultDiv);
+                            resultsContainer.appendChild(resultDiv);
                         });
+
+                        outputContainer.appendChild(resultsContainer);
                     } else {
                         outputContainer.innerHTML = '<p>No results found.</p>';
                     }
