@@ -1,71 +1,71 @@
-const apiUrl = 'https://sheets.googleapis.com/v4/spreadsheets/1nE2ohOnINWPDd2u3_ajVBXaM8lR3gQqvUSe0pE9UJH4/values/Sheet1?key=AIzaSyAf5iWmlgcpHOOib8wClGC5hH2DoX0g3OM';
-const searchButton = document.getElementById('searchButton');
-const clearButton = document.getElementById('clearButton');
-const searchBox = document.getElementById('searchBox');
-const searchResults = document.getElementById('searchResults');
-const searchResultsContainer = document.getElementById('searchResultsContainer');
+document.addEventListener("DOMContentLoaded", function() {
+    const searchButton = document.getElementById('searchButton');
+    const clearButton = document.getElementById('clearButton');
+    const searchInput = document.getElementById('searchInput');
+    const searchResultsContainer = document.getElementById('searchResults');
+    
+    // Hide the search results initially
+    searchResultsContainer.style.display = 'none';  // Ensure it’s hidden initially
 
-searchButton.addEventListener('click', search);
-clearButton.addEventListener('click', clearSearch);
+    searchButton.addEventListener('click', function() {
+        const searchQuery = searchInput.value.trim();
 
-function search() {
-  const query = searchBox.value.trim().toLowerCase();
-  if (query === "") {
-    displayError("Please enter a search term.");
-    return;
-  }
+        // Check if there's a search term
+        if (!searchQuery) {
+            alert("Please enter a search term");
+            return;
+        }
 
-  fetch(apiUrl)
-    .then(response => response.json())
-    .then(data => {
-      const rows = data.values;
-      const filteredResults = rows.filter(row => row.some(cell => cell.toLowerCase().includes(query)));
-
-      if (filteredResults.length > 0) {
-        displaySearchResults(filteredResults);
-      } else {
-        displayError("No results found.");
-      }
-    })
-    .catch(error => {
-      displayError("An error occurred while fetching data.");
-      console.error(error);
-    });
-}
-
-function displaySearchResults(results) {
-  searchResultsContainer.style.display = 'block';
-  searchResults.innerHTML = '';
-
-  results.forEach(row => {
-    const resultDiv = document.createElement('div');
-    resultDiv.classList.add('result-row');
-
-    row.forEach((cell, index) => {
-      const columnDiv = document.createElement('div');
-      columnDiv.classList.add('result-column');
-      columnDiv.style.color = getColumnColor(index);
-      columnDiv.textContent = cell;
-      resultDiv.appendChild(columnDiv);
+        // Fetch data from Google Sheets API (Replace the URL with actual endpoint)
+        fetchData(searchQuery);
     });
 
-    searchResults.appendChild(resultDiv);
-  });
-}
+    clearButton.addEventListener('click', function() {
+        searchInput.value = '';
+        searchResultsContainer.style.display = 'none'; // Hide results when cleared
+    });
 
-function displayError(message) {
-  searchResultsContainer.style.display = 'block';
-  searchResults.innerHTML = `<p style="color: red;">${message}</p>`;
-}
+    function fetchData(query) {
+        fetch(`https://sheets.googleapis.com/v4/spreadsheets/1nE2ohOnINWPDd2u3_ajVBXaM8lR3gQqvUSe0pE9UJH4/values:batchGet?ranges=Sheet1!A1:C1000&key=AIzaSyAf5iWmlgcpHOOib8wClGC5hH2DoX0g3OM`)
+            .then(response => response.json())
+            .then(data => {
+                const rows = data.valueRanges[0].values;
+                const results = [];
+                let found = false;
 
-function clearSearch() {
-  searchBox.value = '';
-  searchResults.innerHTML = '';
-  searchResultsContainer.style.display = 'none';
-}
+                rows.forEach(row => {
+                    if (row[0].toLowerCase().includes(query.toLowerCase())) {
+                        results.push(row);
+                        found = true;
+                    }
+                });
 
-function getColumnColor(index) {
-  // Customize your column colors here
-  const columnColors = ['#c05510', '#f5c265', '#2e6095']; // Add or modify as needed
-  return columnColors[index % columnColors.length];
-}
+                if (found) {
+                    displayResults(results);
+                } else {
+                    searchResultsContainer.innerHTML = "No results found.";
+                    searchResultsContainer.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                searchResultsContainer.innerHTML = "Error fetching data.";
+                searchResultsContainer.style.display = 'block';
+            });
+    }
+
+    function displayResults(results) {
+        let output = '';
+        results.forEach(result => {
+            output += `
+                <div class="result-row">
+                    <span class="column-sorani">${result[0]}</span>: 
+                    <span class="column-badini">${result[1]}</span>, 
+                    <span class="column-hawarami">${result[2]}</span>
+                </div>
+            `;
+        });
+        searchResultsContainer.innerHTML = output;
+        searchResultsContainer.style.display = 'block'; // Show the results
+    }
+});
