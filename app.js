@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchButton = document.getElementById('searchButton');
     const clearButton = document.getElementById('clearButton');
     const outputContainer = document.getElementById('output');
-    const installButton = document.getElementById('installButton');  // Install button (if needed)
+    const installButton = document.getElementById('installButton');  // Install button (visible)
     let deferredPrompt;
 
     // Fetch the data from the local data.json
@@ -84,6 +84,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Install button handling (if needed)
     if (installButton) {
-        installButton.style.display = 'none';  // Not needed as per your request
+        installButton.style.display = 'block';  // Ensure it is visible
+        installButton.addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the A2HS prompt');
+                    } else {
+                        console.log('User dismissed the A2HS prompt');
+                    }
+                });
+            }
+        });
     }
+
+    // Listen for the beforeinstallprompt event
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (installButton) {
+            installButton.style.display = 'block'; // Show the install button
+        }
+    });
+
 });
