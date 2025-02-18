@@ -2,30 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadingScreen = document.getElementById('loadingScreen');
     const searchButton = document.getElementById('searchButton');
     const clearButton = document.getElementById('clearButton');
-    const installButton = document.getElementById('installButton');
     const outputContainer = document.getElementById('output');
-    let deferredPrompt;
-
-    // Show the install prompt when available (but remove this part if you don't want the install prompt)
-    window.addEventListener('beforeinstallprompt', (event) => {
-        event.preventDefault();
-        deferredPrompt = event;
-        if (installButton) {
-            installButton.style.display = 'block'; // Show the install button
-        }
-    });
-
-    if (installButton) {
-        installButton.addEventListener('click', () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    console.log(choiceResult.outcome);
-                    deferredPrompt = null; // Reset the prompt
-                });
-            }
-        });
-    }
 
     // Fetch data and perform the search
     const fetchData = async () => {
@@ -99,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Error fetching data:', error);
-            loadingScreen.style.display = 'none'; // Hide loading screen if error occurs
+            loadingScreen.style.display = 'none';
         }
     };
 
