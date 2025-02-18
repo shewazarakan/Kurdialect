@@ -22,39 +22,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (searchTerm) {
                     // Filter the data based on search term
                     const filteredData = data.values.filter(row => 
-                        row[0].includes(searchTerm) || // سۆرانی
-                        row[1].includes(searchTerm) || // بادینی
-                        row[2].includes(searchTerm)    // هەورامی
+                        row[0].includes(searchTerm) || 
+                        row[1].includes(searchTerm) || 
+                        row[2].includes(searchTerm)
                     );
 
                     if (filteredData.length > 0) {
                         // Clear previous results
                         outputContainer.innerHTML = '';
 
-                        // Loop through each result
                         filteredData.forEach(row => {
                             const resultDiv = document.createElement('div');
                             let resultHTML = '';
 
                             // Determine which column the match is in and format the result
                             if (row[0].includes(searchTerm)) {
-                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
-                                resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row[1]}</p>`;
-                                resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row[2]}</p>`;
+                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: <span style="color: #000000;">${row[0]}</span></p>`;
+                                resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: <span style="color: #000000;">${row[1]}</span></p>`;
+                                resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: <span style="color: #000000;">${row[2]}</span></p>`;
                             } else if (row[1].includes(searchTerm)) {
-                                resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row[1]}</p>`;
-                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
-                                resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row[2]}</p>`;
+                                resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: <span style="color: #000000;">${row[1]}</span></p>`;
+                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: <span style="color: #000000;">${row[0]}</span></p>`;
+                                resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: <span style="color: #000000;">${row[2]}</span></p>`;
                             } else if (row[2].includes(searchTerm)) {
-                                resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: ${row[2]}</p>`;
-                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: ${row[0]}</p>`;
-                                resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: ${row[1]}</p>`;
+                                resultHTML += `<p style="color: #2e6095;"><strong>هەورامی</strong>: <span style="color: #000000;">${row[2]}</span></p>`;
+                                resultHTML += `<p style="color: #c05510;"><strong>سۆرانی</strong>: <span style="color: #000000;">${row[0]}</span></p>`;
+                                resultHTML += `<p style="color: #f5c265;"><strong>بادینی</strong>: <span style="color: #000000;">${row[1]}</span></p>`;
                             }
-
-                            // Change the data text to black
-                            resultHTML = resultHTML.replace(/<p style="color: .*?;">(.*?)<\/p>/g, (match, p1) => {
-                                return `<p style="color: #000000;">${p1}</p>`; // Make the data black
-                            });
 
                             resultDiv.innerHTML = resultHTML;
                             outputContainer.appendChild(resultDiv);
