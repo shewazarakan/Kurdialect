@@ -81,23 +81,29 @@ button:hover {
     font-size: 16px;
 }
 
+/* Search result box style */
 .result-box {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start; /* Align data and image properly */
     align-items: flex-start;
     padding: 10px;
     background-color: #f9f9f9;
     border-radius: 5px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: none;  /* Removed unnecessary shadow */
+    width: auto;
+    margin-bottom: 15px; /* Space between results */
 }
 
+/* Text container style */
 .result-text {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start; /* Align the text at the top */
+    margin-right: 15px; /* Add space between text and image */
     flex-grow: 1;
 }
 
+/* Text paragraph style */
 .result-text p {
     margin: 0;
     font-size: 18px;
@@ -105,16 +111,17 @@ button:hover {
     line-height: 1.5;
 }
 
+/* Image container style */
 .result-image {
     display: flex;
-    align-items: flex-end;
+    align-items: flex-end;  /* Ensure the image aligns at the bottom */
     justify-content: center;
-    max-width: 100px;
-    margin-left: 15px; /* Space between image and text */
+    max-width: 100px; /* Make sure the image is not too big */
+    margin-top: 10px; /* Space between image and text */
 }
 
 .result-image img {
-    max-height: 100px; /* Ensure the image is not too large */
+    max-height: 100px; /* Ensure the image fits inside the box */
     object-fit: cover;
     width: 100%;
 }
