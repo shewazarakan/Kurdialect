@@ -72,7 +72,6 @@ button:hover {
     gap: 10px;
 }
 
-/* Search input box */
 #searchInput {
     width: 300px;
     padding: 12px;
@@ -85,13 +84,13 @@ button:hover {
 .result-box {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: center;  /* Aligns the text and image properly */
     padding: 15px;
     background-color: #f9f9f9;
     border-radius: 5px;
-    border: 2px solid #ddd; /* Add border */
+    border: 1px solid #ccc;  /* Border added */
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    margin-top: 10px; /* Add some spacing between results */
+    width: 100%;
 }
 
 .result-text {
@@ -99,25 +98,28 @@ button:hover {
     flex-direction: column;
     justify-content: space-between;
     flex-grow: 1;
-    font-size: 18px; /* Increase font size */
+    font-size: 18px;  /* Increased text size */
 }
 
 .result-text p {
     margin: 0;
-    font-size: 20px; /* Increase font size */
-    color: #000000;
     line-height: 1.5;
+}
+
+.result-text p strong {
+    font-size: 20px;  /* Larger font for the strong elements */
 }
 
 .result-image {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 15px; /* Space between image and text */
+    max-width: 150px; /* Increased space for image */
+    margin-left: 15px;
 }
 
 .result-image img {
-    max-width: 150px; /* Increase image size */
-    height: auto;
+    max-height: 150px;  /* Increased image size */
     object-fit: cover;
+    width: 100%;
 }
