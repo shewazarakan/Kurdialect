@@ -21,13 +21,14 @@ body {
 h3 {
     text-align: center;
     margin: 20px 0;
+    font-size: 24px; /* Increased for better visibility */
 }
 
 button {
-    font-size: 16px;
-    padding: 12px 20px;
+    font-size: 18px;  /* Increased font size for buttons */
+    padding: 14px 25px; /* Bigger padding */
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 8px;
     border: none;
 }
 
@@ -55,8 +56,8 @@ button:hover {
     background-color: #c05510;
     color: white;
     border-radius: 50%;
-    padding: 15px;
-    font-size: 20px;
+    padding: 18px;
+    font-size: 24px;
     cursor: pointer;
     display: none;
 }
@@ -69,16 +70,17 @@ button:hover {
     padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;  /* Added more gap for better spacing */
 }
 
 #searchInput {
-    width: 300px;
-    padding: 12px;
+    width: 100%;
+    max-width: 400px;
+    padding: 15px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 8px;
     margin-top: 10px;
-    font-size: 16px;
+    font-size: 18px;  /* Increased font size */
 }
 
 /* Search result box style */
@@ -86,12 +88,12 @@ button:hover {
     display: flex;
     justify-content: flex-start; /* Align data and image properly */
     align-items: flex-start;
-    padding: 10px;
+    padding: 15px;  /* Increased padding */
     background-color: #f9f9f9;
-    border-radius: 5px;
+    border-radius: 8px;
     box-shadow: none;  /* Removed unnecessary shadow */
     width: auto;
-    margin-bottom: 15px; /* Space between results */
+    margin-bottom: 20px; /* Space between results */
 }
 
 /* Text container style */
@@ -99,29 +101,30 @@ button:hover {
     display: flex;
     flex-direction: column;
     justify-content: flex-start; /* Align the text at the top */
-    margin-right: 15px; /* Add space between text and image */
+    margin-right: 20px; /* Added more space between text and image */
     flex-grow: 1;
 }
 
 /* Text paragraph style */
 .result-text p {
     margin: 0;
-    font-size: 18px;
+    font-size: 20px;  /* Increased font size */
     color: #000000;
-    line-height: 1.5;
+    line-height: 1.7;
 }
 
 /* Image container style */
 .result-image {
     display: flex;
-    align-items: flex-end;  /* Ensure the image aligns at the bottom */
+    align-items: center;  /* Image aligns better */
     justify-content: center;
-    max-width: 100px; /* Make sure the image is not too big */
-    margin-top: 10px; /* Space between image and text */
+    max-width: 120px; /* Increased image size */
+    margin-top: 10px;
+    order: 2; /* Ensures image is on the right */
 }
 
 .result-image img {
-    max-height: 100px; /* Ensure the image fits inside the box */
+    max-height: 120px; /* Increased image size */
     object-fit: cover;
     width: 100%;
 }
