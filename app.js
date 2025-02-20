@@ -53,11 +53,15 @@ document.addEventListener('DOMContentLoaded', () => {
                             resultDiv.style.border = '1px solid black';
                             resultDiv.style.padding = '10px';
                             resultDiv.style.margin = '5px 0';
+                            resultDiv.style.display = 'flex';
+                            resultDiv.style.justifyContent = 'space-between';
+
                             let resultHTML = '';
 
                             const sorani = row[0];
                             const badini = row[1];
                             const hawrami = row[2];
+                            const pictureUrl = row[3];  // Assuming the picture URL is in the 4th column
 
                             if (sorani.includes(searchTerm)) {
                                 resultHTML += `<p><strong style="color: #c05510;">سۆرانی</strong>: <span style="color: black;">${sorani}</span></p>`;
@@ -73,7 +77,19 @@ document.addEventListener('DOMContentLoaded', () => {
                                 resultHTML += `<p><strong style="color: #f5c265;">بادینی</strong>: <span style="color: black;">${badini}</span></p>`;
                             }
 
+                            // Add the text result HTML
                             resultDiv.innerHTML = resultHTML;
+
+                            // Add image if it exists in the row (assuming 4th column has image URL)
+                            const imgElement = document.createElement('img');
+                            imgElement.src = pictureUrl;
+                            imgElement.alt = "Image";
+                            imgElement.style.width = '100px';
+                            imgElement.style.height = '100px';
+                            imgElement.style.objectFit = 'cover';
+                            resultDiv.appendChild(imgElement);
+
+                            // Append the result to the output container
                             outputContainer.appendChild(resultDiv);
                         });
                     } else {
