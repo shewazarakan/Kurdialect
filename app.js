@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Show loading screen
             loadingScreen.style.display = 'flex';
 
+            // Assuming you are fetching data from a Google Sheet or other source
             const response = await fetch('data.json');
             const jsonData = await response.json();
             const data = jsonData.values.slice(1); // Remove headers
@@ -50,19 +51,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         filteredData.forEach(row => {
                             const resultDiv = document.createElement('div');
-                            resultDiv.style.border = '1px solid black';
+                            resultDiv.style.display = 'flex'; // Flexbox to align text and image side by side
+                            resultDiv.style.alignItems = 'flex-start';
+                            resultDiv.style.border = '1px solid #ccc';
                             resultDiv.style.padding = '10px';
-                            resultDiv.style.margin = '5px 0';
-                            resultDiv.style.display = 'flex';
-                            resultDiv.style.justifyContent = 'space-between';
+                            resultDiv.style.marginBottom = '10px';
+                            resultDiv.style.gap = '20px'; // Space between text and image
+
+                            const textData = document.createElement('div');
+                            textData.style.display = 'flex';
+                            textData.style.flexDirection = 'column'; // Stack the text vertically
 
                             let resultHTML = '';
 
                             const sorani = row[0];
                             const badini = row[1];
                             const hawrami = row[2];
-                            const pictureUrl = row[3];  // Assuming the picture URL is in the 4th column
+                            const imageUrl = row[3];  // Assuming the image URL is in the 4th column
 
+                            // Build the result HTML
                             if (sorani.includes(searchTerm)) {
                                 resultHTML += `<p><strong style="color: #c05510;">سۆرانی</strong>: <span style="color: black;">${sorani}</span></p>`;
                                 resultHTML += `<p><strong style="color: #f5c265;">بادینی</strong>: <span style="color: black;">${badini}</span></p>`;
@@ -77,19 +84,22 @@ document.addEventListener('DOMContentLoaded', () => {
                                 resultHTML += `<p><strong style="color: #f5c265;">بادینی</strong>: <span style="color: black;">${badini}</span></p>`;
                             }
 
-                            // Add the text result HTML
-                            resultDiv.innerHTML = resultHTML;
+                            textData.innerHTML = resultHTML;
 
-                            // Add image if it exists in the row (assuming 4th column has image URL)
-                            const imgElement = document.createElement('img');
-                            imgElement.src = pictureUrl;
-                            imgElement.alt = "Image";
-                            imgElement.style.width = '100px';
-                            imgElement.style.height = '100px';
-                            imgElement.style.objectFit = 'cover';
-                            resultDiv.appendChild(imgElement);
+                            // Add image to the right of the text
+                            if (imageUrl) {
+                                const img = document.createElement('img');
+                                img.src = imageUrl;
+                                img.style.width = '100px';
+                                img.style.height = '100px';
+                                img.style.objectFit = 'cover';
+                                img.style.borderRadius = '5px'; // Optional for rounded image
+                                resultDiv.appendChild(textData);
+                                resultDiv.appendChild(img);
+                            } else {
+                                resultDiv.appendChild(textData); // Only text if no image
+                            }
 
-                            // Append the result to the output container
                             outputContainer.appendChild(resultDiv);
                         });
                     } else {
