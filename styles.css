@@ -80,6 +80,8 @@ button:hover {
 }
 
 #output div {
+    display: flex;
+    align-items: center;
     border: 1px solid #ccc;
     padding: 10px;
     margin-bottom: 10px;
@@ -88,4 +90,12 @@ button:hover {
 #output p {
     font-size: 18px;
     color: #000000; /* Data text color is black */
+    margin-right: 20px; /* Space for image */
+    flex: 1;
+}
+
+#output img {
+    max-width: 100px; /* Adjust as needed */
+    height: auto;
+    margin-left: 10px;
 }
