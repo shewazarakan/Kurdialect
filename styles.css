@@ -1,8 +1,7 @@
-/* Add your basic styling here */
-
+/* Basic styles */
 body {
     font-family: Arial, sans-serif;
-    background-color: #ffffff; /* Pure white background */
+    background-color: #ffffff;
     margin: 0;
     padding: 0;
 }
@@ -53,21 +52,24 @@ button:hover {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: #c05510; /* Same as Sorani column */
+    background-color: #c05510;
     color: white;
     border-radius: 50%;
     padding: 15px;
     font-size: 20px;
     cursor: pointer;
-    display: none; /* Hidden initially */
+    display: none;
 }
 
 #installButton:hover {
-    background-color: #f5c265; /* Hover effect */
+    background-color: #f5c265;
 }
 
 #output {
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 #searchInput {
@@ -79,28 +81,40 @@ button:hover {
     font-size: 16px;
 }
 
-#output div {
-    display: flex; /* Flexbox to arrange data and image side by side */
-    align-items: flex-start; /* Align items at the top */
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
-    gap: 20px; /* Space between text and image */
-}
-
-#output div img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 5px; /* Optional for rounded image */
-}
-
-#output div .text-data {
+.result-box {
     display: flex;
-    flex-direction: column; /* Stack the text vertically */
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-#output p {
+.result-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+
+.result-text p {
+    margin: 0;
     font-size: 18px;
-    color: #000000; /* Data text color is black */
+    color: #000000;
+    line-height: 1.5;
+}
+
+.result-image {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    max-width: 100px;
+    margin-left: 15px; /* Space between image and text */
+}
+
+.result-image img {
+    max-height: 100px; /* Ensure the image is not too large */
+    object-fit: cover;
+    width: 100%;
 }
