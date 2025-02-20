@@ -80,22 +80,27 @@ button:hover {
 }
 
 #output div {
-    display: flex;
-    align-items: center;
+    display: flex; /* Flexbox to arrange data and image side by side */
+    align-items: flex-start; /* Align items at the top */
     border: 1px solid #ccc;
     padding: 10px;
     margin-bottom: 10px;
+    gap: 20px; /* Space between text and image */
+}
+
+#output div img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px; /* Optional for rounded image */
+}
+
+#output div .text-data {
+    display: flex;
+    flex-direction: column; /* Stack the text vertically */
 }
 
 #output p {
     font-size: 18px;
     color: #000000; /* Data text color is black */
-    margin-right: 20px; /* Space for image */
-    flex: 1;
-}
-
-#output img {
-    max-width: 100px; /* Adjust as needed */
-    height: auto;
-    margin-left: 10px;
 }
