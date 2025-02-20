@@ -2,20 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadingScreen = document.getElementById('loadingScreen');
     const searchButton = document.getElementById('searchButton');
     const clearButton = document.getElementById('clearButton');
-    const installButton = document.getElementById('installButton');
     const outputContainer = document.getElementById('output');
-
-    // Hide install button if app is installed
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-        installButton.style.display = 'none';
-    }
-
-    if (installButton) {
-        installButton.addEventListener('click', () => {
-            // Redirect to install PWA manually
-            alert('To install, click the browser’s install button or add to home screen.');
-        });
-    }
 
     // Fetch data and perform the search
     const fetchData = async () => {
@@ -23,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Show loading screen
             loadingScreen.style.display = 'flex';
 
-            const response = await fetch('data.json');
+            const response = await fetch('data.json');  // Change to your data source
             const jsonData = await response.json();
             const data = jsonData.values.slice(1); // Remove headers
 
@@ -34,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
             searchButton.addEventListener('click', () => {
                 const searchTerm = document.getElementById('searchInput').value.trim();
                 if (searchTerm) {
-                    // Filter the data based on search term
+                    // Filter the data based on the search term
                     const filteredData = data.filter(row =>
                         row.some(cell => cell.includes(searchTerm))
                     );
@@ -50,26 +37,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         filteredData.forEach(row => {
                             const resultDiv = document.createElement('div');
-                            resultDiv.classList.add('result-box'); // Class for styling
+                            resultDiv.classList.add('search-result');
 
-                            let resultHTML = '';
                             const sorani = row[0];
                             const badini = row[1];
                             const hawrami = row[2];
-                            const imageUrl = row[3]; // Assuming the image URL is in the 4th column
+                            const image = row[3]; // Assuming image URL is in the 4th column
 
-                            resultHTML += `
-                                <div class="result-text">
-                                    <p><strong style="color: #c05510;">سۆرانی</strong>: <span style="color: black;">${sorani}</span></p>
-                                    <p><strong style="color: #f5c265;">بادینی</strong>: <span style="color: black;">${badini}</span></p>
-                                    <p><strong style="color: #2e6095;">هەورامی</strong>: <span style="color: black;">${hawrami}</span></p>
-                                </div>
-                                <div class="result-image">
-                                    <img src="${imageUrl}" alt="Image" />
-                                </div>
-                            `;
+                            // Create divs for text and image
+                            const resultTextDiv = document.createElement('div');
+                            resultTextDiv.classList.add('result-text');
 
-                            resultDiv.innerHTML = resultHTML;
+                            let resultHTML = '';
+
+                            // Dynamically display data based on the search term
+                            if (sorani.includes(searchTerm)) {
+                                resultHTML += `
+                                    <p><strong style="color: #c05510;">سۆرانی</strong>: ${sorani}</p>
+                                    <p><strong style="color: #2e6095;">هەورامی</strong>: ${hawrami}</p>
+                                    <p><strong style="color: #f5c265;">بادینی</strong>: ${badini}</p>
+                                `;
+                            } else if (badini.includes(searchTerm)) {
+                                resultHTML += `
+                                    <p><strong style="color: #f5c265;">بادینی</strong>: ${badini}</p>
+                                    <p><strong style="color: #c05510;">سۆرانی</strong>: ${sorani}</p>
+                                    <p><strong style="color: #2e6095;">هەورامی</strong>: ${hawrami}</p>
+                                `;
+                            } else if (hawrami.includes(searchTerm)) {
+                                resultHTML += `
+                                    <p><strong style="color: #2e6095;">هەورامی</strong>: ${hawrami}</p>
+                                    <p><strong style="color: #c05510;">سۆرانی</strong>: ${sorani}</p>
+                                    <p><strong style="color: #f5c265;">بادینی</strong>: ${badini}</p>
+                                `;
+                            }
+
+                            resultTextDiv.innerHTML = resultHTML;
+
+                            // Create image div
+                            const resultImageDiv = document.createElement('div');
+                            resultImageDiv.classList.add('result-image');
+                            resultImageDiv.innerHTML = `<img src="${image}" alt="Image" />`;
+
+                            // Append text and image divs to the result div
+                            resultDiv.appendChild(resultTextDiv);
+                            resultDiv.appendChild(resultImageDiv);
+
+                            // Append result div to output container
                             outputContainer.appendChild(resultDiv);
                         });
                     } else {
