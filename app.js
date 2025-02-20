@@ -1,108 +1,93 @@
-/* Basic styles */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #ffffff;
-    margin: 0;
-    padding: 0;
-}
+document.addEventListener('DOMContentLoaded', () => {
+    const loadingScreen = document.getElementById('loadingScreen');
+    const searchButton = document.getElementById('searchButton');
+    const clearButton = document.getElementById('clearButton');
+    const installButton = document.getElementById('installButton');
+    const outputContainer = document.getElementById('output');
 
-#loadingScreen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.8);
-    display: none;
-    justify-content: center;
-    align-items: center;
-}
+    // Hide install button if app is installed
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        installButton.style.display = 'none';
+    }
 
-h3 {
-    text-align: center;
-    margin: 20px 0;
-}
+    if (installButton) {
+        installButton.addEventListener('click', () => {
+            // Redirect to install PWA manually
+            alert('To install, click the browser’s install button or add to home screen.');
+        });
+    }
 
-button {
-    font-size: 16px;
-    padding: 12px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    border: none;
-}
+    // Fetch data and perform the search
+    const fetchData = async () => {
+        try {
+            // Show loading screen
+            loadingScreen.style.display = 'flex';
 
-#searchButton, #clearButton {
-    background-color: #2e6095;
-    color: #fff;
-    margin-right: 10px;
-    margin-top: 10px;
-    border-radius: 8px;
-    width: auto;
-}
+            const response = await fetch('data.json');
+            const jsonData = await response.json();
+            const data = jsonData.values.slice(1); // Remove headers
 
-#clearButton {
-    background-color: #f5c265;
-}
+            // Hide loading screen once data is fetched
+            loadingScreen.style.display = 'none';
 
-button:hover {
-    opacity: 0.9;
-}
+            // Handle the search functionality
+            searchButton.addEventListener('click', () => {
+                const searchTerm = document.getElementById('searchInput').value.trim();
+                if (searchTerm) {
+                    // Filter the data based on search term
+                    const filteredData = data.filter(row =>
+                        row.some(cell => cell.includes(searchTerm))
+                    );
 
-#installButton {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #c05510;
-    color: white;
-    border-radius: 50%;
-    padding: 15px;
-    font-size: 20px;
-    cursor: pointer;
-    display: none;
-}
+                    if (filteredData.length > 0) {
+                        // Clear previous results
+                        outputContainer.innerHTML = '';
 
-#installButton:hover {
-    background-color: #f5c265;
-}
+                        // Add search result heading
+                        const resultHeading = document.createElement('h3');
+                        resultHeading.innerHTML = '<strong>SEARCH RESULTS</strong>';
+                        outputContainer.appendChild(resultHeading);
 
-#output {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+                        filteredData.forEach(row => {
+                            const resultDiv = document.createElement('div');
+                            resultDiv.classList.add('result-box'); // Class for styling
 
-#searchInput {
-    width: 300px;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-top: 10px;
-    font-size: 16px;
-}
+                            let resultHTML = '';
+                            const sorani = row[0];
+                            const badini = row[1];
+                            const hawrami = row[2];
+                            const imageUrl = row[3]; // Assuming the image URL is in the 4th column
 
-.result-box {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-}
+                            resultHTML += `
+                                <div class="result-text">
+                                    <p><strong style="color: #c05510;">سۆرانی</strong>: <span style="color: black;">${sorani}</span></p>
+                                    <p><strong style="color: #f5c265;">بادینی</strong>: <span style="color: black;">${badini}</span></p>
+                                    <p><strong style="color: #2e6095;">هەورامی</strong>: <span style="color: black;">${hawrami}</span></p>
+                                </div>
+                                <div class="result-image">
+                                    <img src="${imageUrl}" alt="Image" />
+                                </div>
+                            `;
 
-.result-box p {
-    margin: 0;
-    font-size: 18px;
-    color: #000000;
-    line-height: 1.5;
-    margin-right: 10px; /* Add space between text and image */
-}
+                            resultDiv.innerHTML = resultHTML;
+                            outputContainer.appendChild(resultDiv);
+                        });
+                    } else {
+                        outputContainer.innerHTML = '<p>No results found.</p>';
+                    }
+                }
+            });
 
-.result-image {
-    max-height: 100px; /* Ensure the image is not too large */
-    object-fit: cover;
-    width: auto;
-    height: 100%; /* Keep the image aligned to the bottom */
-    margin-left: 15px; /* Add space between the image and the data */
-}
+            // Handle clear button
+            clearButton.addEventListener('click', () => {
+                document.getElementById('searchInput').value = '';
+                outputContainer.innerHTML = '';
+            });
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    fetchData();
+});
