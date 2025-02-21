@@ -1,224 +1,128 @@
-/* General Page Styles */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-}
-
-body {
-    background-color: #f9f9f9;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    min-height: 100vh;
-    padding-top: 20px;
-}
-
-/* Search Result Styles */
-.search-result {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 2px solid #c05510; /* Sorani column color for border */
-    margin-bottom: 15px;
-    padding: 20px;
-    background-color: white;
-    width: 100%; /* Ensure results take full width available */
-    border-radius: 8px;
-}
-
-.search-result .result-text {
-    flex: 1; /* Takes available space */
-    padding-right: 15px; /* Space between text and image */
-}
-
-.search-result .result-image {
-    flex-shrink: 0; /* Prevents image from shrinking */
-    width: 120px;
-    height: 120px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.search-result img {
-    max-width: 100%; /* Ensure image fits within container */
-    max-height: 100%;
-}
-
-/* Search Container */
-.search-container {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px; /* Space between the search box and buttons */
-    width: 100%;
-    margin-bottom: 20px; /* Adds space between the search section and results */
-    max-width: 800px; /* Prevents input from growing too wide */
-    padding: 10px;
-}
-
-#searchInput {
-    padding: 10px 15px;
-    font-size: 16px;
-    width: 100%;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-}
-
-#searchButton, #clearButton {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-#searchButton {
-    background-color: #2e6095; /* Search button color */
-    color: white;
-}
-
-#searchButton:hover {
-    background-color: #1a4379; /* Darken on hover */
-}
-
-#clearButton {
-    background-color: #f5c265; /* Clear button color */
-    color: white;
-}
-
-#clearButton:hover {
-    background-color: #d1a847; /* Darken on hover */
-}
-
-/* Install Button */
+/* Install Button (Floating, grey with plus icon centered) */
 #installButton {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: #c05510; /* Sorani column color */
     width: 60px;
     height: 60px;
     border-radius: 50%;
+    background-color: #c05510; /* Sorani color */
     display: flex;
     justify-content: center;
     align-items: center;
     color: white;
     font-size: 30px;
-    border: none;
+    border: 2px solid black;  /* Border color changed to black */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
 }
 
 #installButton i {
-    font-size: 24px; /* Adjust icon size */
+    font-size: 30px;
 }
 
-/* Mobile Responsiveness */
-@media screen and (max-width: 600px) {
-    .search-container {
-        flex-direction: column; /* Stack search box and buttons vertically */
-        gap: 10px; /* Space between search box and buttons */
-    }
-
-    #searchInput {
-        padding: 12px 15px;
-        font-size: 18px;
-    }
-
-    #searchButton, #clearButton {
-        width: 100%; /* Buttons take up full width on mobile */
-        padding: 12px;
-        font-size: 18px;
-    }
-
-    .search-result {
-        flex-direction: column; /* Stack the content vertically */
-        padding: 15px;
-    }
-
-    .result-text {
-        padding-right: 0;
-    }
-
-    .result-image {
-        width: 100%;
-        height: auto;
-        margin-top: 10px;
-        text-align: center;
-    }
-
-    .search-result img {
-        max-width: 100%;
-        height: auto;
-    }
-
-    #installButton {
-        width: 50px;
-        height: 50px;
-        font-size: 24px;
-        bottom: 15px;
-        right: 15px;
-    }
+/* Search and Clear Button styles (adjusted space and color) */
+.search-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+    gap: 10px; /* Reduced space between the search box and buttons */
 }
 
-/* Tablet Responsiveness */
-@media screen and (max-width: 1024px) {
-    .search-container {
-        flex-direction: row;
-        gap: 15px; /* Space between search box and buttons */
-    }
-
-    .search-result {
-        flex-direction: row; /* Keep columns and image on the same row */
-        justify-content: space-between;
-        padding: 20px;
-    }
-
-    .search-result .result-text {
-        flex: 1;
-        padding-right: 15px;
-    }
-
-    .search-result .result-image {
-        width: 130px;
-        height: 130px;
-    }
+#searchButton, #clearButton {
+    padding: 8px 16px;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
 }
 
-/* Large Screen / Desktop */
-@media screen and (min-width: 1025px) {
-    body {
+#searchButton {
+    background-color: #2e6095; /* Corrected color */
+    color: white;
+}
+
+#clearButton {
+    background-color: #f5c265; /* Corrected color */
+    color: black;
+}
+
+/* Search Results Box with Border and Styling */
+#output {
+    margin-top: 20px;
+    border: 2px solid black;  /* Black border for the search results box */
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.search-result {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #000;  /* Adding a bottom border for separation */
+    padding-bottom: 10px;
+    width: 100%;
+}
+
+.result-text {
+    flex: 1;
+    margin-right: 20px;  /* Space between data and image */
+}
+
+.result-image {
+    flex: 1;
+    text-align: right;
+}
+
+.result-image img {
+    width: 150px;
+    height: auto;
+    border-radius: 5px;
+}
+
+/* For large screens, adjust the size of the search results box and columns */
+@media (min-width: 768px) {
+    #output {
         padding: 40px;
-    }
-
-    .search-container {
-        max-width: 900px;
+        margin-top: 30px;
     }
 
     .search-result {
-        flex-direction: row;
-        padding: 20px;
-        max-width: 100%;
+        width: 48%; /* Makes each result box occupy 48% of the width */
     }
 
     .result-text {
-        padding-right: 20px;
+        font-size: 18px;  /* Bigger font size on desktop */
     }
 
-    .result-image {
-        width: 150px;
-        height: 150px;
+    .result-image img {
+        width: 200px; /* Bigger image size on desktop */
+    }
+}
+
+/* Mobile-friendly adjustments */
+@media (max-width: 767px) {
+    .search-container {
+        flex-direction: column;
+        gap: 5px;  /* Reduced space between search box and buttons */
     }
 
-    #installButton {
-        width: 60px;
-        height: 60px;
-        font-size: 30px;
-        bottom: 20px;
-        right: 20px;
+    #output {
+        padding: 10px;
+    }
+
+    .search-result {
+        width: 100%; /* Full width for search result box on mobile */
+    }
+
+    .result-text {
+        font-size: 14px;  /* Smaller font on mobile */
+    }
+
+    .result-image img {
+        width: 120px;  /* Smaller image size on mobile */
     }
 }
