@@ -12,7 +12,6 @@
     align-items: center;
     color: white;
     font-size: 30px;
-    border: 2px solid black;  /* Border color changed to black */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     z-index: 1000;
@@ -20,14 +19,23 @@
 
 #installButton i {
     font-size: 30px;
+    color: grey; /* Grey color for the plus icon */
 }
 
-/* Search and Clear Button styles (adjusted space and color) */
+/* Search and Clear Button styles */
 .search-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start; /* Align to the left */
+    gap: 10px;  /* Minimal space between search box and buttons */
     margin: 10px;
-    gap: 10px; /* Reduced space between the search box and buttons */
+}
+
+#searchInput {
+    flex: 1;  /* Search input takes all available space */
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
 #searchButton, #clearButton {
@@ -38,33 +46,32 @@
 }
 
 #searchButton {
-    background-color: #2e6095; /* Corrected color */
+    background-color: #2e6095; /* Correct color for search button */
     color: white;
 }
 
 #clearButton {
-    background-color: #f5c265; /* Corrected color */
+    background-color: #f5c265; /* Correct color for clear button */
     color: black;
 }
 
-/* Search Results Box with Border and Styling */
+/* Search Results Box - Border appears only after search */
 #output {
     margin-top: 20px;
-    border: 2px solid black;  /* Black border for the search results box */
+    display: none; /* Initially hide the output */
     padding: 20px;
+    border: 2px solid black; /* Black border for the search results box */
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .search-result {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
-    border-bottom: 2px solid #000;  /* Adding a bottom border for separation */
     padding-bottom: 10px;
-    width: 100%;
+    border-bottom: 2px solid #000;  /* Add a bottom border for separation */
 }
 
 .result-text {
@@ -83,23 +90,24 @@
     border-radius: 5px;
 }
 
-/* For large screens, adjust the size of the search results box and columns */
+/* Adjust for large screens (desktop) */
 @media (min-width: 768px) {
     #output {
+        display: block; /* Display output on large screens */
         padding: 40px;
         margin-top: 30px;
     }
 
     .search-result {
-        width: 48%; /* Makes each result box occupy 48% of the width */
+        width: 48%; /* Each result box takes 48% of the width */
     }
 
     .result-text {
-        font-size: 18px;  /* Bigger font size on desktop */
+        font-size: 18px;
     }
 
     .result-image img {
-        width: 200px; /* Bigger image size on desktop */
+        width: 200px;
     }
 }
 
@@ -107,7 +115,7 @@
 @media (max-width: 767px) {
     .search-container {
         flex-direction: column;
-        gap: 5px;  /* Reduced space between search box and buttons */
+        gap: 5px; /* Reduced space between search box and buttons */
     }
 
     #output {
@@ -119,10 +127,10 @@
     }
 
     .result-text {
-        font-size: 14px;  /* Smaller font on mobile */
+        font-size: 14px;
     }
 
     .result-image img {
-        width: 120px;  /* Smaller image size on mobile */
+        width: 120px;
     }
 }
