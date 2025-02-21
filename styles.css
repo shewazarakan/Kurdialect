@@ -94,9 +94,9 @@ h3 {
     font-size: 24px;
 }
 
-/* Install button styling */
+/* Install button styling (with correct color for Sorani) */
 .install-button {
-    background-color: #c05510;
+    background-color: #c05510; /* Sorani color */
     color: white;
     font-size: 30px;
     width: 50px;
@@ -114,6 +114,7 @@ h3 {
     line-height: 50px;
 }
 
+/* Plus sign inside the install button */
 .install-button:before {
     content: '+';
     font-size: 24px;
