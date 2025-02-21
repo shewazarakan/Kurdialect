@@ -11,7 +11,39 @@ body {
     background-color: #f0f0f0;
 }
 
-/* Search container styles (desktop and mobile) */
+/* Install button styling (Correct specifications) */
+.install-button {
+    background-color: #c05510; /* Sorani color */
+    color: white;
+    font-size: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* Ensures the button is a circle */
+    border: none;
+    position: fixed;
+    bottom: 20px; /* Position at the bottom */
+    right: 20px; /* Position at the right */
+    display: none; /* Initially hidden, will be displayed when conditions are met */
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-align: center;
+    line-height: 50px; /* Ensures the plus sign is vertically centered */
+}
+
+/* Plus sign inside the install button (grey) */
+.install-button:before {
+    content: '+';
+    font-size: 24px;
+    color: #808080; /* Grey color for the plus sign */
+}
+
+/* Hover effect for install button */
+.install-button:hover {
+    background-color: #a44b0b; /* Darker shade for hover effect */
+}
+
+/* General layout and search section styles */
 .search-container {
     margin: 20px;
     display: flex;
@@ -20,7 +52,6 @@ body {
     gap: 10px;
 }
 
-/* Input box styles */
 input[type="text"] {
     padding: 10px;
     width: 300px;
@@ -29,7 +60,6 @@ input[type="text"] {
     border: 1px solid #ccc;
 }
 
-/* Button styles */
 button {
     padding: 10px 20px;
     cursor: pointer;
@@ -38,7 +68,6 @@ button {
     border: none;
 }
 
-/* Search and Clear buttons specific styles */
 #searchButton {
     background-color: #2e6095;
     color: white;
@@ -49,7 +78,6 @@ button {
     color: white;
 }
 
-/* Loading screen */
 #loadingScreen {
     position: fixed;
     top: 0;
@@ -63,7 +91,6 @@ button {
     justify-content: center;
 }
 
-/* Result container styling */
 .search-result {
     display: flex;
     flex-direction: row;
@@ -75,90 +102,49 @@ button {
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Result text styling */
 .result-text {
     flex: 1;
     margin-right: 10px;
 }
 
-/* Image within results */
 .result-image img {
     max-width: 150px;
     margin-left: 10px;
 }
 
-/* Header styles */
 h3 {
     color: #c05510;
     margin-bottom: 20px;
     font-size: 24px;
 }
 
-/* Install button styling (with correct color for Sorani) */
-.install-button {
-    background-color: #c05510; /* Sorani color */
-    color: white;
-    font-size: 30px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: none;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    display: none; /* Initially hidden, will show on the right condition */
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    text-align: center;
-    line-height: 50px;
-}
-
-/* Plus sign inside the install button */
-.install-button:before {
-    content: '+';
-    font-size: 24px;
-    color: #808080; /* Grey color for the plus sign */
-}
-
-/* Hover effect for install button */
-.install-button:hover {
-    background-color: #a44b0b;
-}
-
-/* Mobile responsive styles */
+/* Mobile-friendly adjustments */
 @media (max-width: 768px) {
-    /* Adjust search container on mobile */
     .search-container {
         width: 100%;
         flex-direction: column;
         align-items: center;
     }
 
-    /* Adjust input field size */
     input[type="text"] {
         width: 80%;
     }
 
-    /* Adjust buttons on mobile */
     button {
         width: 80%;
         margin: 5px 0;
     }
 
-    /* Adjust results for mobile (stack them vertically) */
     .search-result {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    /* Resize result images */
     .result-image img {
         max-width: 100px;
         max-height: 100px;
     }
 
-    /* Adjust install button for mobile */
     .install-button {
         font-size: 25px;
         width: 45px;
@@ -167,13 +153,11 @@ h3 {
         right: 15px;
     }
 
-    /* Resize the plus sign inside the install button */
     .install-button:before {
         font-size: 20px;
     }
 }
 
-/* Further responsiveness for small devices */
 @media (max-width: 480px) {
     h3 {
         font-size: 20px;
