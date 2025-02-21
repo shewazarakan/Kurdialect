@@ -6,20 +6,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const installButton = document.getElementById('installButton');
     let deferredPrompt;
 
-    // Fetch data from data.json
+    // Fetch data and perform the search
     const fetchData = async () => {
         try {
-            // Show loading screen
-            loadingScreen.style.display = 'flex';
+            loadingScreen.style.display = 'flex'; // Show loading screen
 
-            const response = await fetch('data.json'); // Fetching data.json
+            const response = await fetch('data.json');  // Change to your data source
             const jsonData = await response.json();
-            const data = jsonData.values.slice(1); // Removing headers
+            const data = jsonData.values.slice(1); // Remove headers
 
-            // Hide loading screen after data is fetched
-            loadingScreen.style.display = 'none';
+            loadingScreen.style.display = 'none'; // Hide loading screen
 
-            // Handle the search functionality
             searchButton.addEventListener('click', () => {
                 const searchTerm = document.getElementById('searchInput').value.trim();
                 if (searchTerm) {
@@ -28,10 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     );
 
                     if (filteredData.length > 0) {
-                        // Clear previous results
                         outputContainer.innerHTML = '';
-
-                        // Add search result heading
                         const resultHeading = document.createElement('h3');
                         resultHeading.innerHTML = '<strong>SEARCH RESULTS</strong>';
                         outputContainer.appendChild(resultHeading);
@@ -39,19 +33,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         filteredData.forEach(row => {
                             const resultDiv = document.createElement('div');
                             resultDiv.classList.add('search-result');
-
                             const sorani = row[0];
                             const badini = row[1];
                             const hawrami = row[2];
                             const image = row[3]; // Assuming image URL is in the 4th column
 
-                            // Create divs for text and image
                             const resultTextDiv = document.createElement('div');
                             resultTextDiv.classList.add('result-text');
-
                             let resultHTML = '';
 
-                            // Dynamically display data based on the search term
                             if (sorani.includes(searchTerm)) {
                                 resultHTML += `
                                     <p><strong style="color: #c05510;">سۆرانی</strong>: ${sorani}</p>
@@ -74,16 +64,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             resultTextDiv.innerHTML = resultHTML;
 
-                            // Create image div
                             const resultImageDiv = document.createElement('div');
                             resultImageDiv.classList.add('result-image');
                             resultImageDiv.innerHTML = `<img src="${image}" alt="Image" />`;
 
-                            // Append text and image divs to the result div
                             resultDiv.appendChild(resultTextDiv);
                             resultDiv.appendChild(resultImageDiv);
-
-                            // Append result div to output container
                             outputContainer.appendChild(resultDiv);
                         });
                     } else {
@@ -92,28 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // Handle clear button
             clearButton.addEventListener('click', () => {
                 document.getElementById('searchInput').value = '';
                 outputContainer.innerHTML = '';
-            });
-
-            // Handle install button visibility and action
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                installButton.style.display = 'block';
-            });
-
-            installButton.addEventListener('click', async () => {
-                if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    const { outcome } = await deferredPrompt.userChoice;
-                    if (outcome === 'accepted') {
-                        installButton.style.display = 'none';
-                    }
-                    deferredPrompt = null;
-                }
             });
 
         } catch (error) {
@@ -122,4 +89,32 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     fetchData();
+
+    // Install Button Logic
+    installButton.style.display = 'flex';  // Always show the install button before installation
+
+    installButton.addEventListener('click', () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the A2HS prompt');
+                } else {
+                    console.log('User dismissed the A2HS prompt');
+                }
+                deferredPrompt = null;
+                installButton.style.display = 'none'; // Hide button after installation
+            });
+        }
+    });
+
+    window.addEventListener('appinstalled', () => {
+        console.log('App installed');
+        installButton.style.display = 'none';  // Hide install button once installed
+    });
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+        deferredPrompt = event; // Save the event for later
+        installButton.style.display = 'flex';  // Show install button
+    });
 });
