@@ -1,30 +1,119 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kurdialect</title>
-    <link rel="icon" href="data:,"> <!-- This disables the favicon -->
-    <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <!-- Loading Screen -->
-    <div id="loadingScreen" class="loading-screen">Loading...</div>
+/* Basic styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
 
-    <!-- Search and Clear Section -->
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search...">
-        <button id="searchButton">Search</button>
-        <button id="clearButton">Clear</button>
-    </div>
+#loadingScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
 
-    <!-- Output Container -->
-    <div id="output"></div>
+h3 {
+    text-align: center;
+    margin: 20px 0;
+}
 
-    <!-- Install Button (PWA install prompt) -->
-    <button id="installButton" style="display:none;">Install App</button>
+button {
+    font-size: 16px;
+    padding: 12px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+}
 
-    <script src="app.js"></script>
-</body>
-</html>
+#searchButton, #clearButton {
+    background-color: #2e6095;
+    color: #fff;
+    margin-right: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    width: auto;
+}
+
+#clearButton {
+    background-color: #f5c265;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+#installButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #c05510;
+    color: white;
+    border-radius: 50%;
+    padding: 15px;
+    font-size: 20px;
+    cursor: pointer;
+    display: none;
+}
+
+#installButton:hover {
+    background-color: #f5c265;
+}
+
+#output {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Search Input Styling */
+#searchInput {
+    width: 300px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+.result-box {
+    display: block;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 2px solid #ccc; /* Add border to search result box */
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.result-text {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.result-text p {
+    margin: 5px 0;
+    font-size: 18px; /* Make text a bit larger */
+    color: #000000;
+    line-height: 1.5;
+}
+
+.result-image {
+    display: inline-block;
+    margin-left: 20px;
+    width: 120px; /* Adjust width based on the largest data in the dataset */
+    height: 120px; /* Adjust height to maintain a good aspect ratio */
+}
+
+.result-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image fits properly */
+}
