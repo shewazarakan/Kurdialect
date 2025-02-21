@@ -11,18 +11,18 @@ body {
     background-color: #f0f0f0;
 }
 
-/* Search container styles */
+/* Search container styles (desktop and mobile) */
 .search-container {
     margin: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 10px;
 }
 
 /* Input box styles */
 input[type="text"] {
     padding: 10px;
-    margin-right: 10px;
     width: 300px;
     font-size: 16px;
     border-radius: 5px;
@@ -114,6 +114,12 @@ h3 {
     line-height: 50px;
 }
 
+.install-button:before {
+    content: '+';
+    font-size: 24px;
+    color: #808080; /* Grey color for the plus sign */
+}
+
 /* Hover effect for install button */
 .install-button:hover {
     background-color: #a44b0b;
@@ -124,17 +130,19 @@ h3 {
     /* Adjust search container on mobile */
     .search-container {
         width: 100%;
-        padding: 0 20px;
+        flex-direction: column;
+        align-items: center;
     }
 
     /* Adjust input field size */
     input[type="text"] {
-        width: 100%;
+        width: 80%;
     }
 
     /* Adjust buttons on mobile */
     button {
-        width: 100%;
+        width: 80%;
+        margin: 5px 0;
     }
 
     /* Adjust results for mobile (stack them vertically) */
@@ -160,7 +168,7 @@ h3 {
 
     /* Resize the plus sign inside the install button */
     .install-button:before {
-        font-size: 25px;
+        font-size: 20px;
     }
 }
 
