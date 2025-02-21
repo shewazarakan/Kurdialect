@@ -120,8 +120,17 @@ h3 {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    text-align: center;
+    line-height: 50px; /* Center the plus sign inside the circle */
 }
 
+.install-button:before {
+    content: "+";
+    color: #808080; /* Grey color for the plus sign */
+    font-size: 30px; /* Adjust size of the plus sign */
+}
+
+/* Install button hover state */
 .install-button:hover {
     background-color: #a44b0b;
 }
@@ -157,6 +166,10 @@ h3 {
         height: 45px;
         bottom: 15px;
         right: 15px;
+    }
+
+    .install-button:before {
+        font-size: 25px; /* Smaller plus sign for mobile */
     }
 }
 
