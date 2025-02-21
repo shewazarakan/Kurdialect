@@ -1,3 +1,27 @@
+/* Search and Clear Buttons */
+#searchButton {
+    background-color: #2e6095; /* Search button color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+#clearButton {
+    background-color: #f5c265; /* Clear button color */
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+/* Search and Clear Container (no space between input and buttons) */
+.search-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 0; /* No space between the search input and buttons */
+}
+
 /* Install Button */
 #installButton {
     display: none;
@@ -26,73 +50,6 @@
     transform: translate(-50%, -50%);
 }
 
-/* Search and Clear Buttons */
-#searchButton {
-    background-color: #2e6095; /* Search button color */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-}
-
-#clearButton {
-    background-color: #f5c265; /* Clear button color */
-    color: black;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-}
-
-/* Result Container */
-#output {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-/* Search Result Box */
-.search-result {
-    display: flex;
-    justify-content: space-between;
-    border: 2px solid #000;
-    padding: 15px;
-    margin-bottom: 10px;
-    width: 100%;
-    max-width: 800px;
-}
-
-.result-text {
-    flex: 1;
-    padding-right: 15px;
-}
-
-.result-image {
-    flex-shrink: 0;
-    max-width: 150px;
-    padding-left: 15px;
-}
-
-/* Title in search results */
-h3 {
-    margin-bottom: 20px;
-    color: #000;
-}
-
-/* Input Box */
-.search-container input {
-    padding: 10px;
-    width: 300px;
-    border-radius: 5px;
-    margin-right: 10px;
-}
-
-.search-container button {
-    padding: 10px 20px;
-    margin-left: 10px;
-    cursor: pointer;
-}
-
 /* Loading Screen */
 .loading-screen {
     display: none;
@@ -107,4 +64,93 @@ h3 {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+/* Result Container */
+#output {
+    margin-top: 20px;
+}
+
+/* Search Results Title */
+h3 {
+    color: #000;
+    margin-bottom: 20px;  /* Add space between title and search results */
+}
+
+/* Search Result Box */
+.search-result {
+    display: flex;
+    justify-content: space-between;
+    border: 2px solid #000;
+    padding: 15px;
+    margin-bottom: 10px;
+    width: 100%;
+    max-width: 800px;
+}
+
+/* Text Section of the Result */
+.result-text {
+    flex: 1;
+    padding-right: 15px;
+}
+
+.result-text p {
+    margin: 5px 0;
+}
+
+/* Image Section of the Result */
+.result-image {
+    flex-shrink: 0;
+    max-width: 150px;
+    padding-left: 15px;
+}
+
+.result-image img {
+    width: 100%;
+    height: auto;
+}
+
+/* Styling for each Data Column */
+.result-text strong {
+    display: block;
+}
+
+/* Styling for the Input Box */
+.search-container input {
+    padding: 10px;
+    width: 300px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+/* Input Box and Button Alignment */
+.search-container button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+/* Adjusting the Position of the Result Box and Title */
+#output {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;  /* Adds space between the title and result boxes */
+}
+
+.search-result {
+    border: 2px solid #000;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.result-text {
+    flex: 1;
+    padding-right: 15px;
+}
+
+.result-image {
+    flex-shrink: 0;
+    padding-left: 15px;
 }
