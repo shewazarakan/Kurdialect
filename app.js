@@ -3,25 +3,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchButton = document.getElementById('searchButton');
     const clearButton = document.getElementById('clearButton');
     const outputContainer = document.getElementById('output');
+    const installButton = document.getElementById('installButton');
+    let deferredPrompt;
 
-    // Fetch data and perform the search
+    // Fetch data from data.json
     const fetchData = async () => {
         try {
             // Show loading screen
             loadingScreen.style.display = 'flex';
 
-            const response = await fetch('data.json');  // Change to your data source
+            const response = await fetch('data.json'); // Fetching data.json
             const jsonData = await response.json();
-            const data = jsonData.values.slice(1); // Remove headers
+            const data = jsonData.values.slice(1); // Removing headers
 
-            // Hide loading screen once data is fetched
+            // Hide loading screen after data is fetched
             loadingScreen.style.display = 'none';
 
             // Handle the search functionality
             searchButton.addEventListener('click', () => {
                 const searchTerm = document.getElementById('searchInput').value.trim();
                 if (searchTerm) {
-                    // Filter the data based on the search term
                     const filteredData = data.filter(row =>
                         row.some(cell => cell.includes(searchTerm))
                     );
@@ -95,6 +96,24 @@ document.addEventListener('DOMContentLoaded', () => {
             clearButton.addEventListener('click', () => {
                 document.getElementById('searchInput').value = '';
                 outputContainer.innerHTML = '';
+            });
+
+            // Handle install button visibility and action
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                installButton.style.display = 'block';
+            });
+
+            installButton.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        installButton.style.display = 'none';
+                    }
+                    deferredPrompt = null;
+                }
             });
 
         } catch (error) {
