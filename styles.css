@@ -1,162 +1,96 @@
-/* General Body Styling */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
 }
 
-/* Loading Screen */
-.loading-screen {
+.search-container {
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+input[type="text"] {
+    padding: 10px;
+    margin-right: 10px;
+    width: 300px;
+}
+
+button {
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+#searchButton {
+    background-color: #2e6095;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+#clearButton {
+    background-color: #f5c265;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+#loadingScreen {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.5rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
     display: none;
-}
-
-/* Search and Clear Section */
-.search-container {
-    margin: 20px;
-    text-align: center;
-}
-
-#searchInput {
-    padding: 10px;
-    font-size: 1rem;
-    width: 80%;
-    max-width: 300px;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-}
-
-#searchButton {
-    padding: 10px 15px;
-    font-size: 1rem;
-    margin-left: 10px;
-    background-color: #2e6095;  /* Search button color */
-    border: none;
-    border-radius: 5px;
-    color: #fff;
-    cursor: pointer;
-}
-
-#searchButton:hover {
-    background-color: #1a4870;
-}
-
-#clearButton {
-    padding: 10px 15px;
-    font-size: 1rem;
-    margin-left: 10px;
-    background-color: #f5c265;  /* Clear button color */
-    border: none;
-    border-radius: 5px;
-    color: #fff;
-    cursor: pointer;
-}
-
-#clearButton:hover {
-    background-color: #d3a44e;
-}
-
-/* Output Results */
-#output {
-    padding: 20px;
-    text-align: left;
-    max-width: 800px;
-    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
 }
 
 .search-result {
     display: flex;
-    justify-content: space-between;
+    flex-direction: row;
     align-items: center;
     margin: 10px 0;
-    padding: 10px;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .result-text {
-    width: 70%;
-}
-
-.result-image {
-    width: 25%;
-    text-align: center;
+    flex: 1;
 }
 
 .result-image img {
-    max-width: 100%;
-    border-radius: 5px;
+    max-width: 150px;
+    margin-left: 10px;
 }
 
-/* Styling for the headers based on search term match */
-strong {
-    font-weight: bold;
-}
-
-strong[style*="color: #c05510;"] {
+h3 {
     color: #c05510;
 }
 
-strong[style*="color: #2e6095;"] {
-    color: #2e6095;
-}
-
-strong[style*="color: #f5c265;"] {
-    color: #f5c265;
-}
-
-/* Install Button */
-#installButton {
+.install-button {
+    background-color: #c05510;
+    color: white;
+    font-size: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
     position: fixed;
     bottom: 20px;
     right: 20px;
-    width: 50px;
-    height: 50px;
-    background-color: #c05510;  /* Sorani color */
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
+    display: none;
     align-items: center;
-    font-size: 1.5rem;
+    justify-content: center;
     cursor: pointer;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    border: none;
-    z-index: 100;
-    display: none; /* Hidden by default */
 }
 
-#installButton:hover {
-    background-color: #9e4512; /* Darken the color on hover */
-}
-
-#installButton:active {
-    background-color: #7a3610; /* Darken the color when clicked */
-}
-
-/* Make the install button a circle with a plus sign */
-#installButton::before {
-    content: '+';
-    font-size: 2rem;
-    color: grey;
-}
-
-/* Ensure that the buttons and text have good spacing */
-button {
-    margin: 10px;
-}
-
-input[type="text"] {
-    margin: 10px 0;
+.install-button:hover {
+    background-color: #a44b0b;
 }
