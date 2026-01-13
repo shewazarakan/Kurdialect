@@ -6,16 +6,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const installButton = document.getElementById('installButton');
     let deferredPrompt;
 
-    // Fetch data and perform the search
     const fetchData = async () => {
         try {
-            loadingScreen.style.display = 'flex'; // Show loading screen
+            loadingScreen.style.display = 'flex'; 
 
-            const response = await fetch('data.json');  // Change to your data source
+            const response = await fetch('data.json');  
             const jsonData = await response.json();
-            const data = jsonData.values.slice(1); // Remove headers
+            const data = jsonData.values.slice(1);
 
-            loadingScreen.style.display = 'none'; // Hide loading screen
+            loadingScreen.style.display = 'none';
 
             searchButton.addEventListener('click', () => {
                 const searchTerm = document.getElementById('searchInput').value.trim();
@@ -36,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             const sorani = row[0];
                             const badini = row[1];
                             const hawrami = row[2];
-                            const image = row[3]; // Assuming image URL is in the 4th column
+                            const image = row[3]; 
 
                             const resultTextDiv = document.createElement('div');
                             resultTextDiv.classList.add('result-text');
@@ -89,9 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     fetchData();
-
-    // Install Button Logic
-    installButton.style.display = 'flex';  // Always show the install button before installation
+    installButton.style.display = 'flex';  
 
     installButton.addEventListener('click', () => {
         if (deferredPrompt) {
@@ -103,18 +100,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log('User dismissed the A2HS prompt');
                 }
                 deferredPrompt = null;
-                installButton.style.display = 'none'; // Hide button after installation
+                installButton.style.display = 'none'; 
             });
         }
     });
 
     window.addEventListener('appinstalled', () => {
         console.log('App installed');
-        installButton.style.display = 'none';  // Hide install button once installed
+        installButton.style.display = 'none';  
     });
 
     window.addEventListener('beforeinstallprompt', (event) => {
-        deferredPrompt = event; // Save the event for later
-        installButton.style.display = 'flex';  // Show install button
+        deferredPrompt = event; 
+        installButton.style.display = 'flex';  
     });
 });
