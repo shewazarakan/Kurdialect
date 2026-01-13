@@ -10,7 +10,7 @@ const STATIC_ASSETS = [
     "/manifest.json"
 ];
 
-// Install Service Worker and Cache Static Assets
+
 self.addEventListener("install", event => {
     event.waitUntil(
         caches.open(CACHE_NAME).then(cache => {
@@ -19,7 +19,7 @@ self.addEventListener("install", event => {
     );
 });
 
-// Activate and Remove Old Caches
+
 self.addEventListener("activate", event => {
     event.waitUntil(
         caches.keys().then(keys => {
@@ -30,10 +30,10 @@ self.addEventListener("activate", event => {
     );
 });
 
-// Intercept Fetch Requests
+
 self.addEventListener("fetch", event => {
     if (event.request.url.includes(API_URL)) {
-        // Try fetching from network first, then fallback to cache
+       
         event.respondWith(
             fetch(event.request)
                 .then(response => {
